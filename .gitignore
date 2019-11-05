@@ -1,4 +1,5 @@
 
+<<<<<<< Updated upstream
 Pro100-T7/Pro100-T7.csproj.user
 Pro100-T7/obj/ARM/Debug/XamlTypeInfo.g.cs
 Pro100-T7/obj/ARM/Debug/XamlSaveStateFile.xml
@@ -12,3 +13,15 @@ Pro100-T7/obj/ARM/Debug/App.g.cs
 .vs/Pro100-T7/v16/Server/sqlite3/storage.ide
 .vs/Pro100-T7/v16/Server/sqlite3/db.lock
 .vs/Pro100-T7/v16/.suo
+=======
+.vs/Pro100-T7/v16/.suo
+.vs/Pro100-T7/v16/Server/sqlite3/db.lock
+.vs/Pro100-T7/v16/Server/sqlite3/storage.ide
+.vs/Pro100-T7/v16/Server/sqlite3/storage.ide-shm
+.vs/Pro100-T7/v16/Server/sqlite3/storage.ide-wal
+.vs/Pro100-T7/v16/TestStore/0/000-0000.testlog
+.vs/Pro100-T7/v16/TestStore/0/testlog.manifest
+Pro100-T7/obj/ARM/Debug/App.g.cs
+Pro100-T7/obj/ARM/Debug/MainPage.g.cs
+Pro100-T7/obj/ARM/Debug/XamlTypeInfo.g.cs
+>>>>>>> Stashed changes
