@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Pro100_T7.Model
 {
-    class History
-    {
-    }
+public class History {
+
+}
+
 }
