@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj": {}
+    "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj": {}
   },
   "projects": {
-    "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj": {
+    "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj",
+        "projectUniqueName": "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj",
         "projectName": "Pro100-T7",
-        "projectPath": "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj",
+        "projectPath": "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7\\Pro100-T7.csproj",
         "packagesPath": "C:\\Users\\xXDeathblade226\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\obj\\",
+        "outputPath": "C:\\Users\\xXDeathblade226\\OneDrive - Neumont College of Computer Science\\Projects\\Pro100-T7\\Pro100-T7\\Pro100-T7\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
