@@ -140,13 +140,11 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
-    <Compile Include="Model\Brush.cs" />
-    <Compile Include="Model\Color.cs" />
+    <Compile Include="Models\Brush.cs" />
+    <Compile Include="Models\Color.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\History.cs" />
-    <Compile Include="Model\Layers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
