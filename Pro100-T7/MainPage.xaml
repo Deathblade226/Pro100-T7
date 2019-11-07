@@ -11,35 +11,33 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 
-<Grid x:Name="mainArea">
-    
-<Rectangle Fill="#464646"/>
+    <Grid x:Name="mainArea">
 
-<AppBar>
-<ColorPicker x:Name="colorPicker"
+        <Rectangle Fill="#464646"/>
+
+        <AppBar>
+            <ColorPicker x:Name="ColorPicker"
              Height="690"
              IsAlphaEnabled="True"
-             IsEnabled="True"
-             Color="Black"/> 
-</AppBar>    
+             IsEnabled="True"/>
+        </AppBar>
 
-<Canvas x:Name="DrawArea"
-        Height="800"
-        Background="White">
-<Image x:Name="Image"
-       Height="800"
-       Width="1500"/>
+        <Canvas x:Name="DrawArea"
+                Height="800"
+                Background="White">
+            <Image x:Name="Image"
+                   Height="800"
+                   Width="1500"
+            />
+        </Canvas>
 
-</Canvas>
-
-<TextBlock x:Name="Mouse"
+        <TextBlock x:Name="Mouse"
            Text="PlaceHolder"
            Width="800"
            FontSize="30"
            TextAlignment="Center"
            VerticalAlignment="Bottom"
-           Height="50"/>
-
-    </Grid> 
-
+           Height="50"
+        />
+    </Grid>
 </Page>
