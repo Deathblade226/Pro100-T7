@@ -53,10 +53,12 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
     Image.Source = bmp;
     using (bmp.GetBitmapContext()) {
-    
-    //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, 100);
 
-    WriteableBitmapExtensions.DrawLine(bmp, (int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
+
+    Rect size = new Rect();
+    bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, Colors.Black, 5);
+
 
     }
     old = e.GetCurrentPoint(null).Position;
@@ -64,9 +66,7 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     
     }else { old = current;}
 
-    //if (ptrPt.Properties.IsRightButtonPressed) {}
-
-    //bmp.Clear(Colors.White);
+    if (ptrPt.Properties.IsRightButtonPressed) {
     
     }
 
@@ -76,6 +76,5 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     
 
 }
-
 
 
