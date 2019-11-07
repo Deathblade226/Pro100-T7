@@ -1,4 +1,6 @@
-﻿<Page
+﻿<Page Width="1500"
+      Height="1000"
+      
     x:Class="Pro100_T7.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,7 +10,37 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
 
-    </Grid>
+<Grid x:Name="mainArea">
+    
+<Rectangle Fill="#464646"/>
+
+<AppBar>
+<ColorPicker x:Name="ColorPicker"
+             Height="690"
+             IsAlphaEnabled="True"
+             IsEnabled="True"/> 
+
+
+</AppBar>    
+
+<Canvas x:Name="DrawArea"
+        Height="800"
+        Background="White">
+<Image x:Name="Image"
+       Height="800"
+       Width="1500"/>
+
+</Canvas>
+
+<TextBlock x:Name="Mouse"
+           Text="PlaceHolder"
+           Width="800"
+           FontSize="30"
+           TextAlignment="Center"
+           VerticalAlignment="Bottom"
+           Height="50"/>
+
+    </Grid> 
+
 </Page>
