@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pro100_T7.Models
-{
-    class Brush
-    {
-    }
+namespace Pro100_T7.Models {
+
+public class Brush {
+
+}
+
 }
