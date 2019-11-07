@@ -331,3 +331,5 @@ ASALocalRun/
 Pro100-T7/obj/ARM/Debug/Pro100-T7.csprojAssemblyReference.cache
 *.cache
 *.cache
+*.xml
+*.cache
