@@ -21,9 +21,9 @@ namespace Pro100_T7.Models
             ImageID = indexID;
         }
 
-        public void DrawBrush()
+        public void DrawBrush(Stroke stroke, DrawPoint drawPoint)
         {
-
+            //draw code will go here and modify the image accordingly
         }
 
     }
