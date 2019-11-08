@@ -15,6 +15,8 @@ namespace Pro100_T7.Models
         public WriteableBitmap CanvasData { get; private set; }
         public List<ImageLayer> ImageLayers { get; private set; }
 
+        public ImageLayer WorkingImageLayer { get; private set; }
+
         /// <summary>
         /// Creates a boiler-plate WritableBitMap Canvas element with drawing capability using the supplied width and heights.
         /// </summary>
@@ -24,6 +26,7 @@ namespace Pro100_T7.Models
         {
             CanvasData = BitmapFactory.New(pixelWidth, pixelHeight);
             ImageLayers.Add(new ImageLayer(0));
+            WorkingImageLayer = ImageLayers.First();
         }
 
         /// <summary>
@@ -37,6 +40,41 @@ namespace Pro100_T7.Models
         {
             CanvasData = BitmapFactory.New(pixelWidth, pixelHeight);
             ImageLayers = imageLayers.ToList();
+            WorkingImageLayer = ImageLayers.First();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DrawLayersToCanvas()
+        {
+            DrawLayersToWritableBitmap();
+            DrawWritableBitmapToUICanvasElement();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DrawLayersToWritableBitmap()
+        {
+            //combine all layers into one WritableBitmap object
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void DrawWritableBitmapToUICanvasElement()
+        {
+            //apply the complete writable bitmap to the visible canvas element
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newImageLayerID"></param>
+        public void SelectWorkingImageLayer(int newImageLayerID)
+        {
+            //change the WorkingImageLayer to the desired image layer
         }
     }
 }
