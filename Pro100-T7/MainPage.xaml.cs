@@ -17,92 +17,125 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
+using Pro100_T7.Models;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace Pro100_T7 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-public sealed partial class MainPage : Page {
+namespace Pro100_T7
+{
+	/// <summary>
+	/// An empty page that can be used on its own or navigated to within a Frame.
+	/// </summary>
+	public sealed partial class MainPage : Page
+	{
 
-WriteableBitmap bmp;
-Point current = new Point();
-Point old = new Point();
+		WriteableBitmap bmp;
+		Point current = new Point();
+		Point old = new Point();
 
-public MainPage() {
-    this.InitializeComponent();
-    bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
-    //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
-    //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-}
+		public MainPage()
+		{
+			this.InitializeComponent();
+			bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
+			History.StartHistory(bmp.PixelBuffer.ToArray());
+			//ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
+			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+		}
 
-protected override async void OnNavigatedTo(NavigationEventArgs e) {
-    base.OnNavigatedTo(e);
+		protected override async void OnNavigatedTo(NavigationEventArgs e)
+		{
+			base.OnNavigatedTo(e);
 
-    PointerMoved += MainPage_PointerMoved;
-}
+			PointerMoved += MainPage_PointerMoved;
+			DrawArea.PointerReleased += MainPage_PointerReleased;
+		}
 
-private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
-    var pointerPosition = Window.Current.CoreWindow.PointerPosition;
-    var x = pointerPosition.X - Window.Current.Bounds.X - 60;
-    var y = pointerPosition.Y -Window.Current.Bounds.Y - 110;
-    Pointer ptr = e.Pointer;
-    //!appBar.IsOpen &&
-    //HideSideBar &&
-    if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse) {
-    Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
-    current.X = x;
-    current.Y = y;
-    Mouse.Text = "x:" + x + " | y:" + y;
-    if (ptrPt.Properties.IsLeftButtonPressed) {
+		private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+		{
+			var pointerPosition = Window.Current.CoreWindow.PointerPosition;
+			var x = pointerPosition.X - Window.Current.Bounds.X - 60;
+			var y = pointerPosition.Y - Window.Current.Bounds.Y - 110;
+			Pointer ptr = e.Pointer;
+			//!appBar.IsOpen &&
+			//HideSideBar &&
+			if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+			{
+				Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
+				current.X = x;
+				current.Y = y;
+				Mouse.Text = "x:" + x + " | y:" + y;
+				if (ptrPt.Properties.IsLeftButtonPressed)
+				{
+					Image.Source = bmp;
+					using (bmp.GetBitmapContext())
+					{
+						//bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
 
-    Image.Source = bmp;
-    using (bmp.GetBitmapContext()) {
-    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
-    
-    //Rects with outline, also gaps
-    bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);    
+						//Rects with outline, also gaps
+						bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);
 
-    //Pen Like drawing - This could be a brush by its self.
-    //bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+						//Pen Like drawing - This could be a brush by its self.
+						//bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-    //Filled Circles
-    //bmp.FillEllipseCentered((int)current.X, (int)current.Y, 5, 5, colorPicker.Color);
-    
-    //Cant take in constant input
-    //int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
-    //bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
-    
-    //int w = bmp.PixelWidth;
-    //int h = bmp.PixelHeight;
-    //WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
+						//Filled Circles
+						//bmp.FillEllipseCentered((int)current.X, (int)current.Y, 5, 5, colorPicker.Color);
 
-    //Draws lines spaced out
-    //bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+						//Cant take in constant input
+						//int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
+						//bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
 
-    //bmp.Invalidate();
+						//int w = bmp.PixelWidth;
+						//int h = bmp.PixelHeight;
+						//WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
 
-    }
-    old.X = x;
-    old.Y = y;
+						//Draws lines spaced out
+						//bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-    } else { old = current; }
+						//bmp.Invalidate();
 
-    if (ptrPt.Properties.IsRightButtonPressed) {
+					}
+					old.X = x;
+					old.Y = y;
 
-    //Clears the canvas
-    bmp.Clear();
+				}
+				else { old = current; }
 
-    //Used to pickup color
-    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
+				if (ptrPt.Properties.IsRightButtonPressed)
+				{
 
-    }
-}
+					//Clears the canvas
+					bmp.Clear();
 
-}
+					//Used to pickup color
+					//colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
 
-}
+				}
+			}
+
+		}
+
+		private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
+		{
+			byte[] b1 = bmp.PixelBuffer.ToArray();
+			byte[] b = new byte[b1.Length];
+			b1.CopyTo(b, 0);
+			History.EndAction(new Action(b));
+		}
+
+		private void Undo_Button(object sender, RoutedEventArgs e)
+		{
+			byte[] b = History.Undo().bmp;
+			bmp.PixelBuffer.AsStream().Write(b, 0, b.Length);
+			bmp.Invalidate();
+		}
+
+		private void Redo_Button(object sender, RoutedEventArgs e)
+		{
+			byte[] b = History.Redo().bmp;
+			bmp.PixelBuffer.AsStream().Write(b, 0, b.Length);
+			bmp.Invalidate();
+		}
+	}
 
 }
 
