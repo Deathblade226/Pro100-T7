@@ -146,6 +146,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\DrawPoint.cs" />
     <Compile Include="Models\ImageLayer.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

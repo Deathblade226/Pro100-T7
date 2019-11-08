@@ -21,5 +21,10 @@ namespace Pro100_T7.Models
             ImageID = indexID;
         }
 
+        public void DrawBrush()
+        {
+
+        }
+
     }
 }
