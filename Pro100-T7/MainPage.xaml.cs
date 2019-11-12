@@ -22,15 +22,17 @@ using System.Threading;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace Pro100_T7 {
+namespace Pro100_T7
+{
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-public sealed partial class MainPage : Page {
+    public sealed partial class MainPage : Page
+    {
+
 
 WriteableBitmap bmp;
 Point current = new Point();
-Point betweem = new Point();
 Point old = new Point();
 
 public MainPage() {
@@ -43,10 +45,8 @@ public MainPage() {
 
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     //base.OnNavigatedTo(e);
-
     PointerMoved += MainPage_PointerMoved;
-}
-
+        }
 
 private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
@@ -100,8 +100,6 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     drawing.Source = bmp;
     using (bmp.GetBitmapContext()) {
     bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
-    bmp.FillEllipseCentered((int)betweem.X, (int)betweem.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
-    bmp.FillEllipseCentered((int)old.X, (int)old.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
     bmp.Invalidate();
     
     }
@@ -111,7 +109,6 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     if (ptrPt.Properties.IsRightButtonPressed) {
     
     bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, Color.FromArgb(0, 0, 0, 0));
-    bmp.FillEllipseCentered((int)old.X, (int)old.Y, (int)brushSize.Value, (int)brushSize.Value, Color.FromArgb(0, 0, 0, 0));
     bmp.Invalidate();
     
     }
@@ -135,7 +132,30 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     #endregion
 }
 
-}
+                        //bmp.Invalidate();
+
+                    }
+                    old.X = x;
+                    old.Y = y;
+
+                }
+                else { old = current; }
+
+                if (ptrPt.Properties.IsRightButtonPressed)
+                {
+
+                    //Clears the canvas
+                    bmp.Clear();
+
+                    //Used to pickup color
+                    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
+
+                }
+            }
+
+        }
+
+    }
 
 }
 
