@@ -15,28 +15,24 @@
 <Grid x:Name="mainArea">
  
 <Rectangle Fill="#464646"/>
-   
     
 <GroupItem HorizontalAlignment="Right"
            Margin="0 0 20 0">
 <Grid>
     
 <ColorPicker x:Name="colorPicker"
-             Grid.Column="1"
              Height="690"
              IsAlphaEnabled="True"
              IsEnabled="True"
              Color="Red"/>
 
-<GroupItem Grid.Column="1"
-           HorizontalAlignment="Center">
+<GroupItem HorizontalAlignment="Center">
 <Grid>
     
 <TextBlock Text="Brush Size: 1 - 200"
            FontSize="20"
            Width="170"
            Height="40"
-           Grid.Column="1"
            VerticalAlignment="Top"
            Margin="0 75 0 0"/>
     
@@ -46,7 +42,6 @@
          InputScope="Number"
          HorizontalAlignment="Left"
          VerticalAlignment="Top"
-         Grid.Column="1"
          Text="1"
          Margin="340 98.5 0 0"/>    
     
@@ -56,8 +51,7 @@
         Minimum="1"
         Maximum="200"
         Margin="20 100 0 870"
-        Width="310"
-        Grid.Column="1"/>    
+        Width="310"/>    
 </Grid>
 </GroupItem>    
 </Grid>
@@ -72,7 +66,7 @@
         VerticalAlignment="Center"
         HorizontalAlignment="Center"
         Background="White">
-<Image x:Name="Image"
+<Image x:Name="drawing"
        Height="800"
        Width="1000"/>
 
@@ -86,6 +80,8 @@
            TextAlignment="Center"
            VerticalAlignment="Bottom"
            Height="50"/>
+  
 </Grid>
 
+    
 </Page>

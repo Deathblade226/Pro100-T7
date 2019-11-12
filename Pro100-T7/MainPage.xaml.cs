@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
+using System;
+using System.Threading;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -28,66 +30,107 @@ namespace Pro100_T7
     public sealed partial class MainPage : Page
     {
 
-        WriteableBitmap bmp;
-        Point current = new Point();
-        Point old = new Point();
 
-        public MainPage()
-        {
-            this.InitializeComponent();
-            bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
-            //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+WriteableBitmap bmp;
+Point current = new Point();
+Point old = new Point();
+
+public MainPage() {
+    this.InitializeComponent();
+    bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
+    //bmp = BitmapFactory.New(1500, 1000);
+    //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
+    //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+}
+
+protected override void OnNavigatedTo(NavigationEventArgs e) {
+    //base.OnNavigatedTo(e);
+    PointerMoved += MainPage_PointerMoved;
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
+private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
-            PointerMoved += MainPage_PointerMoved;
-        }
+    #region Notes
+    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
+    
+    //Rects with outline, also gaps
+    //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);    
+    
+    
+    //Pen Like drawing - This could be a brush by its self.
+    //bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+    
+    //Filled Circles
 
-        private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            var pointerPosition = Window.Current.CoreWindow.PointerPosition;
-            var x = pointerPosition.X - Window.Current.Bounds.X - 60;
-            var y = pointerPosition.Y - Window.Current.Bounds.Y - 110;
-            Pointer ptr = e.Pointer;
-            //!appBar.IsOpen &&
-            //HideSideBar &&
-            if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
-            {
-                Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
-                current.X = x;
-                current.Y = y;
-                Mouse.Text = "x:" + x + " | y:" + y;
-                if (ptrPt.Properties.IsLeftButtonPressed)
-                {
+    //Cant take in constant input
+    //int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
+    //bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
+    
+    //int w = bmp.PixelWidth;
+    //int h = bmp.PixelHeight;
+    //WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
+    
+    //Draws lines spaced out
+    //bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+    
+    //bmp.Invalidate();
 
-                    Image.Source = bmp;
-                    using (bmp.GetBitmapContext())
-                    {
-                        //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
+    //Clears the canvas
+    //bmp.Clear();
 
-                        //Rects with outline, also gaps
-                        bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);
+    //Used to pickup color
+    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
+    #endregion
 
-                        //Pen Like drawing - This could be a brush by its self.
-                        //bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+    #region Drawing1.0
+    var pointerPosition = Window.Current.CoreWindow.PointerPosition;
+    var x = pointerPosition.X - Window.Current.Bounds.X - 60;
+    var y = pointerPosition.Y -Window.Current.Bounds.Y - 110;
+    Pointer ptr = e.Pointer;
+    Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
+    if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse) {
+    
+    old = current;
+    current.Y = y;
+    current.X = x;
 
-                        //Filled Circles
-                        //bmp.FillEllipseCentered((int)current.X, (int)current.Y, 5, 5, colorPicker.Color);
+    Mouse.Text = "x:" + x + " | y:" + y;
+    if (ptrPt.Properties.IsLeftButtonPressed) {
+    
+    drawing.Source = bmp;
+    using (bmp.GetBitmapContext()) {
+    bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
+    bmp.Invalidate();
+    
+    }
+    }
+    }
+    
+    if (ptrPt.Properties.IsRightButtonPressed) {
+    
+    bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, Color.FromArgb(0, 0, 0, 0));
+    bmp.Invalidate();
+    
+    }
 
-                        //Cant take in constant input
-                        //int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
-                        //bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
+    #endregion
 
-                        //int w = bmp.PixelWidth;
-                        //int h = bmp.PixelHeight;
-                        //WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
+    #region Drawing2.0
 
-                        //Draws lines spaced out
-                        //bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+    //if (e.GetCurrentPoint(DrawArea).Properties.IsLeftButtonPressed) {
+    //drawPoints.Add(e.GetCurrentPoint(DrawArea).Position);
+
+    //if (drawPoints.Count() > 10) {
+    //bmp.DrawCurve(PointsToInts(drawPoints), 0, Colors.Black);
+
+    //drawPoints.RemoveAt(0);
+    //}
+    //} else {
+    //drawPoints.Clear();
+    //}
+    //}
+    #endregion
+}
 
                         //bmp.Invalidate();
 
@@ -115,4 +158,5 @@ namespace Pro100_T7
     }
 
 }
+
 
