@@ -27,8 +27,7 @@ namespace Pro100_T7
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
-    {
+public sealed partial class MainPage : Page {
 
 
 WriteableBitmap bmp;
@@ -132,31 +131,8 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     #endregion
 }
 
-                        //bmp.Invalidate();
-
-                    }
-                    old.X = x;
-                    old.Y = y;
-
-                }
-                else { old = current; }
-
-                if (ptrPt.Properties.IsRightButtonPressed)
-                {
-
-                    //Clears the canvas
-                    bmp.Clear();
-
-                    //Used to pickup color
-                    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
-
-                }
-            }
-
-        }
-
-    }
+//bmp.Invalidate();
 
 }
 
-
+}
