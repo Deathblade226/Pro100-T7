@@ -23,97 +23,97 @@ using Pro100_T7.Models;
 
 namespace Pro100_T7
 {
-	/// <summary>
-	/// An empty page that can be used on its own or navigated to within a Frame.
-	/// </summary>
-	public sealed partial class MainPage : Page
-	{
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class MainPage : Page
+    {
 
-		WriteableBitmap bmp;
-		Point current = new Point();
-		Point old = new Point();
+        WriteableBitmap bmp;
+        Point current = new Point();
+        Point old = new Point();
 
-		public MainPage()
-		{
-			this.InitializeComponent();
-			bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
+        public MainPage()
+        {
+            this.InitializeComponent();
+            bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
 			History.StartHistory(bmp.PixelBuffer.ToArray());
-			//ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
-			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-		}
+            //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
+            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+        }
 
-		protected override async void OnNavigatedTo(NavigationEventArgs e)
-		{
-			base.OnNavigatedTo(e);
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
 
-			PointerMoved += MainPage_PointerMoved;
+            PointerMoved += MainPage_PointerMoved;
 			DrawArea.PointerReleased += MainPage_PointerReleased;
-		}
+        }
 
-		private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
-		{
-			var pointerPosition = Window.Current.CoreWindow.PointerPosition;
-			var x = pointerPosition.X - Window.Current.Bounds.X - 60;
-			var y = pointerPosition.Y - Window.Current.Bounds.Y - 110;
-			Pointer ptr = e.Pointer;
-			//!appBar.IsOpen &&
-			//HideSideBar &&
-			if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
-			{
-				Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
-				current.X = x;
-				current.Y = y;
-				Mouse.Text = "x:" + x + " | y:" + y;
-				if (ptrPt.Properties.IsLeftButtonPressed)
-				{
-					Image.Source = bmp;
-					using (bmp.GetBitmapContext())
-					{
-						//bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
+        private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            var pointerPosition = Window.Current.CoreWindow.PointerPosition;
+            var x = pointerPosition.X - Window.Current.Bounds.X - 60;
+            var y = pointerPosition.Y - Window.Current.Bounds.Y - 110;
+            Pointer ptr = e.Pointer;
+            //!appBar.IsOpen &&
+            //HideSideBar &&
+            if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
+                current.X = x;
+                current.Y = y;
+                Mouse.Text = "x:" + x + " | y:" + y;
+                if (ptrPt.Properties.IsLeftButtonPressed)
+                {
 
-						//Rects with outline, also gaps
-						bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);
+                    Image.Source = bmp;
+                    using (bmp.GetBitmapContext())
+                    {
+                        //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
 
-						//Pen Like drawing - This could be a brush by its self.
-						//bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+                        //Rects with outline, also gaps
+                        bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);
 
-						//Filled Circles
-						//bmp.FillEllipseCentered((int)current.X, (int)current.Y, 5, 5, colorPicker.Color);
+                        //Pen Like drawing - This could be a brush by its self.
+                        //bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-						//Cant take in constant input
-						//int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
-						//bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
+                        //Filled Circles
+                        //bmp.FillEllipseCentered((int)current.X, (int)current.Y, 5, 5, colorPicker.Color);
 
-						//int w = bmp.PixelWidth;
-						//int h = bmp.PixelHeight;
-						//WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
+                        //Cant take in constant input
+                        //int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
+                        //bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
 
-						//Draws lines spaced out
-						//bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+                        //int w = bmp.PixelWidth;
+                        //int h = bmp.PixelHeight;
+                        //WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
 
-						//bmp.Invalidate();
+                        //Draws lines spaced out
+                        //bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-					}
-					old.X = x;
-					old.Y = y;
+                        //bmp.Invalidate();
 
-				}
-				else { old = current; }
+                    }
+                    old.X = x;
+                    old.Y = y;
 
-				if (ptrPt.Properties.IsRightButtonPressed)
-				{
+                }
+                else { old = current; }
 
-					//Clears the canvas
-					bmp.Clear();
+                if (ptrPt.Properties.IsRightButtonPressed)
+                {
 
-					//Used to pickup color
-					//colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
+                    //Clears the canvas
+                    bmp.Clear();
 
-				}
-			}
+                    //Used to pickup color
+                    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
 
-		}
+                }
+            }
 
+        }
 		private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
 		{
 			byte[] b1 = bmp.PixelBuffer.ToArray();
@@ -136,6 +136,8 @@ namespace Pro100_T7
 			bmp.Invalidate();
 		}
 	}
+
+	
 
 }
 
