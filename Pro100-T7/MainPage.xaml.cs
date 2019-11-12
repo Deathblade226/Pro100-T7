@@ -90,7 +90,6 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
     if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse) {
     
-
     old = current;
     current.Y = y;
     current.X = x;
@@ -135,18 +134,6 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     //}
     #endregion
 }
-
-private int[] PointsToInts(IEnumerable<Point> points) {
-    int[] pointArray = new int[points.Count() * 2];
-
-    int i = 0;
-    foreach (Point p in points) {
-    pointArray[i++] = (int)p.X;
-    pointArray[i++] = (int)p.Y;
-    }
-
-return pointArray;}
-
 
 }
 
