@@ -17,127 +17,150 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
-using Pro100_T7.Models;
+using Pro100_T7;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Pro100_T7
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainPage : Page
-    {
+	/// <summary>
+	/// An empty page that can be used on its own or navigated to within a Frame.
+	/// </summary>
 
-        WriteableBitmap bmp;
-        Point current = new Point();
-        Point old = new Point();
+	public sealed partial class MainPage : Page
+	{
 
-        public MainPage()
-        {
-            this.InitializeComponent();
-            bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
-			History.StartHistory(bmp.PixelBuffer.ToArray());
-            //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
-            //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
-        }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
 
-            PointerMoved += MainPage_PointerMoved;
+		WriteableBitmap bmp;
+		Point current = new Point();
+		Point old = new Point();
+
+		public MainPage()
+		{
+			this.InitializeComponent();
+			bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
+			Models.History.StartHistory(bmp.PixelBuffer.ToArray());
+			//bmp = BitmapFactory.New(1500, 1000);
+			//ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
+			//ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+		}
+
+		protected override void OnNavigatedTo(NavigationEventArgs e)
+		{
+			//base.OnNavigatedTo(e);
+			PointerMoved += MainPage_PointerMoved;
 			DrawArea.PointerReleased += MainPage_PointerReleased;
-        }
+		}
 
-        private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            var pointerPosition = Window.Current.CoreWindow.PointerPosition;
-            var x = pointerPosition.X - Window.Current.Bounds.X - 60;
-            var y = pointerPosition.Y - Window.Current.Bounds.Y - 110;
-            Pointer ptr = e.Pointer;
-            //!appBar.IsOpen &&
-            //HideSideBar &&
-            if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
-            {
-                Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
-                current.X = x;
-                current.Y = y;
-                Mouse.Text = "x:" + x + " | y:" + y;
-                if (ptrPt.Properties.IsLeftButtonPressed)
-                {
+		private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+		{
 
-                    Image.Source = bmp;
-                    using (bmp.GetBitmapContext())
-                    {
-                        //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
+			#region Notes
+			//bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
 
-                        //Rects with outline, also gaps
-                        bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);
+			//Rects with outline, also gaps
+			//bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);    
 
-                        //Pen Like drawing - This could be a brush by its self.
-                        //bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-                        //Filled Circles
-                        //bmp.FillEllipseCentered((int)current.X, (int)current.Y, 5, 5, colorPicker.Color);
+			//Pen Like drawing - This could be a brush by its self.
+			//bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-                        //Cant take in constant input
-                        //int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
-                        //bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
+			//Filled Circles
 
-                        //int w = bmp.PixelWidth;
-                        //int h = bmp.PixelHeight;
-                        //WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
+			//Cant take in constant input
+			//int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
+			//bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
 
-                        //Draws lines spaced out
-                        //bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
+			//int w = bmp.PixelWidth;
+			//int h = bmp.PixelHeight;
+			//WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
 
-                        //bmp.Invalidate();
+			//Draws lines spaced out
+			//bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
 
-                    }
-                    old.X = x;
-                    old.Y = y;
+			//bmp.Invalidate();
 
-                }
-                else { old = current; }
+			//Clears the canvas
+			//bmp.Clear();
 
-                if (ptrPt.Properties.IsRightButtonPressed)
-                {
+			//Used to pickup color
+			//colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
+			#endregion
 
-                    //Clears the canvas
-                    bmp.Clear();
+			#region Drawing1.0
+			var pointerPosition = Window.Current.CoreWindow.PointerPosition;
+			var x = pointerPosition.X - Window.Current.Bounds.X - 60;
+			var y = pointerPosition.Y - Window.Current.Bounds.Y - 110;
+			Pointer ptr = e.Pointer;
+			Windows.UI.Input.PointerPoint ptrPt = e.GetCurrentPoint(null);
+			if (ptr.PointerDeviceType == Windows.Devices.Input.PointerDeviceType.Mouse)
+			{
 
-                    //Used to pickup color
-                    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
+				old = current;
+				current.Y = y;
+				current.X = x;
 
-                }
-            }
+				Mouse.Text = "x:" + x + " | y:" + y;
+				if (ptrPt.Properties.IsLeftButtonPressed)
+				{
 
-        }
+					drawing.Source = bmp;
+					using (bmp.GetBitmapContext())
+					{
+						bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
+						bmp.Invalidate();
+
+					}
+				}
+			}
+
+			if (ptrPt.Properties.IsRightButtonPressed)
+			{
+
+				bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, Color.FromArgb(0, 0, 0, 0));
+				bmp.Invalidate();
+
+			}
+
+			#endregion
+
+			#region Drawing2.0
+
+			//if (e.GetCurrentPoint(DrawArea).Properties.IsLeftButtonPressed) {
+			//drawPoints.Add(e.GetCurrentPoint(DrawArea).Position);
+
+			//if (drawPoints.Count() > 10) {
+			//bmp.DrawCurve(PointsToInts(drawPoints), 0, Colors.Black);
+
+
+		}
+
 		private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
 		{
 			byte[] b1 = bmp.PixelBuffer.ToArray();
 			byte[] b = new byte[b1.Length];
 			b1.CopyTo(b, 0);
-			History.EndAction(new Action(b));
+			Models.History.EndAction(new Models.Action(b));
 		}
 
 		private void Undo_Button(object sender, RoutedEventArgs e)
 		{
-			byte[] b = History.Undo().bmp;
+			byte[] b = Models.History.Undo().bmp;
 			bmp.PixelBuffer.AsStream().Write(b, 0, b.Length);
 			bmp.Invalidate();
 		}
 
 		private void Redo_Button(object sender, RoutedEventArgs e)
 		{
-			byte[] b = History.Redo().bmp;
+			byte[] b = Models.History.Redo().bmp;
 			bmp.PixelBuffer.AsStream().Write(b, 0, b.Length);
 			bmp.Invalidate();
 		}
 	}
 
-	
 
+
+	#endregion
 }
 
