@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Pro100_T7.Models
 {
-    class Brush
+    /// <summary>
+    /// NYI - Placeholder
+    /// </summary>
+    public class Stroke
     {
     }
 }
