@@ -140,7 +140,6 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
-    <Compile Include="Models\BrushColor.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
