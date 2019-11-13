@@ -104,7 +104,6 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     Mouse.Text = "x:" + x + " | y:" + y;
     if (ptrPt.Properties.IsLeftButtonPressed) {
     
-    drawing.Source = bmp;
     using (bmp.GetBitmapContext()) {
     bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
     bmp.Invalidate();
