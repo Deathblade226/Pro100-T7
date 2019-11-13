@@ -35,6 +35,7 @@ namespace Pro100_T7
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+<<<<<<< HEAD
 public sealed partial class MainPage : Page {
 
 bool debug = true;
@@ -165,6 +166,42 @@ if (IsCtrlKeyPressed()){
     switch(e.Key) {
     case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
 
+=======
+    public sealed partial class MainPage : Page
+    {
+        CanvasMaster canvas = new CanvasMaster(800, 1000);
+        DrawPoint drawPoint = new DrawPoint();
+
+        Stroke defaultStroke = new Stroke() { StrokeColor = Colors.OrangeRed, StrokeRadius = 15 };
+
+        public MainPage()
+        {
+            this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            PointerMoved += MainPage_PointerMoved;
+        }
+
+        private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            drawPoint.CurrentPoint = Window.Current.CoreWindow.PointerPosition;
+            if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
+
+            PointerPoint ptrPt = e.GetCurrentPoint(null);
+            if (ptrPt.Properties.IsLeftButtonPressed)
+            {
+                canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint);
+            }
+            else if (ptrPt.Properties.IsRightButtonPressed)
+            {
+                canvas.ImageDataLayer.BitmapDrawingData.Clear();
+            }
+            drawPoint.OldPoint = drawPoint.CurrentPoint;
+        }
+>>>>>>> parent of 3d35d7d... New Drawing System in place and primarily functional
     }
 
 

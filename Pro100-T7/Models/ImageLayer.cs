@@ -23,8 +23,7 @@ namespace Pro100_T7.Models
             using (BitmapDrawingData.GetBitmapContext())
             {
                 //draw code will go here and modify the image accordingly
-                //BitmapDrawingData.DrawLineAa(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius);
-                BitmapDrawingData.FillEllipseCentered(drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeRadius, stroke.StrokeRadius, stroke.StrokeColor);
+                BitmapDrawingData.DrawLineAa(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius);
             }
 
             ImageDataLayerModifiedEvent.Invoke();
