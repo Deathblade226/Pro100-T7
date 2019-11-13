@@ -21,6 +21,7 @@ using System;
 using System.Threading;
 using Pro100_T7.Models;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -50,6 +51,7 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
     //base.OnNavigatedTo(e);
     PointerMoved += MainPage_PointerMoved;
     DrawArea.PointerReleased += MainPage_PointerReleased;
+    KeyDown += KeyPressed;
 }
 
 private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
@@ -134,6 +136,38 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     //}
     //}
     #endregion
+}
+
+private void KeyPressed(object sender, KeyRoutedEventArgs e) { 
+
+if (IsShiftKeyPressed() && IsCtrlKeyPressed()) { 
+    switch(e.Key) {
+    case VirtualKey.S: FileSaveAs_Click(sender, e); break;
+    case VirtualKey.Z: FileRedo_Click(sender, e); break;
+
+    }
+} 
+if (IsCtrlKeyPressed()){
+
+    switch(e.Key) {
+    case VirtualKey.S: FileSave_Click(sender, e); break;
+    case VirtualKey.Z: FileUndo_Click(sender, e); break;
+    case VirtualKey.Y: FileRedo_Click(sender, e); break;
+    case VirtualKey.L: break;
+
+    }
+
+}
+
+}
+
+public static bool IsCtrlKeyPressed() {
+    var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+    return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+}
+public static bool IsShiftKeyPressed() {
+    var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
+    return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
 }
 
 private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e) {
