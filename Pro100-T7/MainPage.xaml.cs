@@ -32,6 +32,7 @@ namespace Pro100_T7
     /// </summary>
 public sealed partial class MainPage : Page {
 
+bool debug = true;
 FileSavePicker fileSavePicker = new FileSavePicker();
 WriteableBitmap bmp;
 Point current = new Point();
@@ -48,10 +49,10 @@ public MainPage() {
 }
 
 protected override void OnNavigatedTo(NavigationEventArgs e) {
-    //base.OnNavigatedTo(e);
+    base.OnNavigatedTo(e);
+    KeyDown += KeyPressed;
     PointerMoved += MainPage_PointerMoved;
     DrawArea.PointerReleased += MainPage_PointerReleased;
-    KeyDown += KeyPressed;
 }
 
 private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
@@ -142,22 +143,27 @@ private void KeyPressed(object sender, KeyRoutedEventArgs e) {
 
 if (IsShiftKeyPressed() && IsCtrlKeyPressed()) { 
     switch(e.Key) {
-    case VirtualKey.S: FileSaveAs_Click(sender, e); break;
-    case VirtualKey.Z: FileRedo_Click(sender, e); break;
+    case VirtualKey.S: FileSaveAs_Click(null, null); break;
+    case VirtualKey.Z: FileRedo_Click(null, null); break;
 
     }
 } 
 if (IsCtrlKeyPressed()){
 
     switch(e.Key) {
-    case VirtualKey.S: FileSave_Click(sender, e); break;
-    case VirtualKey.Z: FileUndo_Click(sender, e); break;
-    case VirtualKey.Y: FileRedo_Click(sender, e); break;
+    case VirtualKey.S: FileSave_Click(null, null); break;
+    case VirtualKey.Z: FileUndo_Click(null, null); break;
+    case VirtualKey.Y: FileRedo_Click(null, null); break;
     case VirtualKey.L: break;
 
     }
-
 }
+    switch(e.Key) {
+    case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
+    
+    }
+
+
 
 }
 
