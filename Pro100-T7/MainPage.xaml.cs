@@ -1,4 +1,4 @@
-﻿using Windows.System;
+using Windows.System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
