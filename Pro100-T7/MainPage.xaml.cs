@@ -17,16 +17,12 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
-<<<<<<< HEAD
 using System;
 using System.Threading;
 using Pro100_T7.Models;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
-=======
-using Pro100_T7.Models;
 using Windows.UI.Input;
->>>>>>> parent of 2650c4c... Merge branch 'master' into josh
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,7 +31,6 @@ namespace Pro100_T7
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-<<<<<<< HEAD
 public sealed partial class MainPage : Page {
 
 bool debug = true;
@@ -166,7 +161,6 @@ if (IsCtrlKeyPressed()){
     switch(e.Key) {
     case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
 
-=======
     public sealed partial class MainPage : Page
     {
         CanvasMaster canvas = new CanvasMaster(800, 1000);
@@ -201,7 +195,6 @@ if (IsCtrlKeyPressed()){
             }
             drawPoint.OldPoint = drawPoint.CurrentPoint;
         }
->>>>>>> parent of 3d35d7d... New Drawing System in place and primarily functional
     }
 
 
