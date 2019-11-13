@@ -74,5 +74,3 @@ namespace Pro100_T7
         }
     }
 }
-
-}
