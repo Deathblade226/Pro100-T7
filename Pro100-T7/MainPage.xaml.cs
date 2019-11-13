@@ -19,6 +19,11 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
 using Pro100_T7.Models;
 using Windows.UI.Input;
+using System;
+using System.Threading;
+using Pro100_T7.Models;
+using Windows.Storage.Pickers;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -70,3 +75,4 @@ namespace Pro100_T7
     }
 }
 
+}
