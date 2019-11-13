@@ -17,11 +17,16 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
+<<<<<<< HEAD
 using System;
 using System.Threading;
 using Pro100_T7.Models;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+=======
+using Pro100_T7.Models;
+using Windows.UI.Input;
+>>>>>>> parent of 2650c4c... Merge branch 'master' into josh
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -230,4 +235,3 @@ private void FileExit_Click(object sender, RoutedEventArgs e) {
 
 }
 
-}
