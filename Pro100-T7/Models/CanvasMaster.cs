@@ -14,7 +14,7 @@ namespace Pro100_T7.Models
     {
         public Canvas UICanvasObject { get; private set; }
 
-        public Image ImageData { get; set; }
+        public Image ImageData { get; private set; }
         public ImageLayer ImageDataLayer { get; private set; }
 
         /// <summary>
@@ -27,50 +27,23 @@ namespace Pro100_T7.Models
             ImageDataLayer = new ImageLayer(pixelWidth, pixelHeight);
             ImageData = new Image();
 
-            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateImageData;
+            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateStoredImageData;
         }
 
         /// <summary>
         /// Creates a boiler-plate WritableBitMap Canvas element with drawing capability using the supplied width and heights.
         /// Initializes the WritableBitMap with a supplied array of ImageLayer to initialize the canvas with preexisting drawing data.
         /// </summary>
-        /// <param name="pixelWidth">Drawing space width</param>
-        /// <param name="pixelHeight">Drawing space height</param>
-        /// <param name="imageLayers">Supplied ImageLayer layers containing preexisting drawing data</param>
+        /// <param name="imageLayer">Supplied ImageLayer containing preexisting drawing data</param>
         public CanvasMaster(ImageLayer imageLayer)
         {
             ImageDataLayer = imageLayer;
             ImageData = new Image() { Source = ImageDataLayer.BitmapDrawingData };
 
-            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateImageData;
+            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateStoredImageData;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DrawLayerToCanvas()
-        {
-            DrawLayerToWritableBitmap();
-            DrawWritableBitmapToUICanvasElement();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DrawLayerToWritableBitmap()
-        {
-            //combine all layers into one WritableBitmap object
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DrawWritableBitmapToUICanvasElement()
-        {
-            //apply the complete writable bitmap to the visible canvas element
-        }
-
-        private void UpdateImageData()
+        private void UpdateStoredImageData()
         {
             ImageData.Source = ImageDataLayer.BitmapDrawingData;
         }
