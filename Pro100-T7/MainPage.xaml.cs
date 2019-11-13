@@ -19,6 +19,8 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.ViewManagement;
 using System;
 using System.Threading;
+using Pro100_T7.Models;
+using Windows.Storage.Pickers;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,14 +31,16 @@ namespace Pro100_T7
     /// </summary>
 public sealed partial class MainPage : Page {
 
-
+FileSavePicker fileSavePicker = new FileSavePicker();
 WriteableBitmap bmp;
 Point current = new Point();
 Point old = new Point();
+bool newFile = true;
 
 public MainPage() {
     this.InitializeComponent();
     bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
+    Models.History.StartHistory(bmp.PixelBuffer.ToArray());
     //bmp = BitmapFactory.New(1500, 1000);
     //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
     //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
@@ -45,7 +49,8 @@ public MainPage() {
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     //base.OnNavigatedTo(e);
     PointerMoved += MainPage_PointerMoved;
-        }
+    DrawArea.PointerReleased += MainPage_PointerReleased;
+}
 
 private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
@@ -131,7 +136,48 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     #endregion
 }
 
-//bmp.Invalidate();
+private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e) {
+	byte[] b1 = bmp.PixelBuffer.ToArray();
+	byte[] b = new byte[b1.Length];
+	b1.CopyTo(b, 0);
+    Models.History.EndAction(new Models.Action(b));
+}
+
+private void FileUndo_Click(object sender, RoutedEventArgs e) {
+    byte[] b = Models.History.Undo().bmp;
+	bmp.PixelBuffer.AsStream().Write(b, 0, b.Length);
+	bmp.Invalidate();
+}
+
+private void FileRedo_Click(object sender, RoutedEventArgs e) {
+    byte[] b = Models.History.Redo().bmp;
+	bmp.PixelBuffer.AsStream().Write(b, 0, b.Length);
+	bmp.Invalidate();
+}
+
+private void FileLoad_Click(object sender, RoutedEventArgs e) {
+
+}
+
+private void FileSaveAs_Click(object sender, RoutedEventArgs e) {
+    fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+    fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+    fileSavePicker.SuggestedFileName = "image";
+
+    var outputFile = fileSavePicker.PickSaveFileAsync();
+
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+}
+
+private void FileSave_Click(object sender, RoutedEventArgs e) {
+
+}
+
+private void FileExit_Click(object sender, RoutedEventArgs e) {
+    Application.Current.Exit();
+}
 
 }
 
