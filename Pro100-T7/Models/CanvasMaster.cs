@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,6 @@ namespace Pro100_T7.Models
 
     public class CanvasMaster
     {
-        public Canvas UICanvasObject { get; private set; }
-
         public Image ImageData { get; private set; }
         public ImageLayer ImageDataLayer { get; private set; }
 
@@ -25,7 +24,7 @@ namespace Pro100_T7.Models
         public CanvasMaster(int pixelWidth, int pixelHeight)
         {
             ImageDataLayer = new ImageLayer(pixelWidth, pixelHeight);
-            ImageData = new Image();
+            ImageData = new Image() { Source = ImageDataLayer.BitmapDrawingData };
 
             ImageDataLayer.ImageDataLayerModifiedEvent += UpdateStoredImageData;
         }

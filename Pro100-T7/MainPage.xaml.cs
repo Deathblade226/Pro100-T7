@@ -29,7 +29,7 @@ namespace Pro100_T7
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        CanvasMaster canvas = new CanvasMaster(800, 1000);
+        CanvasMaster canvas = new CanvasMaster(1000, 800);
         DrawPoint drawPoint = new DrawPoint();
 
         Stroke defaultStroke = new Stroke() { StrokeColor = Colors.OrangeRed, StrokeRadius = 15 };
@@ -37,6 +37,8 @@ namespace Pro100_T7
         public MainPage()
         {
             this.InitializeComponent();
+
+            DrawArea.Children.Add(canvas.ImageData);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -47,7 +49,11 @@ namespace Pro100_T7
 
         private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            drawPoint.CurrentPoint = Window.Current.CoreWindow.PointerPosition;
+            Point current = Window.Current.CoreWindow.PointerPosition;
+            current.X += Window.Current.Bounds.X - 44;
+            current.Y += Window.Current.Bounds.Y - 164;
+            drawPoint.CurrentPoint = current;            
+
             if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
 
             PointerPoint ptrPt = e.GetCurrentPoint(null);

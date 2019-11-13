@@ -66,17 +66,14 @@
 <GroupItem HorizontalAlignment="Left"
            VerticalAlignment="Center"
            Margin="50">
-<Canvas x:Name="DrawArea"
+            <Canvas x:Name="DrawArea"
         Height="800"
         Width="1000"
         VerticalAlignment="Center"
         HorizontalAlignment="Center"
         Background="White">
-<Image x:Name="Image"
-       Height="800"
-       Width="1000"/>
 
-</Canvas>
+            </Canvas>
 </GroupItem>
 
 <TextBlock x:Name="Mouse"
