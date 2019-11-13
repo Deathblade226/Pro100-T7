@@ -160,7 +160,7 @@ if (IsCtrlKeyPressed()){
 }
     switch(e.Key) {
     case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
-    
+
     }
 
 
