@@ -8,14 +8,14 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
+    public delegate void ImageDataLayerModified();
+
     public class CanvasMaster
     {
         public Canvas UICanvasObject { get; private set; }
 
-        public WriteableBitmap CanvasData { get; private set; }
-        public List<ImageLayer> ImageLayers { get; private set; }
-
-        public ImageLayer WorkingImageLayer { get; private set; }
+        public Image ImageData { get; set; }
+        public ImageLayer ImageDataLayer { get; private set; }
 
         /// <summary>
         /// Creates a boiler-plate WritableBitMap Canvas element with drawing capability using the supplied width and heights.
@@ -24,9 +24,10 @@ namespace Pro100_T7.Models
         /// <param name="pixelHeight">Drawing space height</param>
         public CanvasMaster(int pixelWidth, int pixelHeight)
         {
-            CanvasData = BitmapFactory.New(pixelWidth, pixelHeight);
-            ImageLayers.Add(new ImageLayer(0));
-            WorkingImageLayer = ImageLayers.First();
+            ImageDataLayer = new ImageLayer(pixelWidth, pixelHeight);
+            ImageData = new Image();
+
+            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateImageData;
         }
 
         /// <summary>
@@ -36,26 +37,27 @@ namespace Pro100_T7.Models
         /// <param name="pixelWidth">Drawing space width</param>
         /// <param name="pixelHeight">Drawing space height</param>
         /// <param name="imageLayers">Supplied ImageLayer layers containing preexisting drawing data</param>
-        public CanvasMaster(int pixelWidth, int pixelHeight, ImageLayer[] imageLayers)
+        public CanvasMaster(ImageLayer imageLayer)
         {
-            CanvasData = BitmapFactory.New(pixelWidth, pixelHeight);
-            ImageLayers = imageLayers.ToList();
-            WorkingImageLayer = ImageLayers.First();
+            ImageDataLayer = imageLayer;
+            ImageData = new Image() { Source = ImageDataLayer.BitmapDrawingData };
+
+            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateImageData;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void DrawLayersToCanvas()
+        public void DrawLayerToCanvas()
         {
-            DrawLayersToWritableBitmap();
+            DrawLayerToWritableBitmap();
             DrawWritableBitmapToUICanvasElement();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void DrawLayersToWritableBitmap()
+        public void DrawLayerToWritableBitmap()
         {
             //combine all layers into one WritableBitmap object
         }
@@ -68,13 +70,9 @@ namespace Pro100_T7.Models
             //apply the complete writable bitmap to the visible canvas element
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="newImageLayerID"></param>
-        public void SelectWorkingImageLayer(int newImageLayerID)
+        private void UpdateImageData()
         {
-            //change the WorkingImageLayer to the desired image layer
+            ImageData.Source = ImageDataLayer.BitmapDrawingData;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Pro100_T7.Models
         public Point NewPoint { get; set; }
         
         /// <summary>
-        /// Create an empty DrawPoint object ready to store two points which will be drawn between
+        /// Create an empty DrawPoint object ready to store two points - an old location and a new location
         /// </summary>
         public DrawPoint() { }
 
@@ -26,5 +26,10 @@ namespace Pro100_T7.Models
         {
             OldPoint = oldPoint; NewPoint = NewPoint;
         }
+
+        public int OldX() => (int)OldPoint.X;
+        public int OldY() => (int)OldPoint.Y;
+        public int NewX() => (int)NewPoint.X;
+        public int NewY() => (int)NewPoint.Y;
     }
 }

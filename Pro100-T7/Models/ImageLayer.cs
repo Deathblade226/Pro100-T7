@@ -10,22 +10,23 @@ namespace Pro100_T7.Models
 {
     public class ImageLayer
     {
-        public Image Image { get; private set; } = new Image();
-        public uint ImageID { get; private set; } = uint.MaxValue;
+        public event ImageDataLayerModified ImageDataLayerModifiedEvent;
+        public WriteableBitmap BitmapDrawingData { get; set; }
 
-        /// <summary>
-        /// Creates a new ImageLayer which corresponds to the supplied indexID
-        /// </summary>
-        /// <param name="indexID">Corespondong ID this new ImageLayer will associate to</param>
-        public ImageLayer(uint indexID)
+        public ImageLayer(int pixelWidth, int pixelHeight) 
         {
-            ImageID = indexID;
+            BitmapDrawingData = BitmapFactory.New(pixelWidth, pixelHeight);
         }
 
         public void DrawBrush(Stroke stroke, DrawPoint drawPoint)
         {
-            //draw code will go here and modify the image accordingly
-        }
+            using (BitmapDrawingData.GetBitmapContext())
+            {
+                //draw code will go here and modify the image accordingly
+                BitmapDrawingData.DrawLineAa(drawPoint.OldX(), drawPoint.OldY(), drawPoint.NewX(), drawPoint.NewY(), stroke.StrokeColor, stroke.StrokeRadius);
+            }
 
+            ImageDataLayerModifiedEvent.Invoke();
+        }
     }
 }

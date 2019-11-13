@@ -142,7 +142,6 @@
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
     <Compile Include="Models\Brush.cs" />
     <Compile Include="Models\CanvasMaster.cs" />
-    <Compile Include="Models\Color.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
