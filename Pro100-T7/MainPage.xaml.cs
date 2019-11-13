@@ -169,13 +169,26 @@ private void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     if (outputFile == null) { // The user cancelled the picking operation
     return;
     }
+    newFile = false;
 }
 
 private void FileSave_Click(object sender, RoutedEventArgs e) {
+    if (newFile) { 
+    FileSaveAs_Click(sender, e);
+    }else { 
 
+    var outputFile = fileSavePicker.PickSaveFileAsync();
+
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+    }
 }
 
 private void FileExit_Click(object sender, RoutedEventArgs e) {
     Application.Current.Exit();
 }
 
+}
+
+}
