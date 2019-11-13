@@ -62,6 +62,9 @@
 </Windows10version1809:MenuBar>    
     
 <GroupItem HorizontalAlignment="Right"
+           VerticalAlignment="Center"
+           Height="900"
+           Visibility="Visible"
            Margin="0 0 20 0">
 <Grid>
 

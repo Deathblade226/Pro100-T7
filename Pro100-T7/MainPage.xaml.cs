@@ -21,6 +21,7 @@ using System;
 using System.Threading;
 using Pro100_T7.Models;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,6 +32,7 @@ namespace Pro100_T7
     /// </summary>
 public sealed partial class MainPage : Page {
 
+bool debug = true;
 FileSavePicker fileSavePicker = new FileSavePicker();
 WriteableBitmap bmp;
 Point current = new Point();
@@ -47,7 +49,8 @@ public MainPage() {
 }
 
 protected override void OnNavigatedTo(NavigationEventArgs e) {
-    //base.OnNavigatedTo(e);
+    base.OnNavigatedTo(e);
+    KeyDown += KeyPressed;
     PointerMoved += MainPage_PointerMoved;
     DrawArea.PointerReleased += MainPage_PointerReleased;
 }
@@ -134,6 +137,43 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     //}
     //}
     #endregion
+}
+
+private void KeyPressed(object sender, KeyRoutedEventArgs e) { 
+
+if (IsShiftKeyPressed() && IsCtrlKeyPressed()) { 
+    switch(e.Key) {
+    case VirtualKey.S: FileSaveAs_Click(null, null); break;
+    case VirtualKey.Z: FileRedo_Click(null, null); break;
+
+    }
+} 
+if (IsCtrlKeyPressed()){
+
+    switch(e.Key) {
+    case VirtualKey.S: FileSave_Click(null, null); break;
+    case VirtualKey.Z: FileUndo_Click(null, null); break;
+    case VirtualKey.Y: FileRedo_Click(null, null); break;
+    case VirtualKey.L: break;
+
+    }
+}
+    switch(e.Key) {
+    case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
+    
+    }
+
+
+
+}
+
+public static bool IsCtrlKeyPressed() {
+    var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+    return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+}
+public static bool IsShiftKeyPressed() {
+    var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
+    return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
 }
 
 private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e) {
