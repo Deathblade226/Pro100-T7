@@ -15,6 +15,25 @@
 <Grid x:Name="mainArea">
  
 <Rectangle Fill="#464646"/>
+
+<MenuBar x:Name="AppBar"
+         VerticalAlignment="Top"
+         Background="LightGray">
+
+<MenuBarItem Title="File">
+    <MenuFlyoutItem x:Name="FileSave">Save</MenuFlyoutItem>
+    <MenuFlyoutItem x:Name="FileSaveAs">SaveAs</MenuFlyoutItem>
+    <MenuFlyoutItem x:Name="FileLoad">Load</MenuFlyoutItem>
+    <MenuFlyoutItem x:Name="FileExit">Exit</MenuFlyoutItem>
+</MenuBarItem>    
+    
+<MenuBarItem Title="Edit">
+    <MenuFlyoutItem x:Name="FileUndo">Undo</MenuFlyoutItem>
+    <MenuFlyoutItem x:Name="FileRedo">Redo</MenuFlyoutItem>
+</MenuBarItem>    
+    
+    
+</MenuBar>    
     
 <GroupItem HorizontalAlignment="Right"
            Margin="0 0 20 0">
