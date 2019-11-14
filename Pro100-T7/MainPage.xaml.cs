@@ -22,6 +22,7 @@ using System.Threading;
 using Pro100_T7.Models;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using Brush = Pro100_T7.Models.Brush;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -39,6 +40,7 @@ Point current = new Point();
 Point old = new Point();
 bool newFile = true;
 bool onCanvas = false;
+String brushType = "regular";
 
 public MainPage() {
     this.InitializeComponent();
@@ -107,11 +109,22 @@ private async void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e
     
     drawing.Source = bmp;
     using (bmp.GetBitmapContext()) {
-    bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
-    bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value * 2);    
-    bmp.Invalidate();
+    //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value * 2);    
     // 
+    Brush brush = new Models.Brush((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value, bmp);
+    if (brushType.Equals("regular")){
+    brush.Regular();
     }
+    else if (brushType.Equals("wavy")){
+    brush.Wavy();
+    }
+    else if (brushType.Equals("pen")){
+    brush.Pen();
+    }
+    else if (brushType.Equals("double")){
+    brush.Double();
+    }
+    bmp.Invalidate();    
     }
     }
     
@@ -228,6 +241,18 @@ private void DrawArea_PointerEntered(object sender, PointerRoutedEventArgs e) {
 
 }
 
+private void RegularBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "regular";
+}
+private void WavyBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "wavy";
+}
+private void DoubleBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "double";
+}
+private void PenBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "pen";
+}
 }
 
 }
