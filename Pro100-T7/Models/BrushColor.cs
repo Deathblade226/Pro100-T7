@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pro100_T7.Models
 {
-    class Color
+    class BrushColor
     {
     }
 }
