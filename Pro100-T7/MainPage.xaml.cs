@@ -1,4 +1,4 @@
-﻿using Windows.System;
+using Windows.System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,6 +21,8 @@ using System;
 using System.Threading;
 using Pro100_T7.Models;
 using Windows.Storage.Pickers;
+using Windows.UI.Core;
+using Brush = Pro100_T7.Models.Brush;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -31,11 +33,13 @@ namespace Pro100_T7
     /// </summary>
 public sealed partial class MainPage : Page {
 
+bool debug = true;
 FileSavePicker fileSavePicker = new FileSavePicker();
 WriteableBitmap bmp;
 Point current = new Point();
 Point old = new Point();
 bool newFile = true;
+String brushType = "regular";
 
 public MainPage() {
     this.InitializeComponent();
@@ -47,7 +51,8 @@ public MainPage() {
 }
 
 protected override void OnNavigatedTo(NavigationEventArgs e) {
-    //base.OnNavigatedTo(e);
+    base.OnNavigatedTo(e);
+    KeyDown += KeyPressed;
     PointerMoved += MainPage_PointerMoved;
     DrawArea.PointerReleased += MainPage_PointerReleased;
 }
@@ -103,9 +108,21 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     
     drawing.Source = bmp;
     using (bmp.GetBitmapContext()) {
-    bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
-    bmp.Invalidate();
-    
+    Brush brush = new Models.Brush((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value, bmp);
+
+    if (brushType.Equals("regular")){
+    brush.Regular();
+    }
+    else if (brushType.Equals("wavy")){
+    brush.Wavy();
+    }
+    else if (brushType.Equals("pen")){
+    brush.Pen();
+    }
+    else if (brushType.Equals("double")){
+    brush.Double();
+    }
+    bmp.Invalidate();    
     }
     }
     }
@@ -134,6 +151,43 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     //}
     //}
     #endregion
+}
+
+private void KeyPressed(object sender, KeyRoutedEventArgs e) { 
+
+if (IsShiftKeyPressed() && IsCtrlKeyPressed()) { 
+    switch(e.Key) {
+    case VirtualKey.S: FileSaveAs_Click(null, null); break;
+    case VirtualKey.Z: FileRedo_Click(null, null); break;
+
+    }
+} 
+if (IsCtrlKeyPressed()){
+
+    switch(e.Key) {
+    case VirtualKey.S: FileSave_Click(null, null); break;
+    case VirtualKey.Z: FileUndo_Click(null, null); break;
+    case VirtualKey.Y: FileRedo_Click(null, null); break;
+    case VirtualKey.L: break;
+
+    }
+}
+    switch(e.Key) {
+    case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
+
+    }
+
+
+
+}
+
+public static bool IsCtrlKeyPressed() {
+    var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control);
+    return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
+}
+public static bool IsShiftKeyPressed() {
+    var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
+    return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
 }
 
 private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e) {
@@ -189,6 +243,18 @@ private void FileExit_Click(object sender, RoutedEventArgs e) {
     Application.Current.Exit();
 }
 
+private void RegularBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "regular";
+}
+private void WavyBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "wavy";
+}
+private void DoubleBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "double";
+}
+private void PenBrush_Click(object sender, RoutedEventArgs e){
+    brushType = "pen";
+}
 }
 
 }

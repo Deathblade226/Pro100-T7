@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +9,12 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
+    public delegate void ImageDataLayerModified();
+
     public class CanvasMaster
     {
-        public Canvas UICanvasObject { get; private set; }
-
-        public WriteableBitmap CanvasData { get; private set; }
-        public List<ImageLayer> ImageLayers { get; private set; }
-
-        public ImageLayer WorkingImageLayer { get; private set; }
+        public Image ImageData { get; private set; }
+        public ImageLayer ImageDataLayer { get; private set; }
 
         /// <summary>
         /// Creates a boiler-plate WritableBitMap Canvas element with drawing capability using the supplied width and heights.
@@ -24,57 +23,28 @@ namespace Pro100_T7.Models
         /// <param name="pixelHeight">Drawing space height</param>
         public CanvasMaster(int pixelWidth, int pixelHeight)
         {
-            CanvasData = BitmapFactory.New(pixelWidth, pixelHeight);
-            ImageLayers.Add(new ImageLayer(0));
-            WorkingImageLayer = ImageLayers.First();
+            ImageDataLayer = new ImageLayer(pixelWidth, pixelHeight);
+            ImageData = new Image() { Source = ImageDataLayer.BitmapDrawingData };
+
+            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateStoredImageData;
         }
 
         /// <summary>
         /// Creates a boiler-plate WritableBitMap Canvas element with drawing capability using the supplied width and heights.
         /// Initializes the WritableBitMap with a supplied array of ImageLayer to initialize the canvas with preexisting drawing data.
         /// </summary>
-        /// <param name="pixelWidth">Drawing space width</param>
-        /// <param name="pixelHeight">Drawing space height</param>
-        /// <param name="imageLayers">Supplied ImageLayer layers containing preexisting drawing data</param>
-        public CanvasMaster(int pixelWidth, int pixelHeight, ImageLayer[] imageLayers)
+        /// <param name="imageLayer">Supplied ImageLayer containing preexisting drawing data</param>
+        public CanvasMaster(ImageLayer imageLayer)
         {
-            CanvasData = BitmapFactory.New(pixelWidth, pixelHeight);
-            ImageLayers = imageLayers.ToList();
-            WorkingImageLayer = ImageLayers.First();
+            ImageDataLayer = imageLayer;
+            ImageData = new Image() { Source = ImageDataLayer.BitmapDrawingData };
+
+            ImageDataLayer.ImageDataLayerModifiedEvent += UpdateStoredImageData;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DrawLayersToCanvas()
+        private void UpdateStoredImageData()
         {
-            DrawLayersToWritableBitmap();
-            DrawWritableBitmapToUICanvasElement();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DrawLayersToWritableBitmap()
-        {
-            //combine all layers into one WritableBitmap object
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void DrawWritableBitmapToUICanvasElement()
-        {
-            //apply the complete writable bitmap to the visible canvas element
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="newImageLayerID"></param>
-        public void SelectWorkingImageLayer(int newImageLayerID)
-        {
-            //change the WorkingImageLayer to the desired image layer
+            ImageData.Source = ImageDataLayer.BitmapDrawingData;
         }
     }
 }
