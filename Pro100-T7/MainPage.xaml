@@ -59,24 +59,24 @@
                     Text="Redo (Ctrl+Y)"/>    
 </MenuBarItem>
 
-            <MenuBarItem Title="Brushes">
-                <MenuFlyoutItem x:Name="Regular"
-                                ToolTipService.ToolTip="Regular Brush"
-                                Click="RegularBrush_Click"
-                                Text="Regular Brush" />
-                <MenuFlyoutItem x:Name="Wavy"
-                                ToolTipService.ToolTip="Wavy Brush"
-                                Click="WavyBrush_Click"
-                                Text="Wavy Brush" />
-                <MenuFlyoutItem x:Name="Double"
-                                ToolTipService.ToolTip="Double Brush"
-                                Click="DoubleBrush_Click"
-                                Text="Double Brush" />
-                <MenuFlyoutItem x:Name="Pen"
-                                ToolTipService.ToolTip="Pen Brush"
-                                Click="PenBrush_Click"
-                                Text="Pen Brush" />
-            </MenuBarItem>
+<MenuBarItem Title="Brushes">
+    <MenuFlyoutItem x:Name="Regular"
+                    ToolTipService.ToolTip="Regular Brush"
+                    Click="RegularBrush_Click"
+                    Text="Regular Brush" />
+    <MenuFlyoutItem x:Name="Wavy"
+                    ToolTipService.ToolTip="Wavy Brush"
+                    Click="WavyBrush_Click"
+                    Text="Wavy Brush" />
+    <MenuFlyoutItem x:Name="Double"
+                    ToolTipService.ToolTip="Double Brush"
+                    Click="DoubleBrush_Click"
+                    Text="Double Brush" />
+    <MenuFlyoutItem x:Name="Pen"
+                    ToolTipService.ToolTip="Pen Brush"
+                    Click="PenBrush_Click"
+                    Text="Pen Brush" />
+</MenuBarItem>
     
 </Windows10version1809:MenuBar>    
     

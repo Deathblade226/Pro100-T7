@@ -154,9 +154,10 @@ private async void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e
     #endregion
 }
 
-private void KeyPressed(object sender, KeyRoutedEventArgs e) { 
- 
-    if (IsCtrlKeyPressed()){
+}
+
+private void KeyPressed(object sender, KeyRoutedEventArgs e) {
+                if (IsCtrlKeyPressed()){
 
     switch(e.Key) {
     case VirtualKey.S: FileSave_Click(null, null); break;
@@ -241,9 +242,6 @@ private void DrawArea_PointerEntered(object sender, PointerRoutedEventArgs e) {
 
 }
 
-private void RegularBrush_Click(object sender, RoutedEventArgs e){
-    brushType = "regular";
-}
 private void WavyBrush_Click(object sender, RoutedEventArgs e){
     brushType = "wavy";
 }
@@ -253,6 +251,11 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e){
 private void PenBrush_Click(object sender, RoutedEventArgs e){
     brushType = "pen";
 }
+
+private void RegularBrush_Click(object sender, RoutedEventArgs e) {
+    brushType = "regular";
+}
+
 }
 
 }
