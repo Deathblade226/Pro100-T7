@@ -38,6 +38,7 @@ WriteableBitmap bmp;
 Point current = new Point();
 Point old = new Point();
 bool newFile = true;
+bool onCanvas = false;
 
 public MainPage() {
     this.InitializeComponent();
@@ -48,14 +49,14 @@ public MainPage() {
     //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 }
 
-protected override void OnNavigatedTo(NavigationEventArgs e) {
-    base.OnNavigatedTo(e);
-    KeyDown += KeyPressed;
+protected async override void OnNavigatedTo(NavigationEventArgs e) {
+//    KeyDown += KeyPressed;
     PointerMoved += MainPage_PointerMoved;
     DrawArea.PointerReleased += MainPage_PointerReleased;
+
 }
 
-private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
+private async void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
     #region Notes
     //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
@@ -107,8 +108,9 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
     drawing.Source = bmp;
     using (bmp.GetBitmapContext()) {
     bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
+    bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value * 2);    
     bmp.Invalidate();
-    
+    // 
     }
     }
     }
@@ -140,15 +142,8 @@ private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 }
 
 private void KeyPressed(object sender, KeyRoutedEventArgs e) { 
-
-if (IsShiftKeyPressed() && IsCtrlKeyPressed()) { 
-    switch(e.Key) {
-    case VirtualKey.S: FileSaveAs_Click(null, null); break;
-    case VirtualKey.Z: FileRedo_Click(null, null); break;
-
-    }
-} 
-if (IsCtrlKeyPressed()){
+ 
+    if (IsCtrlKeyPressed()){
 
     switch(e.Key) {
     case VirtualKey.S: FileSave_Click(null, null); break;
@@ -157,14 +152,10 @@ if (IsCtrlKeyPressed()){
     case VirtualKey.L: break;
 
     }
-}
+    }
     switch(e.Key) {
     case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
-
     }
-
-
-
 }
 
 public static bool IsCtrlKeyPressed() {
@@ -202,6 +193,7 @@ private void FileLoad_Click(object sender, RoutedEventArgs e) {
 private void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
     fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+    fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
     fileSavePicker.SuggestedFileName = "image";
 
     var outputFile = fileSavePicker.PickSaveFileAsync();
@@ -227,6 +219,13 @@ private void FileSave_Click(object sender, RoutedEventArgs e) {
 
 private void FileExit_Click(object sender, RoutedEventArgs e) {
     Application.Current.Exit();
+}
+private void DrawArea_PointerExited(object sender, PointerRoutedEventArgs e) {
+    onCanvas = false;
+}
+
+private void DrawArea_PointerEntered(object sender, PointerRoutedEventArgs e) {
+
 }
 
 }
