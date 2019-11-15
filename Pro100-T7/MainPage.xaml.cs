@@ -1,4 +1,4 @@
-﻿using Windows.System;
+using Windows.System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -307,6 +307,62 @@ namespace Pro100_T7
         {
             brushType = "pen";
         }
+
+private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
+    using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite)) {
+    // Create an encoder with the desired format
+    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+    if (outputFile.FileType == ".png") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+    if (outputFile.FileType == ".jpg") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+
+    // Set the software bitmap
+    encoder.SetSoftwareBitmap(softwareBitmap);
+
+    // Set additional encoding parameters, if needed
+    encoder.BitmapTransform.ScaledWidth = (uint)DrawArea.Width;
+    encoder.BitmapTransform.ScaledHeight = (uint)DrawArea.Height;
+    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+    encoder.IsThumbnailGenerated = true;
+
+    try { await encoder.FlushAsync();}
+    catch (Exception err) {
+    const int WINCODEC_ERR_UNSUPPORTEDOPERATION = unchecked((int)0x88982F81);
+    switch (err.HResult) {
+    case WINCODEC_ERR_UNSUPPORTEDOPERATION: 
+    // If the encoder does not support writing a thumbnail, then try again
+    // but disable thumbnail generation.
+    encoder.IsThumbnailGenerated = false;
+    break;
+    default: throw;
     }
+    }
+
+    if (encoder.IsThumbnailGenerated == false) {
+    await encoder.FlushAsync();
+    }
+    }
+}
+
+private async void FileNew_Click(object sender, RoutedEventArgs e) {
+    
+    ContentDialog newFile = new ContentDialog {
+    Title = "Do you want to save before opening a new canvas.",
+    CloseButtonText = "Cancel",
+    PrimaryButtonText = "Yes",
+    SecondaryButtonText = "No"
+    };
+    
+    var result = await newFile.ShowAsync(); 
+    
+    if (result == ContentDialogResult.Primary) { 
+    FileSave_Click(null, null);
+    bmp.Clear();
+    History.ClearHistory();
+    } else if (result == ContentDialogResult.Secondary) { 
+    bmp.Clear();
+    History.ClearHistory();
+    }
+
+}
 
 }

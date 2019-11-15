@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     MinHeight="1000"
     MinWidth="1500"
     x:Class="Pro100_T7.MainPage"
@@ -7,15 +7,129 @@
     xmlns:local="using:Pro100_T7"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uc="using:Pro100_T7.UserControls"
+    xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:Name="mainArea">
-        <Rectangle Fill="#464646"/>
-        
+
+<Grid x:Name="mainArea">    
+    
+<AppBar HorizontalAlignment="Right"/>
+
+<Rectangle Fill="#464646"/>
+
+<Windows10version1809:MenuBar x:Name="AppBar"
+         VerticalAlignment="Top"
+         Background="LightGray">    
+    
+<Windows10version1809:MenuBarItem Title="File">
+    
+    <MenuFlyoutItem x:Name="FileNew"
+                    ToolTipService.ToolTip="New (Ctrl+N)"
+                    Click="FileNew_Click"
+                    Text="New"/>
+    <MenuFlyoutSeparator/>
+    
+    <MenuFlyoutItem x:Name="FileSave"
+                    ToolTipService.ToolTip="Save (Ctrl+S)"
+                    Click="FileSave_Click"
+                    Text="Save"/>
+    
+    <MenuFlyoutItem x:Name="FileSaveAs"
+                    Click="FileSaveAs_Click"
+                    Text="SaveAs"/>
+    
+    <MenuFlyoutItem x:Name="FileLoad"
+                    ToolTipService.ToolTip="Load (Ctrl+L)"
+                    Click="FileLoad_Click"
+                    Text="Load"/>
+    <MenuFlyoutSeparator/>
+
+    <MenuFlyoutItem x:Name="FileExit"
+                    ToolTipService.ToolTip="Exit (Ctrl+Esc)"
+                    Click="FileExit_Click"
+                    Text="Exit"/>
+    
+</Windows10version1809:MenuBarItem>    
+    
+<MenuBarItem Title="Edit">
+    
+    <MenuFlyoutItem x:Name="FileUndo"
+                    ToolTipService.ToolTip="Undo (Ctrl+Z)"
+                    Click="FileUndo_Click"
+                    Text="Undo (Ctrl+Z)"/>
+ 
+    <MenuFlyoutItem x:Name="FileRedo"
+                    ToolTipService.ToolTip="Redo (Ctrl+Shift+Z)"
+                    Click="FileRedo_Click"
+                    Text="Redo (Ctrl+Y)"/>    
+</MenuBarItem>
+
+<MenuBarItem Title="Brushes">
+    <MenuFlyoutItem x:Name="Regular"
+                    ToolTipService.ToolTip="Regular Brush"
+                    Click="RegularBrush_Click"
+                    Text="Regular Brush" />
+    <MenuFlyoutItem x:Name="Wavy"
+                    ToolTipService.ToolTip="Wavy Brush"
+                    Click="WavyBrush_Click"
+                    Text="Wavy Brush" />
+    <MenuFlyoutItem x:Name="Double"
+                    ToolTipService.ToolTip="Double Brush"
+                    Click="DoubleBrush_Click"
+                    Text="Double Brush" />
+    <MenuFlyoutItem x:Name="Pen"
+                    ToolTipService.ToolTip="Pen Brush"
+                    Click="PenBrush_Click"
+                    Text="Pen Brush" />
+</MenuBarItem>
+    
+</Windows10version1809:MenuBar>    
+    
+<GroupItem HorizontalAlignment="Right"
+           VerticalAlignment="Center"
+           Height="900"
+           Visibility="Visible"
+           Margin="0 0 20 0">
+<Grid>
+
+<Windows10FallCreatorsUpdate:ColorPicker x:Name="colorPicker"
+             Height="690"
+             IsEnabled="True"
+             Color="Red"/>
+
+<GroupItem HorizontalAlignment="Center">
+					<Grid>
+    
+<TextBlock Text="Brush Size: 1 - 200"
+           FontSize="20"
+           Width="170"
+           Height="40"
+           VerticalAlignment="Top"
+           Margin="0 75 0 0"/>
+    
+<TextBox x:Name="brushSizeBox"
+         Width="60"
+         Height="35"
+         InputScope="Number"
+         HorizontalAlignment="Left"
+         VerticalAlignment="Top"
+         Text="1"
+         Margin="340 98.5 0 0"/>    
+    
+<Slider x:Name="brushSize"
+        HorizontalAlignment="Left"
+        Value="{Binding Text, ElementName=brushSizeBox, Mode=TwoWay}"
+        Minimum="1"
+        Maximum="200"
+        Margin="20 100 0 870"
+        Width="310"/>    
+</Grid>
+</GroupItem>    
+</Grid>
+</GroupItem>
+       
         <uc:BrushModifierPanel x:Name="BrushModifier"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"/>
-
-    </Grid>
 </Page>
