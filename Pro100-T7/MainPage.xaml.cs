@@ -53,7 +53,7 @@ namespace Pro100_T7
             base.OnNavigatedTo(e);
             KeyDown += KeyPressed;
             PointerMoved += MainPage_PointerMoved;
-            //DrawArea.PointerReleased += MainPage_PointerReleased;
+            DrawCanvas.GetControlCanvasUIElement().PointerReleased += MainPage_PointerReleased;
         }
 
         private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
