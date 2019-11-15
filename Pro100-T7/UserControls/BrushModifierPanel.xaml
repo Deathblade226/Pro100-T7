@@ -1,0 +1,54 @@
+﻿<UserControl
+    x:Class="Pro100_T7.UserControls.BrushModifierPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Pro100_T7.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <GroupItem HorizontalAlignment="Right"
+           Margin="0 0 20 0">
+        <Grid>
+            <ColorPicker x:Name="colorPicker"
+                             Grid.Column="1"
+                             Height="690"
+                             IsAlphaEnabled="True"
+                             IsEnabled="True"
+                             Color="Red"/>
+            <GroupItem Grid.Column="1"
+                           HorizontalAlignment="Center">
+                <Grid>
+                    <TextBlock Text="Brush Size: 1 - 200"
+                                   FontSize="20"
+                                   Width="170"
+                                   Height="40"
+                                   Grid.Column="1"
+                                   VerticalAlignment="Top"
+                                   Margin="0 75 0 0"
+                        />
+                    <TextBox x:Name="brushSizeBox"
+                                 Width="60"
+                                 Height="35"
+                                 InputScope="Number"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top"
+                                 Grid.Column="1"
+                                 Text="1"
+                                 Margin="340 98.5 0 0"
+                        />
+                    <Slider x:Name="brushSize"
+                                HorizontalAlignment="Left"
+                                Value="{Binding Text, ElementName=brushSizeBox, Mode=TwoWay}"
+                                Minimum="1"
+                                Maximum="200"
+                                Margin="20 100 0 870"
+                                Width="310"
+                                Grid.Column="1"/>
+                </Grid>
+            </GroupItem>
+        </Grid>
+    </GroupItem>
+</UserControl>

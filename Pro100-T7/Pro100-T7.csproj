@@ -150,8 +150,11 @@
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Stroke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserControls\RasterCanvas.xaml.cs">
-      <DependentUpon>RasterCanvas.xaml</DependentUpon>
+    <Compile Include="UserControls\DrawingCanvas.xaml.cs">
+      <DependentUpon>DrawingCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\BrushModifierPanel.xaml.cs">
+      <DependentUpon>BrushModifierPanel.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +181,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\RasterCanvas.xaml">
+    <Page Include="UserControls\DrawingCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\BrushModifierPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

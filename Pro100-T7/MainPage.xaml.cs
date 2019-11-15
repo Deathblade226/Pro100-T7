@@ -38,7 +38,7 @@ namespace Pro100_T7
         {
             this.InitializeComponent();
 
-            DrawArea.Children.Add(canvas.ImageData);
+            //DrawArea.Children.Add(canvas.ImageData);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
