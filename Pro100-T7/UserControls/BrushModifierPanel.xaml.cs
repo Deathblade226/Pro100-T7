@@ -23,5 +23,9 @@ namespace Pro100_T7.UserControls
         {
             this.InitializeComponent();
         }
+
+        public ColorPicker GetColorPickerUIElement() => colorPicker;
+        public TextBox GetBrushSizeTextBoxUIElement() => brushSizeBox;
+        public Slider GetBrushSizeSliderUIElement() => brushSizeSlider;
     }
 }

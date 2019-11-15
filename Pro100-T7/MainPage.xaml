@@ -17,13 +17,5 @@
         <uc:BrushModifierPanel x:Name="BrushModifier"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"/>
 
-        <TextBlock x:Name="Mouse"
-           Text="PlaceHolder"
-           Width="800"
-           FontSize="30"
-           TextAlignment="Center"
-           VerticalAlignment="Bottom"
-           Height="50"
-        />
     </Grid>
 </Page>
