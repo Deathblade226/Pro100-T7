@@ -21,7 +21,7 @@ using Pro100_T7.Models;
 using Windows.UI.Input;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
-using Brush = Pro100_T7.Models.Brush;
+using Pro100_T7.Model;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -38,7 +38,7 @@ namespace Pro100_T7
         bool debug = true;
         FileSavePicker fileSavePicker = new FileSavePicker();
         bool newFile = true;
-        String brushType = "regular";
+        string brushType = "regular";
 
         Stroke defaultStroke = new Stroke() { StrokeColor = Colors.OrangeRed, StrokeRadius = 15 };
 
@@ -232,19 +232,19 @@ namespace Pro100_T7
             byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
             byte[] b = new byte[b1.Length];
             b1.CopyTo(b, 0);
-            Models.History.EndAction(new Models.Action(b));
+            History.EndAction(new Action(b));
         }
 
         private void FileUndo_Click(object sender, RoutedEventArgs e)
         {
-            byte[] b = Models.History.Undo().bmp;
+            byte[] b = History.Undo().bmp;
             canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
             canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
         }
 
         private void FileRedo_Click(object sender, RoutedEventArgs e)
         {
-            byte[] b = Models.History.Redo().bmp;
+            byte[] b = History.Redo().bmp;
             canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
             canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
         }
