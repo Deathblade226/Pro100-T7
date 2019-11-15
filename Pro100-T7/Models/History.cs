@@ -16,11 +16,30 @@ namespace Pro100_T7.Model
     {
 		private static Stack<Action> undoStack = new Stack<Action>();
 		private static Stack<Action> redoStack = new Stack<Action>();
+		private static Action baseAction = new Action();
 
-		//puts a clear default action at the start of the undo stack so we can undo the first action taken by the user. Call this to initialize the class
-		public static void StartHistory()
+
+
+		/// <summary>
+		/// Clears the history and redo stack to the initial state on load
+		/// </summary>
+		public static void ClearHistory()
 		{
-			undoStack.Push(new Action());
+			historyStack.Clear();
+			historyStack.Push(baseAction);
+			redoStack.Clear();
+			redoStack.Push(baseAction);
+		}
+
+		/// <summary>
+		/// Initializes the class. Must be called whenever a new image is created or loaded and before any actions are taken
+		/// </summary>
+		/// <param name="currentState">Represents the current state of the image on loading.</param>
+		public static void StartHistory(byte[] currentState)
+		{
+			Action temp = new Action(currentState);
+			baseAction = temp;
+			ClearHistory();
 		}
 		
 		public static void EndAction(Action a)
