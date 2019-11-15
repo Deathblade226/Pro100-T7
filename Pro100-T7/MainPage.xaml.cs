@@ -21,6 +21,10 @@ using Pro100_T7.Models;
 using Windows.UI.Input;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using System;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -231,7 +235,7 @@ namespace Pro100_T7
             byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
             byte[] b = new byte[b1.Length];
             b1.CopyTo(b, 0);
-            History.EndAction(new Action(b));
+            History.EndAction(new Models.Action(b));
         }
 
         private void FileUndo_Click(object sender, RoutedEventArgs e)
@@ -308,61 +312,72 @@ namespace Pro100_T7
             brushType = "pen";
         }
 
-private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
-    using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite)) {
-    // Create an encoder with the desired format
-    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-    if (outputFile.FileType == ".png") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-    if (outputFile.FileType == ".jpg") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+        private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile)
+        {
+            using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite))
+            {
+                // Create an encoder with the desired format
+                BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                if (outputFile.FileType == ".png") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+                if (outputFile.FileType == ".jpg") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
 
-    // Set the software bitmap
-    encoder.SetSoftwareBitmap(softwareBitmap);
+                // Set the software bitmap
+                encoder.SetSoftwareBitmap(softwareBitmap);
 
-    // Set additional encoding parameters, if needed
-    encoder.BitmapTransform.ScaledWidth = (uint)DrawArea.Width;
-    encoder.BitmapTransform.ScaledHeight = (uint)DrawArea.Height;
-    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
-    encoder.IsThumbnailGenerated = true;
+                // Set additional encoding parameters, if needed
+                encoder.BitmapTransform.ScaledWidth = (uint)DrawCanvas.GetControlCanvasUIElement().Width;
+                encoder.BitmapTransform.ScaledHeight = (uint)DrawCanvas.GetControlCanvasUIElement().Height;
+                encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+                encoder.IsThumbnailGenerated = true;
 
-    try { await encoder.FlushAsync();}
-    catch (Exception err) {
-    const int WINCODEC_ERR_UNSUPPORTEDOPERATION = unchecked((int)0x88982F81);
-    switch (err.HResult) {
-    case WINCODEC_ERR_UNSUPPORTEDOPERATION: 
-    // If the encoder does not support writing a thumbnail, then try again
-    // but disable thumbnail generation.
-    encoder.IsThumbnailGenerated = false;
-    break;
-    default: throw;
+                try { await encoder.FlushAsync(); }
+                catch (Exception err)
+                {
+                    const int WINCODEC_ERR_UNSUPPORTEDOPERATION = unchecked((int)0x88982F81);
+                    switch (err.HResult)
+                    {
+                        case WINCODEC_ERR_UNSUPPORTEDOPERATION:
+                            // If the encoder does not support writing a thumbnail, then try again
+                            // but disable thumbnail generation.
+                            encoder.IsThumbnailGenerated = false;
+                            break;
+                        default: throw;
+                    }
+                }
+
+                if (encoder.IsThumbnailGenerated == false)
+                {
+                    await encoder.FlushAsync();
+                }
+            }
+        }
+
+        private async void FileNew_Click(object sender, RoutedEventArgs e)
+        {
+
+            ContentDialog newFile = new ContentDialog
+            {
+                Title = "Do you want to save before opening a new canvas.",
+                CloseButtonText = "Cancel",
+                PrimaryButtonText = "Yes",
+                SecondaryButtonText = "No"
+            };
+
+            var result = await newFile.ShowAsync();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                FileSave_Click(null, null);
+                canvas.ImageDataLayer.BitmapDrawingData.Clear();
+                History.ClearHistory();
+            }
+            else if (result == ContentDialogResult.Secondary)
+            {
+                canvas.ImageDataLayer.BitmapDrawingData.Clear();
+                History.ClearHistory();
+            }
+
+        }
+
     }
-    }
-
-    if (encoder.IsThumbnailGenerated == false) {
-    await encoder.FlushAsync();
-    }
-    }
-}
-
-private async void FileNew_Click(object sender, RoutedEventArgs e) {
-    
-    ContentDialog newFile = new ContentDialog {
-    Title = "Do you want to save before opening a new canvas.",
-    CloseButtonText = "Cancel",
-    PrimaryButtonText = "Yes",
-    SecondaryButtonText = "No"
-    };
-    
-    var result = await newFile.ShowAsync(); 
-    
-    if (result == ContentDialogResult.Primary) { 
-    FileSave_Click(null, null);
-    bmp.Clear();
-    History.ClearHistory();
-    } else if (result == ContentDialogResult.Secondary) { 
-    bmp.Clear();
-    History.ClearHistory();
-    }
-
-}
-
 }
