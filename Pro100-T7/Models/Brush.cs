@@ -30,7 +30,7 @@ namespace Pro100_T7.Models
             Bmp = bmp;
         }
 
-        public void Wavy()
+        public void Wavy() //Crash on going to top/bottom of image
         {
             //Wavy Kinda lines
             for (int i = 1; i <= BrushSize; i++)
@@ -39,7 +39,14 @@ namespace Pro100_T7.Models
             }
         }
 
-        public void Regular() => Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, BrushColor);
+        public void Regular() 
+        { 
+            Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, BrushColor);
+            Bmp.DrawLineAa(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
+            //bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
+            //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value * 2);
+
+        }
 
         public void Double()
         {

@@ -23,6 +23,10 @@ using Pro100_T7.Models;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Brush = Pro100_T7.Models.Brush;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Popups;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -39,60 +43,23 @@ WriteableBitmap bmp;
 Point current = new Point();
 Point old = new Point();
 bool newFile = true;
-bool onCanvas = false;
 String brushType = "regular";
 
 public MainPage() {
     this.InitializeComponent();
     bmp = BitmapFactory.New((int)DrawArea.Width, (int)DrawArea.Height);
     Models.History.StartHistory(bmp.PixelBuffer.ToArray());
+    KeyDown += KeyPressed;
+    PointerMoved += MainPage_PointerMoved;
+    DrawArea.PointerReleased += MainPage_PointerReleased;
+    drawing.Source = bmp;
     //bmp = BitmapFactory.New(1500, 1000);
     //ApplicationView.PreferredLaunchViewSize = new Size(1750, 1250);
     //ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 }
 
-protected async override void OnNavigatedTo(NavigationEventArgs e) {
-//    KeyDown += KeyPressed;
-    PointerMoved += MainPage_PointerMoved;
-    DrawArea.PointerReleased += MainPage_PointerReleased;
-
-}
-
 private async void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e) {
 
-    #region Notes
-    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
-    
-    //Rects with outline, also gaps
-    //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value);    
-    
-    
-    //Pen Like drawing - This could be a brush by its self.
-    //bmp.DrawLineDDA((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
-    
-    //Filled Circles
-
-    //Cant take in constant input
-    //int[] points = { (int)old.X, (int)old.Y, (int)current.X, (int)current.Y};
-    //bmp.FillCurveClosed(points, 0.5f,  colorPicker.Color);
-    
-    //int w = bmp.PixelWidth;
-    //int h = bmp.PixelHeight;
-    //WriteableBitmapExtensions.DrawLine(bmp.GetBitmapContext() , w, h, 1, 2, 30, 40, 255);
-    
-    //Draws lines spaced out
-    //bmp.DrawLineBresenham((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color);
-    
-    //bmp.Invalidate();
-
-    //Clears the canvas
-    //bmp.Clear();
-
-    //Used to pickup color
-    //colorPicker.Color = bmp.GetPixel((int)current.X, (int)current.Y);
-    #endregion
-
-    #region Drawing1.0
     var pointerPosition = Window.Current.CoreWindow.PointerPosition;
     var x = pointerPosition.X - Window.Current.Bounds.X - 60;
     var y = pointerPosition.Y -Window.Current.Bounds.Y - 110;
@@ -107,10 +74,8 @@ private async void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e
     Mouse.Text = "x:" + x + " | y:" + y;
     if (ptrPt.Properties.IsLeftButtonPressed) {
     
-    drawing.Source = bmp;
     using (bmp.GetBitmapContext()) {
-    //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value * 2);    
-    // 
+
     Brush brush = new Models.Brush((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value, bmp);
     if (brushType.Equals("regular")){
     brush.Regular();
@@ -134,35 +99,19 @@ private async void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e
     bmp.Invalidate();
     
     }
-
-    #endregion
-
-    #region Drawing2.0
-
-    //if (e.GetCurrentPoint(DrawArea).Properties.IsLeftButtonPressed) {
-    //drawPoints.Add(e.GetCurrentPoint(DrawArea).Position);
-
-    //if (drawPoints.Count() > 10) {
-    //bmp.DrawCurve(PointsToInts(drawPoints), 0, Colors.Black);
-
-    //drawPoints.RemoveAt(0);
-    //}
-    //} else {
-    //drawPoints.Clear();
-    //}
-    //}
-    #endregion
+    brushSize.Focus(FocusState.Programmatic);
 }
 
 }
 
-private void KeyPressed(object sender, KeyRoutedEventArgs e) {
-                if (IsCtrlKeyPressed()){
+private async void KeyPressed(object sender, KeyRoutedEventArgs e) {
+    if (IsCtrlKeyPressed()){
 
     switch(e.Key) {
     case VirtualKey.S: FileSave_Click(null, null); break;
     case VirtualKey.Z: FileUndo_Click(null, null); break;
     case VirtualKey.Y: FileRedo_Click(null, null); break;
+    case VirtualKey.N: FileNew_Click(null, null); break;
     case VirtualKey.L: break;
 
     }
@@ -186,6 +135,7 @@ private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e) {
 	byte[] b = new byte[b1.Length];
 	b1.CopyTo(b, 0);
     Models.History.EndAction(new Models.Action(b));
+
 }
 
 private void FileUndo_Click(object sender, RoutedEventArgs e) {
@@ -204,29 +154,36 @@ private void FileLoad_Click(object sender, RoutedEventArgs e) {
 
 }
 
-private void FileSaveAs_Click(object sender, RoutedEventArgs e) {
+private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
+    fileSavePicker = new FileSavePicker();
     fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
     fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
     fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
     fileSavePicker.SuggestedFileName = "image";
 
-    var outputFile = fileSavePicker.PickSaveFileAsync();
+    var outputFile = await fileSavePicker.PickSaveFileAsync();
 
-    if (outputFile == null) { // The user cancelled the picking operation
-    return;
-    }
+    if (outputFile != null) { // The user cancelled the picking operation
+    
+    SoftwareBitmap output = SoftwareBitmap.CreateCopyFromBuffer(bmp.PixelBuffer, BitmapPixelFormat.Bgra8, bmp.PixelWidth, bmp.PixelHeight);
+    SaveSoftwareBitmapToFile(output, outputFile);
+
     newFile = false;
+    }
 }
 
-private void FileSave_Click(object sender, RoutedEventArgs e) {
+private async void FileSave_Click(object sender, RoutedEventArgs e) {
     if (newFile) { 
     FileSaveAs_Click(sender, e);
     }else { 
 
-    var outputFile = fileSavePicker.PickSaveFileAsync();
+    var outputFile = await fileSavePicker.PickSaveFileAsync();
 
-    if (outputFile == null) { // The user cancelled the picking operation
-    return;
+    if (outputFile != null) { // The user cancelled the picking operation
+    
+    SoftwareBitmap output = SoftwareBitmap.CreateCopyFromBuffer(bmp.PixelBuffer, BitmapPixelFormat.Bgra8, bmp.PixelWidth, bmp.PixelHeight);
+    SaveSoftwareBitmapToFile(output, outputFile);
+
     }
     }
 }
@@ -235,7 +192,7 @@ private void FileExit_Click(object sender, RoutedEventArgs e) {
     Application.Current.Exit();
 }
 private void DrawArea_PointerExited(object sender, PointerRoutedEventArgs e) {
-    onCanvas = false;
+
 }
 
 private void DrawArea_PointerEntered(object sender, PointerRoutedEventArgs e) {
@@ -254,6 +211,63 @@ private void PenBrush_Click(object sender, RoutedEventArgs e){
 
 private void RegularBrush_Click(object sender, RoutedEventArgs e) {
     brushType = "regular";
+}
+
+private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
+    using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite)) {
+    // Create an encoder with the desired format
+    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+    if (outputFile.FileType == ".png") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+    if (outputFile.FileType == ".jpg") encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+
+    // Set the software bitmap
+    encoder.SetSoftwareBitmap(softwareBitmap);
+
+    // Set additional encoding parameters, if needed
+    encoder.BitmapTransform.ScaledWidth = (uint)DrawArea.Width;
+    encoder.BitmapTransform.ScaledHeight = (uint)DrawArea.Height;
+    encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+    encoder.IsThumbnailGenerated = true;
+
+    try { await encoder.FlushAsync();}
+    catch (Exception err) {
+    const int WINCODEC_ERR_UNSUPPORTEDOPERATION = unchecked((int)0x88982F81);
+    switch (err.HResult) {
+    case WINCODEC_ERR_UNSUPPORTEDOPERATION: 
+    // If the encoder does not support writing a thumbnail, then try again
+    // but disable thumbnail generation.
+    encoder.IsThumbnailGenerated = false;
+    break;
+    default: throw;
+    }
+    }
+
+    if (encoder.IsThumbnailGenerated == false) {
+    await encoder.FlushAsync();
+    }
+    }
+}
+
+private async void FileNew_Click(object sender, RoutedEventArgs e) {
+    
+    ContentDialog newFile = new ContentDialog {
+    Title = "Do you want to save before opening a new canvas.",
+    CloseButtonText = "Cancel",
+    PrimaryButtonText = "Yes",
+    SecondaryButtonText = "No"
+    };
+    
+    var result = await newFile.ShowAsync(); 
+    
+    if (result == ContentDialogResult.Primary) { 
+    FileSave_Click(null, null);
+    bmp.Clear();
+    History.ClearHistory();
+    } else if (result == ContentDialogResult.Secondary) { 
+    bmp.Clear();
+    History.ClearHistory();
+    }
+
 }
 
 }

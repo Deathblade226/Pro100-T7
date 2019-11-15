@@ -24,6 +24,13 @@
          Background="LightGray">    
     
 <Windows10version1809:MenuBarItem Title="File">
+    
+    <MenuFlyoutItem x:Name="FileNew"
+                    ToolTipService.ToolTip="New (Ctrl+N)"
+                    Click="FileNew_Click"
+                    Text="New"/>
+    <MenuFlyoutSeparator/>
+    
     <MenuFlyoutItem x:Name="FileSave"
                     ToolTipService.ToolTip="Save (Ctrl+S)"
                     Click="FileSave_Click"
@@ -89,8 +96,6 @@
 
 <Windows10FallCreatorsUpdate:ColorPicker x:Name="colorPicker"
              Height="690"
-             
-             IsAlphaEnabled="True"
              IsEnabled="True"
              Color="Red"/>
 
