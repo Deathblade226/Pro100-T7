@@ -52,7 +52,7 @@ namespace Pro100_T7
             Point current = Window.Current.CoreWindow.PointerPosition;
             current.X += Window.Current.Bounds.X - 44;
             current.Y += Window.Current.Bounds.Y - 164;
-            drawPoint.CurrentPoint = current;            
+            drawPoint.CurrentPoint = current;
 
             if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
 
@@ -69,4 +69,3 @@ namespace Pro100_T7
         }
     }
 }
-
