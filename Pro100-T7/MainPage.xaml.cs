@@ -37,12 +37,13 @@ namespace Pro100_T7
     /// </summary>
 public sealed partial class MainPage : Page {
 
+bool saving;
 bool debug = true;
+bool newFile = true;
 FileSavePicker fileSavePicker = new FileSavePicker();
 WriteableBitmap bmp;
 Point current = new Point();
 Point old = new Point();
-bool newFile = true;
 String brushType = "regular";
 
 public MainPage() {
@@ -168,11 +169,12 @@ private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     SoftwareBitmap output = SoftwareBitmap.CreateCopyFromBuffer(bmp.PixelBuffer, BitmapPixelFormat.Bgra8, bmp.PixelWidth, bmp.PixelHeight);
     SaveSoftwareBitmapToFile(output, outputFile);
 
-    newFile = false;
     }
+    newFile = false;
 }
 
 private async void FileSave_Click(object sender, RoutedEventArgs e) {
+    saving = true;
     if (newFile) { 
     FileSaveAs_Click(sender, e);
     }else { 
@@ -214,6 +216,7 @@ private void RegularBrush_Click(object sender, RoutedEventArgs e) {
 }
 
 private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
+    saving = true;
     using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite)) {
     // Create an encoder with the desired format
     BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
@@ -246,25 +249,30 @@ private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, Stora
     await encoder.FlushAsync();
     }
     }
+    saving = false;
 }
 
 private async void FileNew_Click(object sender, RoutedEventArgs e) {
     
-    ContentDialog newFile = new ContentDialog {
+    ContentDialog OpenNewFile = new ContentDialog {
     Title = "Do you want to save before opening a new canvas.",
     CloseButtonText = "Cancel",
     PrimaryButtonText = "Yes",
     SecondaryButtonText = "No"
     };
     
-    var result = await newFile.ShowAsync(); 
+    var result = await OpenNewFile.ShowAsync(); 
     
     if (result == ContentDialogResult.Primary) { 
     FileSave_Click(null, null);
+    if (!saving) { 
     bmp.Clear();
+    newFile = true;
     History.ClearHistory();
+    }
     } else if (result == ContentDialogResult.Secondary) { 
     bmp.Clear();
+    newFile = true;
     History.ClearHistory();
     }
 
