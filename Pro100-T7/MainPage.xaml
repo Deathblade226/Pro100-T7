@@ -14,8 +14,8 @@
     <Grid x:Name="mainArea">
         <Rectangle Fill="#464646"/>
         
-        <uc:BrushModifierPanel/>
-        <uc:DrawingCanvas/>
+        <uc:BrushModifierPanel x:Name="BrushModifier"/>
+        <uc:DrawingCanvas x:Name="DrawCanvas"/>
 
         <TextBlock x:Name="Mouse"
            Text="PlaceHolder"

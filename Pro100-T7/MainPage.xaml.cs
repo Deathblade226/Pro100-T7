@@ -21,7 +21,6 @@ using Pro100_T7.Models;
 using Windows.UI.Input;
 using Windows.Storage.Pickers;
 using Windows.UI.Core;
-using Pro100_T7.Model;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -46,7 +45,7 @@ namespace Pro100_T7
         {
             this.InitializeComponent();
 
-            //DrawArea.Children.Add(canvas.ImageData);
+            DrawCanvas.GetControlCanvasUIElement().Children.Add(canvas.ImageData);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

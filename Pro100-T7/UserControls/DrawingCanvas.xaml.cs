@@ -23,5 +23,7 @@ namespace Pro100_T7.UserControls
         {
             this.InitializeComponent();
         }
+
+        public Canvas GetControlCanvasUIElement() => DrawArea;
     }
 }
