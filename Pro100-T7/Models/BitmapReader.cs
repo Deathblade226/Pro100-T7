@@ -54,6 +54,19 @@ namespace Pro100_T7.Models
 			return color;
 		}
 
+		public void SetPixel(int x, int y, Color color)
+		{
+			int i = ((y * width) + x) * sizeof(int);
+			bytes[i] = (byte)(color.B);
+			i++;
+			bytes[i] = (byte)(color.G);
+			i++;
+			bytes[i] = (byte)(color.R);
+			i++;
+			bytes[i] = (byte)(color.A);
+
+		}
+
 		public void SetPixel(int x, int y, int color)
 		{
 			int i = ((y * width) + x) * sizeof(int);
@@ -65,7 +78,7 @@ namespace Pro100_T7.Models
 			i++;
 			bytes[i] = (byte)(color >> 24);
 
-			bmp.Invalidate();
+			//bmp.Invalidate();
 		}
 
 

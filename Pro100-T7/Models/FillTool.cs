@@ -12,7 +12,7 @@ namespace Pro100_T7.Models
 {
 	public class FillTool
 	{
-		public static int toFillWith = (((byte)255) << 24 ) | (((byte)255) << 16);
+		public static int toFillWith;
 		public static int toBeFilled;
 
 		public static Queue<P> points = new Queue<P>();
@@ -32,9 +32,15 @@ namespace Pro100_T7.Models
 		}
 
 
-		public static void Fill(WriteableBitmap bitmap, int x, int y)
+		public static void Fill(WriteableBitmap bitmap, int x, int y, Color color)
 		{
+			int intColor = ((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
+			Fill(bitmap, x, y, intColor);
+		}
 
+		public static void Fill(WriteableBitmap bitmap, int x, int y, int color)
+		{
+			toFillWith = color;
 			using (bmpReader = new BitmapReader(bitmap))
 			{
 				toBeFilled = bmpReader.GetPixeli(x, y);
@@ -50,7 +56,7 @@ namespace Pro100_T7.Models
 		
 
 		/// <summary>
-		/// Uses the scanline algorithm to flood fill a selected area, starting from the point given.
+		/// Uses the scanline algorithm to flood fill a selected area with the color given, starting from the point given.
 		/// </summary>
 		/// <param name="x">The X position to start the fill from</param>
 		/// <param name="y">The Y position to start the fill from</param>
