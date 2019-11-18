@@ -140,7 +140,6 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
-    <Compile Include="Models\BrushColor.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -151,6 +150,15 @@
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Stroke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\BrushModifierPanel.xaml.cs">
+      <DependentUpon>BrushModifierPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\DrawingCanvas.xaml.cs">
+      <DependentUpon>DrawingCanvas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ProgramMenuBar.xaml.cs">
+      <DependentUpon>ProgramMenuBar.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -176,15 +184,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UserControls\BrushModifierPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\DrawingCanvas.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\ProgramMenuBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
