@@ -47,5 +47,10 @@ namespace Pro100_T7.Models
         {
             ImageData.Source = ImageDataLayer.BitmapDrawingData;
         }
+
+        internal object GetControlCanvasUIElement()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
