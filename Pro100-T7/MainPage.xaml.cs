@@ -1,3 +1,4 @@
+using System;
 using Windows.System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,6 @@ using Windows.UI.Core;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using System;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -34,22 +34,26 @@ namespace Pro100_T7
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-public sealed partial class MainPage : Page {
+    public sealed partial class MainPage : Page
+    {
 
-public MainPage() {
-    this.InitializeComponent();
-}
-protected override void OnNavigatedTo(NavigationEventArgs e) {
-    DrawCanvas.OnNavigatedTo(e);
-    ProgramControlsBar.OnNavigatedTo(e);
-    PointerReleased += stopDrawing;
-}
+        public MainPage()
+        {
+            this.InitializeComponent();
+        }
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            DrawCanvas.OnNavigatedTo(e);
+            ProgramControlsBar.OnNavigatedTo(e);
+            PointerReleased += stopDrawing;
+        }
 
-private void stopDrawing(object sender, PointerRoutedEventArgs e) {
-    ProgramControlsBar.Focus(FocusState.Programmatic);
-}
+        private void stopDrawing(object sender, PointerRoutedEventArgs e)
+        {
+            ProgramControlsBar.Focus(FocusState.Programmatic);
+        }
 
-//private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+        //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         //{
         //    #region Notes
         //    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
@@ -153,6 +157,6 @@ private void stopDrawing(object sender, PointerRoutedEventArgs e) {
         //    #endregion
         //}
 
-}
+    }
 
 }
