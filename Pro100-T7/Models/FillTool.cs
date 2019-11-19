@@ -10,16 +10,15 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
-	public class FillTool
+	public static class FillTool
 	{
-		public static int toFillWith;
-		public static int toBeFilled;
+		private static int toFillWith;
+		private static int toBeFilled;
 
-		public static Queue<P> points = new Queue<P>();
-
-		public static BitmapReader bmpReader;
-
-		public struct P
+		/// <summary>
+		/// Simple struct to represent a point, only used in this class.
+		/// </summary>
+		private struct P
 		{
 			public int x;
 			public int y;
@@ -31,22 +30,36 @@ namespace Pro100_T7.Models
 			}
 		}
 
-
+		/// <summary>
+		/// Edits the passed in bitmap and fills the area surrounding the point with the color passed in
+		/// </summary>
+		/// <param name="bitmap">The bitmap to be edited</param>
+		/// <param name="x">The x value of the pointer location</param>
+		/// <param name="y">The y value of the pointer location</param>
+		/// <param name="color">The color to fill the area with</param>
 		public static void Fill(WriteableBitmap bitmap, int x, int y, Color color)
 		{
 			int intColor = ((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
 			Fill(bitmap, x, y, intColor);
 		}
 
+		/// <summary>
+		/// Fills the area surrounding the point with the color passed in
+		/// </summary>
+		/// <param name="bitmap">The bitmap to be edited</param>
+		/// <param name="x">The x value of the pointer location</param>
+		/// <param name="y">The y value of the pointer location</param>
+		/// <param name="color">The color to fill the area with</param>
 		public static void Fill(WriteableBitmap bitmap, int x, int y, int color)
 		{
 			toFillWith = color;
-			using (bmpReader = new BitmapReader(bitmap))
+			//use the using keyword to ensure the BitmapReader is disposed of before the method returns.
+			using (BitmapReader bmpReader = new BitmapReader(bitmap))
 			{
 				toBeFilled = bmpReader.GetPixeli(x, y);
 				if (toBeFilled != toFillWith)
 				{
-					FloodFillScanlineV2(x, y);
+					FloodFillScanline(bmpReader, x, y);
 				}
 
 			}
@@ -60,8 +73,10 @@ namespace Pro100_T7.Models
 		/// </summary>
 		/// <param name="x">The X position to start the fill from</param>
 		/// <param name="y">The Y position to start the fill from</param>
-		private static void FloodFillScanlineV2(int x, int y)
+		private static void FloodFillScanline(BitmapReader bmpReader, int x, int y)
 		{
+			Queue<P> points = new Queue<P>();
+
 			points.Enqueue(new P(x, y));
 
 			while (points.Count != 0)
@@ -77,7 +92,7 @@ namespace Pro100_T7.Models
 				y1++;
 				bool spanLeft = false;
 				bool spanRight = false;
-				while (y1 < bmpReader.height && bmpReader.GetPixeli(temp.x, y1) == toBeFilled)
+				while (y1 < bmpReader.Height && bmpReader.GetPixeli(temp.x, y1) == toBeFilled)
 				{
 					bmpReader.SetPixel(temp.x, y1, toFillWith);
 
@@ -90,12 +105,12 @@ namespace Pro100_T7.Models
 					{
 						spanLeft = false;
 					}
-					if (!spanRight && temp.x < bmpReader.width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) == toBeFilled)
+					if (!spanRight && temp.x < bmpReader.Width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) == toBeFilled)
 					{
 						points.Enqueue(new P(temp.x + 1, y1));
 						spanRight = true;
 					}
-					else if (spanRight && temp.x < bmpReader.width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) != toBeFilled)
+					else if (spanRight && temp.x < bmpReader.Width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) != toBeFilled)
 					{
 						spanRight = false;
 					}
