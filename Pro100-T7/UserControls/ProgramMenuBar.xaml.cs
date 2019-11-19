@@ -32,6 +32,13 @@ public sealed partial class ProgramMenuBar : UserControl {
     //CanvasMaster DrawCanvas;
     FileSavePicker fileSavePicker = new FileSavePicker();
 
+private CanvasMaster canvas;
+
+public CanvasMaster Canvas {
+    get { return canvas; }
+    set { canvas = value; }
+}
+
 public ProgramMenuBar() {
     this.InitializeComponent();
 }
@@ -148,15 +155,15 @@ private void FileExit_Click(object sender, RoutedEventArgs e) {
 }
 
 private void FileUndo_Click(object sender, RoutedEventArgs e) {
-    //byte[] b = History.Undo().bmp;
-    //canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    //canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
+    byte[] b = History.Undo().bmp;
+    canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 
 private void FileRedo_Click(object sender, RoutedEventArgs e) {
-    //byte[] b = History.Redo().bmp;
-    //canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    //canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
+    byte[] b = History.Redo().bmp;
+    canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 private void RegularBrush_Click(object sender, RoutedEventArgs e) {
     brushType = "regular";

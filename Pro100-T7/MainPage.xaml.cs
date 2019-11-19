@@ -43,6 +43,15 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
     ProgramControlsBar.OnNavigatedTo(e);
     PointerReleased += stopDrawing;
+    PointerMoved += Main_PointerMoved;
+}
+
+public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 
+    ProgramControlsBar.Canvas = DrawCanvas.Canvas;
+    int size = 1;
+    int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
+    DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
+    DrawCanvas.Size = size;
 }
 
 private void stopDrawing(object sender, PointerRoutedEventArgs e) {

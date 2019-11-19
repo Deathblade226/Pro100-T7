@@ -1,4 +1,4 @@
-using Pro100_T7.Models;
+﻿using Pro100_T7.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,13 +21,32 @@ using Windows.UI.Xaml.Navigation;
 namespace Pro100_T7.UserControls {
 public sealed partial class DrawingCanvas : UserControl {
 
-DrawPoint drawPoint = new DrawPoint();
-Stroke defaultStroke = new Stroke() { StrokeColor = Colors.OrangeRed, StrokeRadius = 15 };
-CanvasMaster canvas = new CanvasMaster(1000, 800);
+private CanvasMaster canvas = new CanvasMaster(1000, 800);
+private static Color color;
+private int size;
 
+public CanvasMaster Canvas {
+    get { return canvas; }
+    set { canvas = value; }
+}
+
+public Color Color {
+    get { return color; }
+    set { color = value; }
+}
+
+public int Size {
+    get { return size; }
+    set { size = value; }
+}
+
+
+        DrawPoint drawPoint = new DrawPoint();
+Stroke defaultStroke = new Stroke() { StrokeColor = color, StrokeRadius = 1 };
 
 public DrawingCanvas() {
     this.InitializeComponent();
+    
     GetControlCanvasUIElement().Children.Add(canvas.ImageData);
 }
 
@@ -46,6 +65,8 @@ private void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 }
 
 private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
+    defaultStroke.StrokeRadius = size;
+    defaultStroke.StrokeColor = color;
     Point current = Window.Current.CoreWindow.PointerPosition;
     current.X += Window.Current.Bounds.X - 44;
     current.Y += Window.Current.Bounds.Y - 164;
