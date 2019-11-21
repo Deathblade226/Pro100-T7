@@ -23,8 +23,6 @@
 
         <uc:BrushModifierPanel x:Name="BrushModifier"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"/>
-
-        <Button Content="Debug" Click="Button_Click"/>
     </Grid>
 
 </Page>
