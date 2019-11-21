@@ -26,6 +26,8 @@ using Windows.UI.Core;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Xaml.Hosting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -36,11 +38,38 @@ namespace Pro100_T7
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        SocketDebugLogger sdl;
 
         public MainPage()
         {
             this.InitializeComponent();
+
+            Debug();            
         }
+
+        private async Task Debug()
+        {
+            var viewId = 0;
+
+            var newView = CoreApplication.CreateNewView();
+            await newView.Dispatcher.RunAsync(
+                CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    var frame = new Frame();
+                    frame.Navigate(typeof(SocketDebugLogger));
+                    Window.Current.Content = frame;
+
+                    sdl = frame.Content as SocketDebugLogger;
+
+                    viewId = ApplicationView.GetForCurrentView().Id;
+
+                    Window.Current.Activate();
+                });
+
+            var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewId);
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             DrawCanvas.OnNavigatedTo(e);
@@ -51,6 +80,16 @@ namespace Pro100_T7
         private void stopDrawing(object sender, PointerRoutedEventArgs e)
         {
             ProgramControlsBar.Focus(FocusState.Programmatic);
+        }
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => {
+                sdl?.AddMessage("sadas,mdnsa,mda");
+                sdl?.AddMessage("sadas,xdsada,mda");
+                sdl?.AddMessage("sadssaddas,mdnsa,mda");
+                sdl?.AddMessage("sadas,asdasd,mda");
+            });
         }
 
         //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
