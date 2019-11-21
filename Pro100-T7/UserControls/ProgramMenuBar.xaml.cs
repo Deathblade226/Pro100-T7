@@ -25,12 +25,27 @@ using Windows.UI.Xaml.Navigation;
 namespace Pro100_T7.UserControls {
 
 public sealed partial class ProgramMenuBar : UserControl {
-    string brushType = "regular";
+    int brushType = 0;
     bool debug = true;
     bool newFile = true;
-    //CanvasMaster canvas;
-    //CanvasMaster DrawCanvas;
     FileSavePicker fileSavePicker = new FileSavePicker();
+    private CanvasMaster drawArea;
+    private CanvasMaster canvas;
+
+public CanvasMaster DrawArea {
+    get { return drawArea; }
+    set { drawArea = value; }
+}
+
+public int BrushType { 
+    get { return brushType; }
+    set { brushType = value; }
+}
+
+public CanvasMaster Canvas {
+    get { return canvas; }
+    set { canvas = value; }
+}
 
 public ProgramMenuBar() {
     this.InitializeComponent();
@@ -68,43 +83,53 @@ public static bool IsShiftKeyPressed() {
 return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;}
 
 private async void FileNew_Click(object sender, RoutedEventArgs e) {
-    //ContentDialog newFile = new ContentDialog {
-    //    Title = "Do you want to save before opening a new canvas.",
-    //    CloseButtonText = "Cancel",
-    //    PrimaryButtonText = "Yes",
-    //    SecondaryButtonText = "No"};
+    ContentDialog newFile = new ContentDialog {
+    Title = "Do you want to save before opening a new canvas?",
+    CloseButtonText = "Cancel",
+    PrimaryButtonText = "Yes",
+    SecondaryButtonText = "No"};
 
-    //    var result = await newFile.ShowAsync();
+    var result = await newFile.ShowAsync();
 
-    //    if (result == ContentDialogResult.Primary) {
-    //    //FileSave_Click(null, null);
-    //    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
-    //    History.ClearHistory(); }
-    //    else if (result == ContentDialogResult.Secondary) {
-    //    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
-    //    History.ClearHistory();
-    //}
+    if (result == ContentDialogResult.Primary) {
+    //FileSave_Click(null, null);
+    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
+    History.ClearHistory(); }
+    else if (result == ContentDialogResult.Secondary) {
+    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
+    History.ClearHistory();
+    }
 }
 
 private void FileSave_Click(object sender, RoutedEventArgs e) {
-    //if (newFile) { FileSaveAs_Click(sender, e); }
-    //else 
-    //var outputFile = fileSavePicker.PickSaveFileAsync()
-    //if (outputFile == null) { // The user cancelled the picking operation
-    //return;
-    //}
-    //}
+    if (newFile) { FileSaveAs_Click(sender, e); }
+    else { 
+    var outputFile = fileSavePicker.PickSaveFileAsync();
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+    }
 }
 
-private void FileSaveAs_Click(object sender, RoutedEventArgs e) {
-//    fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-//    fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
-//    fileSavePicker.SuggestedFileName = "image";
-//    var outputFile = fileSavePicker.PickSaveFileAsync();
-//    if (outputFile == null) { // The user cancelled the picking operation
-//    return;
-//    }
-//    newFile = false;
+private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
+    fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+    fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+    fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
+    fileSavePicker.SuggestedFileName = "image";
+    var outputFile = await fileSavePicker.PickSaveFileAsync();
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+
+    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
+    BitmapPixelFormat.Bgra8,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
+    );
+
+    SaveSoftwareBitmapToFile(outputBitmap, outputFile);
+    newFile = false;
 }
 
 private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
@@ -143,32 +168,49 @@ private void FileLoad_Click(object sender, RoutedEventArgs e) {
 
 }
 
-private void FileExit_Click(object sender, RoutedEventArgs e) {
+private async void FileExit_Click(object sender, RoutedEventArgs e) {
+    ContentDialog newFile = new ContentDialog {
+    Title = "Do you want to save before exiting the application?",
+    CloseButtonText = "Cancel",
+    PrimaryButtonText = "Yes",
+    SecondaryButtonText = "No"};
+
+    var result = await newFile.ShowAsync();
+
+    if (result == ContentDialogResult.Primary) {
+    FileSave_Click(null, null);
     Application.Current.Exit();
+    } else if (result == ContentDialogResult.Secondary) {
+    Application.Current.Exit();
+    }
 }
 
 private void FileUndo_Click(object sender, RoutedEventArgs e) {
-    //byte[] b = History.Undo().bmp;
-    //canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    //canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
+    byte[] b = History.Undo().bmp;
+    canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 
 private void FileRedo_Click(object sender, RoutedEventArgs e) {
-    //byte[] b = History.Redo().bmp;
-    //canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    //canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
+    byte[] b = History.Redo().bmp;
+    canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 private void RegularBrush_Click(object sender, RoutedEventArgs e) {
-    brushType = "regular";
+    BrushType = 0;
 }
 private void WavyBrush_Click(object sender, RoutedEventArgs e) {
-    brushType = "wavy";
+    BrushType = 1;
 }
 private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
-    brushType = "double";
+    BrushType = 2;
 }
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
-    brushType = "pen";
+    BrushType = 3;
+}
+
+private void FileExport_Click(object sender, RoutedEventArgs e) {
+
 }
 
 }

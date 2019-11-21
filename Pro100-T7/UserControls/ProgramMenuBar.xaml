@@ -39,6 +39,13 @@
 
             <MenuFlyoutSeparator/>
 
+            <MenuFlyoutItem x:Name="FileExport"
+                            ToolTipService.ToolTip="Export (Ctrl+E)"
+                            Text="Export"
+                            Click="FileExport_Click"/>
+
+            <MenuFlyoutSeparator/>
+
             <MenuFlyoutItem x:Name="FileExit"
                     ToolTipService.ToolTip="Exit (Ctrl+Esc)"
                     Text="Exit"
