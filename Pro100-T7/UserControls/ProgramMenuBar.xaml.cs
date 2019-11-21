@@ -305,10 +305,6 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
 
-        private void FileExport_Click(object sender, RoutedEventArgs e) {
-
-}
-
 }
 
 }
