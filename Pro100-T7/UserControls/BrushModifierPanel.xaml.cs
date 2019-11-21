@@ -18,12 +18,18 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Pro100_T7.UserControls {
 public sealed partial class BrushModifierPanel : UserControl {
+Color secondary;
 public BrushModifierPanel() {
     this.InitializeComponent();
 }
 
 public ColorPicker GetColorPickerUIElement() => colorPicker;
+public Color GetColorPickerSecondary() => secondary;
 public TextBox GetBrushSizeTextBoxUIElement() => brushSizeBox;
 public Slider GetBrushSizeSliderUIElement() => brushSizeSlider;
+
+private void colorPicker_RightClick(object sender, RightTappedRoutedEventArgs e){
+            secondary = colorPicker.Color;
 }
+    }
 }

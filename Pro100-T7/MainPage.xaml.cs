@@ -35,7 +35,6 @@ namespace Pro100_T7
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
 public sealed partial class MainPage : Page {
-
 public MainPage() {
     this.InitializeComponent();
 }
@@ -51,6 +50,7 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     int size = 1;
     int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
     DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
+    DrawCanvas.Secondary = BrushModifier.GetColorPickerSecondary();
     DrawCanvas.Size = size;
     ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
     DrawCanvas.Type = ProgramControlsBar.BrushType;
@@ -60,7 +60,7 @@ private void stopDrawing(object sender, PointerRoutedEventArgs e) {
     ProgramControlsBar.Focus(FocusState.Programmatic);
 }
 
-//private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+        //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         //{
         //    #region Notes
         //    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
@@ -164,6 +164,7 @@ private void stopDrawing(object sender, PointerRoutedEventArgs e) {
         //    #endregion
         //}
 
-}
+
+    }
 
 }

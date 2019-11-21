@@ -84,6 +84,18 @@
                     ToolTipService.ToolTip="Pen Brush"
                     Text="Pen Brush" 
                     Click="PenBrush_Click"/>
+            <MenuFlyoutItem x:Name="Triangle"
+                    ToolTipService.ToolTip="Triangle Brush"
+                    Text="Triangle Brush" 
+                    Click="TriangleBrush_Click"/>
+            <MenuFlyoutItem x:Name="Hourglass"
+                    ToolTipService.ToolTip="Hourglass Brush"
+                    Text="Hourglass Brush" 
+                    Click="HourglassBrush_Click"/>
+            <MenuFlyoutItem x:Name="Clear"
+                    ToolTipService.ToolTip="Clear Canvas"
+                    Text="Clear Canvas" 
+                    Click="ClearCanvas_Click"/>
         </MenuBarItem>
 
     </Windows10version1809:MenuBar>
