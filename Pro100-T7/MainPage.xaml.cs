@@ -43,7 +43,6 @@ public MainPage() {
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
     ProgramControlsBar.OnNavigatedTo(e);
-    PointerReleased += stopDrawing;
     PointerMoved += Main_PointerMoved;
 }
 
@@ -56,11 +55,9 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     DrawCanvas.Size = size;
     ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
     DrawCanvas.Type = ProgramControlsBar.BrushType;
+    ProgramControlsBar.SetFocus();
 }
 
-private void stopDrawing(object sender, PointerRoutedEventArgs e) {
-    ProgramControlsBar.Focus(FocusState.Programmatic);
-}
 
         //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         //{
