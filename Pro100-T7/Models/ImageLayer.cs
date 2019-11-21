@@ -27,6 +27,9 @@ namespace Pro100_T7.Models
         case 1: brush.Wavy();  break;
         case 2: brush.Double();  break;
         case 3: brush.Pen();  break;
+        case 4: brush.Clear(); break;
+        case 5: brush.Triangle(); break;
+        case 6: brush.Hourglass(); break;
         }
 
             //draw code will go here and modify the image accordingly
