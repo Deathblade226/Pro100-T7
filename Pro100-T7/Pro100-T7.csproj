@@ -140,19 +140,16 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
-    <Compile Include="Interfaces\IClientServer.cs" />
-    <Compile Include="Interfaces\IDrawPacket.cs" />
+    <Compile Include="Models\BitmapReader.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Brush.cs" />
     <Compile Include="Models\CanvasMaster.cs" />
-    <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\DrawPacket.cs" />
     <Compile Include="Models\DrawPoint.cs" />
+    <Compile Include="Models\FillTool.cs" />
     <Compile Include="Models\ImageLayer.cs" />
     <Compile Include="Models\History.cs" />
-    <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Stroke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\BrushModifierPanel.xaml.cs">
@@ -198,8 +195,8 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\ProgramMenuBar.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
