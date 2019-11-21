@@ -52,6 +52,8 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
     DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
     DrawCanvas.Size = size;
+    ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
+    DrawCanvas.Type = ProgramControlsBar.BrushType;
 }
 
 private void stopDrawing(object sender, PointerRoutedEventArgs e) {

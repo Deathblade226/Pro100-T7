@@ -52,7 +52,9 @@ namespace Pro100_T7.Models
         {
             //Brush that draws two lines at once
             Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, BrushColor);
+            Bmp.DrawLineAa(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
             Bmp.FillEllipseCentered(CurrentX + BrushSize + 20, CurrentY + BrushSize + 20, BrushSize, BrushSize, BrushColor);
+            Bmp.DrawLineAa(OldX + BrushSize + 20, OldY + BrushSize + 20, CurrentX + BrushSize + 20, CurrentY + BrushSize + 20, BrushColor, BrushSize * 2);
         }
 
         //Brush that draws like a pen
