@@ -140,6 +140,8 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
+    <Compile Include="Interfaces\IClientServer.cs" />
+    <Compile Include="Interfaces\IDrawPacket.cs" />
     <Compile Include="Models\BitmapReader.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

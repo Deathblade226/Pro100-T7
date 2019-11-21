@@ -9,6 +9,6 @@ namespace Pro100_T7.Models
 {
     public sealed class Client : IClientServer
     {
-
+        public Server Host { get; set; } = null;
     }
 }
