@@ -20,8 +20,10 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Pro100_T7.UserControls {
 public sealed partial class DrawingCanvas : UserControl {
+
 private CanvasMaster canvas = new CanvasMaster(1000, 800);
 private static Color color;
+private static Color secondary;
 private int size;
 private int type = 0;
 
@@ -35,6 +37,10 @@ public Color Color {
     set { color = value; }
 }
 
+public Color Secondary {
+    get { return secondary; }
+    set { secondary = value; }
+}
 public int Size {
     get { return size; }
     set { size = value; }
@@ -43,6 +49,7 @@ public int Type {
     get { return type; }
     set { type = value; }
 }
+
 
 DrawPoint drawPoint = new DrawPoint();
 Stroke defaultStroke = new Stroke() { StrokeColor = color, StrokeRadius = 1 };
@@ -72,21 +79,23 @@ private void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 
 private async void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     defaultStroke.StrokeRadius = size;
-    defaultStroke.StrokeColor = color;
-    Point current = Window.Current.CoreWindow.PointerPosition;
-    current.X += Window.Current.Bounds.X - 44;
-    current.Y += Window.Current.Bounds.Y - 164;
-    drawPoint.CurrentPoint = current;
+    
+    //Point current = Window.Current.CoreWindow.PointerPosition;
+	//current.X += Window.Current.Bounds.X - 44;
+	//current.Y += Window.Current.Bounds.Y - 164;
+	PointerPoint current = e.GetCurrentPoint(DrawArea);
+    drawPoint.CurrentPoint = new Point(current.Position.X, current.Position.Y);
 
     if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
     PointerPoint ptrPt = e.GetCurrentPoint(null);
     
     if (ptrPt.Properties.IsLeftButtonPressed) {
-    
+    defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type);
 
     } else if (ptrPt.Properties.IsRightButtonPressed) {
-    //canvas.ImageDataLayer.BitmapDrawingData.Clear();
+    defaultStroke.StrokeColor = secondary;
+    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type);
     }
     drawPoint.OldPoint = drawPoint.CurrentPoint;
 }

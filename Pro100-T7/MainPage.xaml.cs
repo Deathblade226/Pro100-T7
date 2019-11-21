@@ -1,3 +1,4 @@
+using System;
 using Windows.System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,8 @@ using Windows.UI.Core;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Xaml.Hosting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,7 +37,6 @@ namespace Pro100_T7
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
 public sealed partial class MainPage : Page {
-
 public MainPage() {
     this.InitializeComponent();
 }
@@ -50,6 +51,7 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     int size = 1;
     int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
     DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
+    DrawCanvas.Secondary = BrushModifier.GetColorPickerSecondary();
     DrawCanvas.Size = size;
     ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
     DrawCanvas.Type = ProgramControlsBar.BrushType;
@@ -57,7 +59,7 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
 }
 
 
-//private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
+        //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         //{
         //    #region Notes
         //    //bmp.SetPixel((int)current.X, (int)current.Y, Colors.Black);
@@ -160,7 +162,5 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
         //    //}
         //    #endregion
         //}
-
-}
-
+    }
 }
