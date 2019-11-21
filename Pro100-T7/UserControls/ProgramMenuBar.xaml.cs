@@ -208,8 +208,17 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
     BrushType = 3;
 }
+private void ClearCanvas_Click(object sender, RoutedEventArgs e){
+    BrushType = 4;
+}
+private void TriangleBrush_Click(object sender, RoutedEventArgs e){
+    BrushType = 5;
+}
+private void HourglassBrush_Click(object sender, RoutedEventArgs e){
+    BrushType = 6;
+}
 
-private void FileExport_Click(object sender, RoutedEventArgs e) {
+        private void FileExport_Click(object sender, RoutedEventArgs e) {
 
 }
 

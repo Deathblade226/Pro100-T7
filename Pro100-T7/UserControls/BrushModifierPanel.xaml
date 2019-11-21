@@ -16,7 +16,8 @@
                          Grid.Column="1"
                          Height="690"
                          IsEnabled="True"
-                         Color="LightBlue"/>
+                         Color="LightBlue"
+                         RightTapped="colorPicker_RightClick"/>
             <GroupItem Grid.Column="1"
                        HorizontalAlignment="Center">
                 <Grid>
