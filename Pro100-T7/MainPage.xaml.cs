@@ -1,3 +1,4 @@
+using System;
 using Windows.System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,8 @@ using Windows.UI.Core;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Xaml.Hosting;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -41,7 +43,6 @@ public MainPage() {
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
     ProgramControlsBar.OnNavigatedTo(e);
-    PointerReleased += stopDrawing;
     PointerMoved += Main_PointerMoved;
 }
 
@@ -54,11 +55,9 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     DrawCanvas.Size = size;
     ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
     DrawCanvas.Type = ProgramControlsBar.BrushType;
+    ProgramControlsBar.SetFocus();
 }
 
-private void stopDrawing(object sender, PointerRoutedEventArgs e) {
-    ProgramControlsBar.Focus(FocusState.Programmatic);
-}
 
         //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         //{
@@ -163,8 +162,5 @@ private void stopDrawing(object sender, PointerRoutedEventArgs e) {
         //    //}
         //    #endregion
         //}
-
-
     }
-
 }

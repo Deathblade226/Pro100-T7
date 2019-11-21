@@ -23,6 +23,6 @@
 
         <uc:BrushModifierPanel x:Name="BrushModifier"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"/>
-</Grid>
+    </Grid>
 
 </Page>

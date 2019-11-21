@@ -9,19 +9,19 @@
     d:DesignHeight="1000"
     d:DesignWidth="400">
 
-    <GroupItem HorizontalAlignment="Right"
+	<GroupItem HorizontalAlignment="Right"
            Margin="0 0 20 0">
-        <Grid>
-            <ColorPicker x:Name="colorPicker"
+		<Grid>
+			<ColorPicker x:Name="colorPicker"
                          Grid.Column="1"
                          Height="690"
                          IsEnabled="True"
                          Color="LightBlue"
                          RightTapped="colorPicker_RightClick"/>
-            <GroupItem Grid.Column="1"
+			<GroupItem Grid.Column="1"
                        HorizontalAlignment="Center">
-                <Grid>
-                    <TextBlock Text="Brush Size: 1 - 200"
+				<Grid>
+					<TextBlock Text="Brush Size: 1 - 200"
                                    FontSize="20"
                                    Width="170"
                                    Height="40"
@@ -29,7 +29,7 @@
                                    VerticalAlignment="Top"
                                    Margin="0 75 0 0"
                     />
-                    <TextBox x:Name="brushSizeBox"
+					<TextBox x:Name="brushSizeBox"
                                  Width="60"
                                  Height="35"
                                  InputScope="Number"
@@ -39,7 +39,7 @@
                                  Text="1"
                                  Margin="340 98.5 0 0"
                     />
-                    <Slider x:Name="brushSizeSlider"
+					<Slider x:Name="brushSizeSlider"
                                 HorizontalAlignment="Left"
                                 Value="{Binding Text, ElementName=brushSizeBox, Mode=TwoWay}"
                                 Minimum="1"
@@ -48,8 +48,8 @@
                                 Width="310"
                                 Grid.Column="1"
                     />
-                </Grid>
-            </GroupItem>
-        </Grid>
-    </GroupItem>
+				</Grid>
+			</GroupItem>
+		</Grid>
+	</GroupItem>
 </UserControl>
