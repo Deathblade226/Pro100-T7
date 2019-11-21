@@ -79,7 +79,7 @@ namespace Pro100_T7.Models
 
 			points.Enqueue(new P(x, y));
 
-			while (points.Count != 0)
+			while (points.Count > 0)
 			{
 				P temp = points.Dequeue();
 				int y1 = temp.y;
@@ -90,29 +90,29 @@ namespace Pro100_T7.Models
 					y1--;
 				}
 				y1++;
-				bool spanLeft = false;
-				bool spanRight = false;
+				bool toBeFilledLeft = false;
+				bool toBeFilledRight = false;
 				while (y1 < bmpReader.Height && bmpReader.GetPixeli(temp.x, y1) == toBeFilled)
 				{
 					bmpReader.SetPixel(temp.x, y1, toFillWith);
 
-					if (!spanLeft && temp.x > 0 && bmpReader.GetPixeli(temp.x - 1, y1) == toBeFilled)
+					if (!toBeFilledLeft && (temp.x > 0 && bmpReader.GetPixeli(temp.x - 1, y1) == toBeFilled))
 					{
 						points.Enqueue(new P(temp.x - 1, y1));
-						spanLeft = true;
+						toBeFilledLeft = true;
 					}
-					else if (spanLeft || temp.x - 1 == 0 && bmpReader.GetPixeli(temp.x - 1, y1) != toBeFilled)
+					else if (toBeFilledLeft && (temp.x > 0 && bmpReader.GetPixeli(temp.x - 1, y1) != toBeFilled))
 					{
-						spanLeft = false;
+						toBeFilledLeft = false;
 					}
-					if (!spanRight && temp.x < bmpReader.Width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) == toBeFilled)
+					if (!toBeFilledRight && (temp.x < bmpReader.Width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) == toBeFilled))
 					{
 						points.Enqueue(new P(temp.x + 1, y1));
-						spanRight = true;
+						toBeFilledRight = true;
 					}
-					else if (spanRight && temp.x < bmpReader.Width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) != toBeFilled)
+					else if (toBeFilledRight && (temp.x < bmpReader.Width - 1 && bmpReader.GetPixeli(temp.x + 1, y1) != toBeFilled))
 					{
-						spanRight = false;
+						toBeFilledRight = false;
 					}
 					y1++;
 				}
