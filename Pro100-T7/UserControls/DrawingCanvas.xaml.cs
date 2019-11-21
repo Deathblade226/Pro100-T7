@@ -23,10 +23,9 @@ public sealed partial class DrawingCanvas : UserControl {
 
 private CanvasMaster canvas = new CanvasMaster(1000, 800);
 private static Color color;
+private static Color secondary;
 private int size;
 private int type = 0;
-
-		private bool isMouseDown = false;
 
 public CanvasMaster Canvas {
     get { return canvas; }
@@ -38,6 +37,10 @@ public Color Color {
     set { color = value; }
 }
 
+public Color Secondary {
+    get { return secondary; }
+    set { secondary = value; }
+}
 public int Size {
     get { return size; }
     set { size = value; }
@@ -76,8 +79,8 @@ private void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 
 private async void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     defaultStroke.StrokeRadius = size;
-    defaultStroke.StrokeColor = color;
-	//Point current = Window.Current.CoreWindow.PointerPosition;
+    
+    //Point current = Window.Current.CoreWindow.PointerPosition;
 	//current.X += Window.Current.Bounds.X - 44;
 	//current.Y += Window.Current.Bounds.Y - 164;
 	PointerPoint current = e.GetCurrentPoint(DrawArea);
@@ -87,11 +90,12 @@ private async void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) 
     PointerPoint ptrPt = e.GetCurrentPoint(null);
     
     if (ptrPt.Properties.IsLeftButtonPressed) {
-    
+    defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type);
 
     } else if (ptrPt.Properties.IsRightButtonPressed) {
-    //canvas.ImageDataLayer.BitmapDrawingData.Clear();
+    defaultStroke.StrokeColor = secondary;
+    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type);
     }
     drawPoint.OldPoint = drawPoint.CurrentPoint;
 }

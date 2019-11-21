@@ -30,13 +30,10 @@ namespace Pro100_T7.Models
             Bmp = bmp;
         }
 
-        public void Wavy() //Crash on going to top/bottom of image
+        public void Wavy() //Crash on going to top/bottom of image(Fixed) New issue very slow
         {
             //Wavy Kinda lines
-            for (int i = 1; i <= BrushSize; i++)
-            {
-                Bmp.SetPixel(CurrentX + i, CurrentY + i, 0, 0, 0);
-            }
+            Bmp.DrawTriangle(OldX, OldY, OldX + BrushSize, OldY + BrushSize, OldX - BrushSize, OldY - BrushSize, BrushColor);
         }
 
         public void Regular() 
@@ -53,11 +50,24 @@ namespace Pro100_T7.Models
             //Brush that draws two lines at once
             Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, BrushColor);
             Bmp.DrawLineAa(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
-            Bmp.FillEllipseCentered(CurrentX + BrushSize + 20, CurrentY + BrushSize + 20, BrushSize, BrushSize, BrushColor);
-            Bmp.DrawLineAa(OldX + BrushSize + 20, OldY + BrushSize + 20, CurrentX + BrushSize + 20, CurrentY + BrushSize + 20, BrushColor, BrushSize * 2);
+            Bmp.FillEllipseCentered(CurrentX + BrushSize + 100, CurrentY + BrushSize + 100, BrushSize, BrushSize, BrushColor);
+            Bmp.DrawLineAa(OldX + BrushSize + 100, OldY + BrushSize + 100, CurrentX + BrushSize + 100, CurrentY + BrushSize + 100, BrushColor, BrushSize * 2);
         }
 
         //Brush that draws like a pen
         public void Pen() => Bmp.DrawLineDDA(OldX, OldY, CurrentX, CurrentY, BrushColor);
+
+        public void Triangle() => Bmp.DrawTriangle(OldX, OldY, CurrentX + BrushSize, CurrentY + BrushSize, CurrentX - BrushSize, CurrentY - BrushSize, BrushColor);
+        public void Hourglass() => Bmp.DrawQuad(OldX, OldY, OldX, OldY + BrushSize, CurrentX, CurrentY, CurrentX, CurrentY + BrushSize, BrushColor);
+
+        public void Erase()
+        { 
+            Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, Colors.White);
+        }
+
+        public void Clear()
+        {
+            Bmp.Clear();
+        }
     }
 }
