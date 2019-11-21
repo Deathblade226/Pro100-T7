@@ -20,7 +20,6 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Pro100_T7.UserControls {
 public sealed partial class DrawingCanvas : UserControl {
-
 private CanvasMaster canvas = new CanvasMaster(1000, 800);
 private static Color color;
 private int size;
@@ -44,7 +43,6 @@ public int Type {
     get { return type; }
     set { type = value; }
 }
-
 
 DrawPoint drawPoint = new DrawPoint();
 Stroke defaultStroke = new Stroke() { StrokeColor = color, StrokeRadius = 1 };

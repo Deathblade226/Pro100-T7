@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl x:Name="Bar"
     x:Class="Pro100_T7.UserControls.ProgramMenuBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,12 +14,14 @@
          VerticalAlignment="Top"
          Background="LightGray">
 
-        <MenuBarItem Title="File">
+        <MenuBarItem x:Name="MBFile" 
+                     Title="File">
 
             <MenuFlyoutItem x:Name="FileNew"
                     ToolTipService.ToolTip="New (Ctrl+N)"
                     Text="New"
                     Click="FileNew_Click"/>
+
             <MenuFlyoutSeparator/>
 
             <MenuFlyoutItem x:Name="FileSave"
@@ -87,4 +89,5 @@
         </MenuBarItem>
 
     </Windows10version1809:MenuBar>
+
 </UserControl>
