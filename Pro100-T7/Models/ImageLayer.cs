@@ -18,15 +18,26 @@ namespace Pro100_T7.Models
             BitmapDrawingData = BitmapFactory.New(pixelWidth, pixelHeight);
         }
 
-        public void DrawBrush(Stroke stroke, DrawPoint drawPoint)
+        public void DrawBrush(Stroke stroke, DrawPoint drawPoint, int type = 0)
         {
-            using (BitmapDrawingData.GetBitmapContext())
-            {
-                //draw code will go here and modify the image accordingly
-                //BitmapDrawingData.DrawLineAa(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius);
-                BitmapDrawingData.FillEllipseCentered(drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeRadius, stroke.StrokeRadius, stroke.StrokeColor);
-            }
+        Brush brush = new Brush(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius,BitmapDrawingData);
+        
+        switch(type){
+        case 0: brush.Regular(); break;
+        case 1: brush.Wavy();  break;
+        case 2: brush.Double();  break;
+        case 3: brush.Pen();  break;
+        }
 
+            //draw code will go here and modify the image accordingly
+            //BitmapDrawingData.FillEllipseCentered(drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeRadius, stroke.StrokeRadius, stroke.StrokeColor);
+            //BitmapDrawingData.DrawLineAa(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius * 2);
+
+            ImageDataLayerModifiedEvent.Invoke();
+        }
+        public void DrawEllipse(Stroke stroke, DrawPoint drawPoint) {
+            Brush brush = new Brush(drawPoint.CurX(), drawPoint.CurY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius, BitmapDrawingData);
+            brush.Regular();
             ImageDataLayerModifiedEvent.Invoke();
         }
     }
