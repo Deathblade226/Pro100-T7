@@ -106,6 +106,10 @@
                     ToolTipService.ToolTip="Clear Canvas"
                     Text="Clear Canvas" 
                     Click="ClearCanvas_Click"/>
+			<MenuFlyoutItem x:Name="Fill"
+                    ToolTipService.ToolTip="Bucket Fill"
+                    Text="Bucket Fill" 
+                    Click="Fill_Click"/>
         </MenuBarItem>
 
         <MenuBarItem Title="Tools">

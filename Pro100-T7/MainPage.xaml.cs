@@ -45,6 +45,12 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
     ProgramControlsBar.OnNavigatedTo(e);
     PointerMoved += Main_PointerMoved;
+	PointerReleased += MainPage_PointerReleased;
+}
+
+private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
+{
+	DrawCanvas.ActionPointerReleased(sender, e);
 }
 
 public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 

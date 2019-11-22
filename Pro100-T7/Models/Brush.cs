@@ -43,7 +43,7 @@ namespace Pro100_T7.Models
         public void Regular() 
         { 
             Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, BrushColor);
-            Bmp.DrawLineAa(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
+            Bmp.DrawLineCustom(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
             //bmp.FillEllipseCentered((int)current.X, (int)current.Y, (int)brushSize.Value, (int)brushSize.Value, colorPicker.Color);
             //bmp.DrawLineAa((int)old.X, (int)old.Y, (int)current.X, (int)current.Y, colorPicker.Color, (int)brushSize.Value * 2);
 
@@ -53,9 +53,9 @@ namespace Pro100_T7.Models
         {
             //Brush that draws two lines at once
             Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, BrushColor);
-            Bmp.DrawLineAa(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
+            Bmp.DrawLineCustom(OldX, OldY, CurrentX, CurrentY, BrushColor, BrushSize * 2);
             Bmp.FillEllipseCentered(CurrentX + BrushSize + 100, CurrentY + BrushSize + 100, BrushSize, BrushSize, BrushColor);
-            Bmp.DrawLineAa(OldX + BrushSize + 100, OldY + BrushSize + 100, CurrentX + BrushSize + 100, CurrentY + BrushSize + 100, BrushColor, BrushSize * 2);
+            Bmp.DrawLineCustom(OldX + BrushSize + 100, OldY + BrushSize + 100, CurrentX + BrushSize + 100, CurrentY + BrushSize + 100, BrushColor, BrushSize * 2);
         }
 
         //Brush that draws like a pen
@@ -77,5 +77,11 @@ namespace Pro100_T7.Models
         {
             Bmp.Clear();
         }
+
+		public void Fill()
+		{
+			FillTool.Fill(Bmp, CurrentX, CurrentY, BrushColor);
+			Bmp.Invalidate();
+		}
     }
 }

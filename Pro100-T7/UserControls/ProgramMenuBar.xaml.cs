@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -35,6 +36,8 @@ public sealed partial class ProgramMenuBar : UserControl {
     private int brushSize = 1;
     bool exit = false;
     bool openNew = false;
+
+		private string customFileExtension = ".dpf";
 
 public CanvasMaster DrawArea {
     get { return drawArea; }
@@ -273,8 +276,8 @@ private async void FileExit_Click(object sender, RoutedEventArgs e) {
 /// <param name="e">Set to null</param>
 private void FileUndo_Click(object sender, RoutedEventArgs e) {
     byte[] b = History.Undo().bmp;
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    drawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+    DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 /// <summary>
 /// Redoes the last action.
@@ -283,8 +286,8 @@ private void FileUndo_Click(object sender, RoutedEventArgs e) {
 /// <param name="e">Set to null</param>
 private void FileRedo_Click(object sender, RoutedEventArgs e) {
     byte[] b = History.Redo().bmp;
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    drawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+    DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 /// <summary>
 /// Sets current brush to base brush.
@@ -318,6 +321,9 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
     BrushType = 3;
 }
+
+
+
 private void ClearCanvas_Click(object sender, RoutedEventArgs e){
     BrushType = 4;
 }
@@ -327,6 +333,11 @@ private void TriangleBrush_Click(object sender, RoutedEventArgs e){
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
+private void Fill_Click(object sender, RoutedEventArgs e)
+{
+	BrushType = 9;
+}
+
 private void Eraser_Click(object sender, RoutedEventArgs e) {
     BrushType = 7;
 }
@@ -338,11 +349,25 @@ private void eyeDropper_Click(object sender, RoutedEventArgs e) {
 /// </summary>
 /// <param name="sender">Set to null</param>
 /// <param name="e">Set to null</param>
-private void FileExport_Click(object sender, RoutedEventArgs e) {
+private async void FileExport_Click(object sender, RoutedEventArgs e)
+{
+	//serialization here
+	FileSavePicker picker = new FileSavePicker();
+	picker.FileTypeChoices.Add("Drawing Project file", new List<string>() { customFileExtension });
+	picker.SuggestedFileName = "New Project";
+	StorageFile file = await picker.PickSaveFileAsync();
+	if (file != null)
+	{
+	using (Stream stream = await file.OpenStreamForWriteAsync())
+	{
+		DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
+		ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
+	}
+	}	
+
 
 }
-
-
+		
 }
 
 }

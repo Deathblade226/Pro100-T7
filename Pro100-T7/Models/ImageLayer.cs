@@ -33,6 +33,8 @@ namespace Pro100_T7.Models
         case 6: brush.Hourglass(); break;
         case 7: brush.Erase(); break;
         case 8: brush.EyeDropper(); break;
+        case 9: brush.Fill(); break;
+
         }
 
             //draw code will go here and modify the image accordingly
