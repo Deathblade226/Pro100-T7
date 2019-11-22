@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Pro100_T7.UserControls {
 public sealed partial class BrushModifierPanel : UserControl {
-Color secondary;
+Color secondary = Color.FromArgb(255, 255, 0, 0);
 public BrushModifierPanel() {
     this.InitializeComponent();
 }
@@ -29,7 +29,26 @@ public TextBox GetBrushSizeTextBoxUIElement() => brushSizeBox;
 public Slider GetBrushSizeSliderUIElement() => brushSizeSlider;
 
 private void colorPicker_RightClick(object sender, RightTappedRoutedEventArgs e){
-            secondary = colorPicker.Color;
+    RColor.Fill = new SolidColorBrush(GetColorPickerSecondary());
+    secondary = colorPicker.Color;
 }
-    }
+
+private void RColorB_Click(object sender, RoutedEventArgs e) {
+    RColor.Fill = new SolidColorBrush(GetColorPickerUIElement().Color);
+    secondary = colorPicker.Color;
+}
+
+private void LColorB_Click(object sender, RoutedEventArgs e) {
+    LColor.Fill = new SolidColorBrush(GetColorPickerUIElement().Color);
+
+}
+private void Default_Click(object sender, RoutedEventArgs e) {
+    colorPicker.Color = Color.FromArgb(255, 0, 0, 255);
+    RColor.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
+    LColor.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+    secondary = Color.FromArgb(255, 255, 0, 0);
+}
+
+}
+
 }

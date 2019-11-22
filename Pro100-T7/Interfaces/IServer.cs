@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Pro100_T7.Interfaces
 {
-    interface IClientServer
+    interface IServer
     {
-        void Update();
+        void SendData();
     }
 }

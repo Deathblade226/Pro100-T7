@@ -94,12 +94,9 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
     
 }
 
-private async void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
+private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     defaultStroke.StrokeRadius = size;
-    
-    //Point current = Window.Current.CoreWindow.PointerPosition;
-	//current.X += Window.Current.Bounds.X - 44;
-	//current.Y += Window.Current.Bounds.Y - 164;
+
 	PointerPoint current = e.GetCurrentPoint(DrawArea);
     drawPoint.CurrentPoint = new Point(current.Position.X, current.Position.Y);
 

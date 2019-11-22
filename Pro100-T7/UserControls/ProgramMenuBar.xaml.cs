@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
@@ -28,10 +29,13 @@ namespace Pro100_T7.UserControls {
 public sealed partial class ProgramMenuBar : UserControl {
     int brushType = 0;
     bool debug = true;
-    bool newFile = true;
+    bool isNewFile = true;
     FileSavePicker fileSavePicker = new FileSavePicker();
+    StorageFile outputFile;
     private CanvasMaster drawArea;
     private int brushSize = 1;
+    bool exit = false;
+    bool openNew = false;
 
 		private string customFileExtension = ".dpf";
 
@@ -120,12 +124,15 @@ private async void FileNew_Click(object sender, RoutedEventArgs e) {
     var result = await newFile.ShowAsync();
 
     if (result == ContentDialogResult.Primary) {
-    //FileSave_Click(null, null);
-    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
-    History.ClearHistory(); }
-    else if (result == ContentDialogResult.Secondary) {
-    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
     History.ClearHistory();
+    openNew = true;
+    await SavingImage();
+    }
+    else if (result == ContentDialogResult.Secondary) {
+    isNewFile = true;
+    outputFile = null;
+    History.ClearHistory();
+    FileUndo_Click(null, null);
     }
 }
 /// <summary>
@@ -133,13 +140,26 @@ private async void FileNew_Click(object sender, RoutedEventArgs e) {
 /// </summary>
 /// <param name="sender"></param>
 /// <param name="e"></param>
-private void FileSave_Click(object sender, RoutedEventArgs e) {
-    if (newFile) { FileSaveAs_Click(sender, e); }
+private async void FileSave_Click(object sender, RoutedEventArgs e) {
+    if (isNewFile) { FileSaveAs_Click(sender, e); }
     else { 
-    var outputFile = fileSavePicker.PickSaveFileAsync();
     if (outputFile == null) { // The user cancelled the picking operation
     return;
     }
+    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
+    BitmapPixelFormat.P010,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
+    );
+
+    await SaveSoftwareBitmapToFile(outputBitmap, outputFile);
+    if (exit) { Application.Current.Exit(); }
+    if (openNew) {     
+    FileUndo_Click(null, null);
+    isNewFile = true;
+    outputFile = null;
+    openNew = false; }
     }
 }
 /// <summary>
@@ -152,7 +172,7 @@ private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
     fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
     fileSavePicker.SuggestedFileName = "image";
-    var outputFile = await fileSavePicker.PickSaveFileAsync();
+    outputFile = await fileSavePicker.PickSaveFileAsync();
     if (outputFile == null) { // The user cancelled the picking operation
     return;
     }
@@ -164,15 +184,26 @@ private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
     );
 
-    SaveSoftwareBitmapToFile(outputBitmap, outputFile);
-    newFile = false;
+    await SaveSoftwareBitmapToFile(outputBitmap, outputFile);
+    if (exit) { Application.Current.Exit(); }
+    if (openNew) {     
+    FileUndo_Click(null, null);
+    isNewFile = true;
+    outputFile = null;
+    openNew = false; }
+    isNewFile = false;
 }
+
+private async Task<bool> SavingImage(){
+    FileSave_Click(null, null);
+return true;}
+
 /// <summary>
 /// Saves images to file.
 /// </summary>
 /// <param name="softwareBitmap">Set to null</param>
 /// <param name="outputFile">Set to null</param>
-private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
+private async Task<bool> SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
     using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite)) {
     // Create an encoder with the desired format
     BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
@@ -202,7 +233,7 @@ private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, Stora
     await encoder.FlushAsync();
     }
     }
-}
+return true;}
 /// <summary>
 /// Loades a file with history data.
 /// </summary>
@@ -226,8 +257,9 @@ private async void FileExit_Click(object sender, RoutedEventArgs e) {
     var result = await newFile.ShowAsync();
 
     if (result == ContentDialogResult.Primary) {
-    FileSaveAs_Click(null, null);
-    Application.Current.Exit();
+    exit = true;
+    await SavingImage();
+
     } else if (result == ContentDialogResult.Secondary) {
     Application.Current.Exit();
     }
@@ -284,30 +316,9 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
     BrushType = 3;
 }
-/// <summary>
-/// Exports the file to be loaded back into latter. Saves current settings.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private async void FileExport_Click(object sender, RoutedEventArgs e) {
-			//serialization here
-			FileSavePicker picker = new FileSavePicker();
-			picker.FileTypeChoices.Add("Drawing Project file", new List<string>() { customFileExtension });
 
-			picker.SuggestedFileName = "New Project";
 
-			StorageFile file = await picker.PickSaveFileAsync();
 
-			if (file != null)
-			{
-				using (Stream stream = await file.OpenStreamForWriteAsync())
-				{
-					DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
-					ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
-				}
-			}
-
-		} 
 private void ClearCanvas_Click(object sender, RoutedEventArgs e){
     BrushType = 4;
 }
@@ -317,11 +328,34 @@ private void TriangleBrush_Click(object sender, RoutedEventArgs e){
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
+private void Fill_Click(object sender, RoutedEventArgs e)
+{
+	BrushType = 7;
+}
 
-		private void Fill_Click(object sender, RoutedEventArgs e)
-		{
-			BrushType = 7;
-		}
+/// <summary>
+/// Exports the file to be loaded back into latter. Saves current settings.
+/// </summary>
+/// <param name="sender">Set to null</param>
+/// <param name="e">Set to null</param>
+private async void FileExport_Click(object sender, RoutedEventArgs e)
+{
+	//serialization here
+	FileSavePicker picker = new FileSavePicker();
+	picker.FileTypeChoices.Add("Drawing Project file", new List<string>() { customFileExtension });
+	picker.SuggestedFileName = "New Project";
+	StorageFile file = await picker.PickSaveFileAsync();
+	if (file != null)
+	{
+	using (Stream stream = await file.OpenStreamForWriteAsync())
+	{
+		DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
+		ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
 	}
+	}	
+
+}
+		
+}
 
 }

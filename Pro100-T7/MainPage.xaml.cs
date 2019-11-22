@@ -47,13 +47,12 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
 	PointerReleased += MainPage_PointerReleased;
 }
 
-		private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
-		{
-			DrawCanvas.ActionPointerReleased(sender, e);
-		}
+private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
+{
+	DrawCanvas.ActionPointerReleased(sender, e);
+}
 
-	public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 
-
+public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 
     int size = 1;
     int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
     DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
