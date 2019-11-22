@@ -47,7 +47,6 @@ protected override void OnNavigatedTo(NavigationEventArgs e) {
 }
 
 public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 
-    ProgramControlsBar.Canvas = DrawCanvas.Canvas;
     int size = 1;
     int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
     DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
