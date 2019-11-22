@@ -93,6 +93,9 @@ private void KeyPressed(object sender, KeyRoutedEventArgs e) {
     }
     switch (e.Key) {
     case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
+    case VirtualKey.B: RegularBrush_Click(null, null); break;
+    case VirtualKey.E: Eraser_Click(null, null); break;
+    case VirtualKey.I: eyeDropper_Click(null, null); break;
     }
 }
 /// <summary>
@@ -148,7 +151,7 @@ private async void FileSave_Click(object sender, RoutedEventArgs e) {
     }
     SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
     drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
-    BitmapPixelFormat.P010,
+    BitmapPixelFormat.Bgra8,
     drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
     drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
     );
@@ -168,7 +171,9 @@ private async void FileSave_Click(object sender, RoutedEventArgs e) {
 /// <param name="sender">Set to null</param>
 /// <param name="e">Set to null</param>
 private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
+    fileSavePicker = new FileSavePicker();
     fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+    
     fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
     fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
     fileSavePicker.SuggestedFileName = "image";
@@ -228,9 +233,9 @@ private async Task<bool> SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap,
     default: throw;
     }
     }
-    if (encoder.IsThumbnailGenerated == false)
-    {
-    await encoder.FlushAsync();
+    if (encoder.IsThumbnailGenerated == false) {
+                    
+    await encoder.FlushAsync(); 
     }
     }
 return true;}
@@ -330,9 +335,15 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
 }
 private void Fill_Click(object sender, RoutedEventArgs e)
 {
-	BrushType = 7;
+	BrushType = 9;
 }
 
+private void Eraser_Click(object sender, RoutedEventArgs e) {
+    BrushType = 7;
+}
+private void eyeDropper_Click(object sender, RoutedEventArgs e) {
+    BrushType = 8;
+}
 /// <summary>
 /// Exports the file to be loaded back into latter. Saves current settings.
 /// </summary>
@@ -353,6 +364,7 @@ private async void FileExport_Click(object sender, RoutedEventArgs e)
 		ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
 	}
 	}	
+
 
 }
 		
