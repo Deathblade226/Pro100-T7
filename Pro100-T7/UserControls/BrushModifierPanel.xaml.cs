@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,7 +28,26 @@ public Color Secondary {
 public BrushModifierPanel() {
     this.InitializeComponent();
     Default_Click(null, null);
+			brushSizeBox.Text = (string)ApplicationData.Current.LocalSettings.Values["brushSize"];
+			Application.Current.Suspending += Current_Suspending;
+			int intColor = (int)ApplicationData.Current.LocalSettings.Values["brushColor"];
+			colorPicker.Color = Color.FromArgb((byte)((intColor & 0xff000000) >> 24),
+												(byte)((intColor & 0x00ff0000) >> 16),
+												(byte)((intColor & 0x0000ff00) >> 8),
+												(byte)((intColor & 0x000000ff) >> 0)
+												);
 }
+
+private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
+{
+			ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+
+			localSettings.Values["brushSize"] = brushSizeBox.Text;
+			Color color = colorPicker.Color;
+			int intColor = ((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
+			localSettings.Values["brushColor"] = intColor;
+		}
 
 public ColorPicker GetColorPickerUIElement() => colorPicker;
 public Color GetColorPickerSecondary() => secondary;
