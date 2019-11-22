@@ -26,6 +26,7 @@ public Color Secondary {
 
 public BrushModifierPanel() {
     this.InitializeComponent();
+    Default_Click(null, null);
 }
 
 public ColorPicker GetColorPickerUIElement() => colorPicker;
