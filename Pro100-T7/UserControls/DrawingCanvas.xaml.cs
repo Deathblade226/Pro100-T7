@@ -74,27 +74,24 @@ public Canvas GetControlCanvasUIElement() => DrawArea;
 public void OnNavigatedTo(NavigationEventArgs e) {
     PointerReleased += ActionPointerReleased;
     PointerMoved += Canvas_PointerMoved;
-			PointerPressed += DrawingCanvas_PointerPressed;
+    PointerPressed += DrawingCanvas_PointerPressed;
 }
 
-		private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
-		{
-			if(isMouseDownOnCanvas)
-			{
-				ActionPointerReleased(sender, e);
-			}
-			isMouseDownOnCanvas = true;
-		}
+private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
+    if(isMouseDownOnCanvas) {
+    ActionPointerReleased(sender, e);
+    }
+	isMouseDownOnCanvas = true;
+}
 
 public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
-			if(isMouseDownOnCanvas)
-			{
-				byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
-				byte[] b = new byte[b1.Length];
-				b1.CopyTo(b, 0);
-				History.EndAction(new Models.Action(b));
-				isMouseDownOnCanvas = false;
-			}
+    if(isMouseDownOnCanvas) {
+    byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
+	byte[] b = new byte[b1.Length];
+	b1.CopyTo(b, 0);
+	History.EndAction(new Models.Action(b));
+	isMouseDownOnCanvas = false;
+    }
     
 }
 
