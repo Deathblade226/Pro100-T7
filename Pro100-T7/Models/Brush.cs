@@ -69,5 +69,11 @@ namespace Pro100_T7.Models
         {
             Bmp.Clear();
         }
+
+		public void Fill()
+		{
+			FillTool.Fill(Bmp, CurrentX, CurrentY, BrushColor);
+			Bmp.Invalidate();
+		}
     }
 }

@@ -30,6 +30,7 @@ namespace Pro100_T7.Models
         case 4: brush.Clear(); break;
         case 5: brush.Triangle(); break;
         case 6: brush.Hourglass(); break;
+        case 7: brush.Fill(); break;
         }
 
             //draw code will go here and modify the image accordingly

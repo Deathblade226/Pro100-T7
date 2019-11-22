@@ -27,6 +27,8 @@ private static Color secondary;
 private int size;
 private int type = 0;
 
+		private bool isMouseDownOnCanvas = false;
+
 public CanvasMaster Canvas {
     get { return canvas; }
     set { canvas = value; }
@@ -68,13 +70,28 @@ public Canvas GetControlCanvasUIElement() => DrawArea;
 public void OnNavigatedTo(NavigationEventArgs e) {
     PointerReleased += ActionPointerReleased;
     PointerMoved += Canvas_PointerMoved;
+			PointerPressed += DrawingCanvas_PointerPressed;
 }
 
-private void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
-    byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
-    byte[] b = new byte[b1.Length];
-    b1.CopyTo(b, 0);
-    History.EndAction(new Models.Action(b));
+		private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+		{
+			if(isMouseDownOnCanvas)
+			{
+				ActionPointerReleased(sender, e);
+			}
+			isMouseDownOnCanvas = true;
+		}
+
+public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
+			if(isMouseDownOnCanvas)
+			{
+				byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
+				byte[] b = new byte[b1.Length];
+				b1.CopyTo(b, 0);
+				History.EndAction(new Models.Action(b));
+				isMouseDownOnCanvas = false;
+			}
+    
 }
 
 private async void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
