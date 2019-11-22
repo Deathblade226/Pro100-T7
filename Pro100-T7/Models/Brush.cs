@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI;
+using Pro100_T7.UserControls;
 
 namespace Pro100_T7.Models
 {
@@ -18,8 +19,10 @@ namespace Pro100_T7.Models
         WriteableBitmap Bmp { get; set; }
         BitmapContext BC { get; set; }
         int BrushSize { get; set; }
+        BrushModifierPanel Mod { get; set; }
 
-        public Brush(int oldX, int oldY, int currentX, int currentY, Windows.UI.Color brushColor, int brushSize, WriteableBitmap bmp)
+
+        public Brush(int oldX, int oldY, int currentX, int currentY, Windows.UI.Color brushColor, int brushSize, WriteableBitmap bmp, BrushModifierPanel mod)
         {
             OldX = oldX;
             OldY = oldY;
@@ -28,6 +31,7 @@ namespace Pro100_T7.Models
             BrushColor = brushColor;
             BrushSize = brushSize;
             Bmp = bmp;
+            Mod = mod;
         }
 
         public void Wavy() //Crash on going to top/bottom of image(Fixed) New issue very slow
@@ -62,7 +66,11 @@ namespace Pro100_T7.Models
 
         public void Erase()
         { 
-            Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, Colors.White);
+            Bmp.FillEllipseCentered(CurrentX, CurrentY, BrushSize, BrushSize, Color.FromArgb(0,0,0,0));
+        }
+
+        public void EyeDropper() { //Left Click Color
+            if (Bmp.GetPixel(CurrentX, CurrentY) != Color.FromArgb(0,0,0,0)) Mod.GetColorPickerUIElement().Color = Bmp.GetPixel(CurrentX, CurrentY);
         }
 
         public void Clear()

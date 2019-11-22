@@ -56,7 +56,7 @@
                                HorizontalAlignment="Left"
                                Margin="155 0 0 230">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{x:Bind colorPicker.Color, Mode=OneWay}"/>
+                            <SolidColorBrush Color="{x:Bind colorPicker.Color, Mode=TwoWay}"/>
                         </Rectangle.Fill>
                     </Rectangle>
 
@@ -67,10 +67,10 @@
                                Width="30"
                                Height="30"
                                Margin="155 0 0 190"
-                               Fill="Red"/>
+                               Fill="{Binding Source=Secondary, Mode=TwoWay}"/>
 
-                    <Button x:Name="LColorB"
-                            Content="Set Primary Color"
+                    <Button x:Name="TradeColor"
+                            Content="Swap Colors"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Bottom"
                             Width="145"
@@ -78,7 +78,7 @@
                             Margin="4 0 1 230"
                             Background="Gray"
                             BorderBrush="Black"
-                            Click="LColorB_Click"/>
+                            Click="TradeColor_Click"/>
                     
                     <Button x:Name="RColorB"
                             Content="Set Secondary Color"

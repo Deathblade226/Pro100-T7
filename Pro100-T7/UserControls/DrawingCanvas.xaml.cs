@@ -21,11 +21,13 @@ using Windows.UI.Xaml.Navigation;
 namespace Pro100_T7.UserControls {
 public sealed partial class DrawingCanvas : UserControl {
 
-private CanvasMaster canvas = new CanvasMaster(1000, 800);
+private CanvasMaster canvas;
 private static Color color;
 private static Color secondary;
 private int size;
 private int type = 0;
+
+public BrushModifierPanel BrushMod { get; set; }
 
 public CanvasMaster Canvas {
     get { return canvas; }
@@ -56,6 +58,7 @@ Stroke defaultStroke = new Stroke() { StrokeColor = color, StrokeRadius = 1 };
 
 public DrawingCanvas() {
     this.InitializeComponent();
+    canvas = new CanvasMaster(1000, 800);
     byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
     byte[] b = new byte[b1.Length];
     b1.CopyTo(b, 0);
@@ -88,11 +91,11 @@ private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     
     if (ptrPt.Properties.IsLeftButtonPressed) {
     defaultStroke.StrokeColor = color;
-    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type);
+    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
 
     } else if (ptrPt.Properties.IsRightButtonPressed) {
     defaultStroke.StrokeColor = secondary;
-    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type);
+    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 2);
     }
     drawPoint.OldPoint = drawPoint.CurrentPoint;
 }
