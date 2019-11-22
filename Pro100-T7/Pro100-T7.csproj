@@ -140,6 +140,7 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
+    <Compile Include="CustomBitmapExtensions\WriteableBitmapCustomExtensions.cs" />
     <Compile Include="Interfaces\IClient.cs" />
     <Compile Include="Interfaces\IClientServer.cs" />
     <Compile Include="Interfaces\IDrawPacket.cs" />
