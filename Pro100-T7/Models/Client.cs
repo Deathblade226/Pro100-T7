@@ -20,7 +20,7 @@ namespace Pro100_T7.Models
 
         public void Update()
         {
-
+    
         }
 
         public void ReceiveData()
