@@ -163,6 +163,9 @@
     <Compile Include="UserControls\BrushModifierPanel.xaml.cs">
       <DependentUpon>BrushModifierPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CanvasSizeBox.xaml.cs">
+      <DependentUpon>CanvasSizeBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\DrawingCanvas.xaml.cs">
       <DependentUpon>DrawingCanvas.xaml</DependentUpon>
     </Compile>
@@ -197,6 +200,10 @@
     <Page Include="UserControls\BrushModifierPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\CanvasSizeBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\DrawingCanvas.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -161,6 +161,11 @@ namespace System.Windows.Media.Imaging
                 return bmp;
             }
         }
+
+        internal static WriteableBitmap New()
+        {
+            throw new NotImplementedException();
+        }
 #else
         /// <summary>
         /// Loads an image from the applications resource file and returns a new WriteableBitmap.

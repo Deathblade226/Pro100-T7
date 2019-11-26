@@ -28,6 +28,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Hosting;
+using Windows.ApplicationModel;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -39,7 +40,6 @@ namespace Pro100_T7
 public sealed partial class MainPage : Page {
 public MainPage() {
     this.InitializeComponent();
-
 }
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
@@ -62,6 +62,7 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     DrawCanvas.Size = size;
     ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
     DrawCanvas.Type = ProgramControlsBar.BrushType;
+    ProgramControlsBar.DrawCanvas = DrawCanvas.GetControlCanvasUIElement();
     ProgramControlsBar.SetFocus();
 }
 
@@ -169,5 +170,5 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
         //    //}
         //    #endregion
         //}
-    }
+}
 }

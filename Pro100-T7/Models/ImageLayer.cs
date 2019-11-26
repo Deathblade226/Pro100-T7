@@ -21,8 +21,8 @@ namespace Pro100_T7.Models
 
         public void DrawBrush(Stroke stroke, DrawPoint drawPoint, int type = 0, int click = 1)
         {
-        Brush brush = new Brush(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius,BitmapDrawingData, BrushMod);
-        
+        Brush brush = new Brush(drawPoint.OldX(), drawPoint.OldY(), drawPoint.CurX(), drawPoint.CurY(), stroke.StrokeColor, stroke.StrokeRadius, BitmapDrawingData, BrushMod);
+
         switch(type){
         case 0: brush.Regular(); break;
         case 1: brush.Wavy();  break;
