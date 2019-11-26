@@ -81,7 +81,6 @@ public void IncreaseBrushSize() {
 public void ReduceBrushSize() { 
     if (BrushSize >= 1) { BrushSize--; }
 }
-
 /// <summary>
 /// Reads current keys pressed and calles method.
 /// </summary>
@@ -89,23 +88,32 @@ public void ReduceBrushSize() {
 /// <param name="e">KeyRoutedEventArgs</param>
 private void KeyPressed(object sender, KeyRoutedEventArgs e) {
     if (IsCtrlKeyPressed()) {
+    if (IsShiftKeyPressed()) {
+    switch (e.Key) {
+    case VirtualKey.S: FileSaveAs_Click(null, null); break;
+    case VirtualKey.Z: FileRedo_Click(null, null); break;
+    }
+    } else { 
     switch (e.Key) {
     case VirtualKey.S: FileSave_Click(null, null); break;
     case VirtualKey.Z: FileUndo_Click(null, null); break;
     case VirtualKey.Y: FileRedo_Click(null, null); break;
+    case VirtualKey.N: FileNew_Click(null, null); break;
     case VirtualKey.Add: IncreaseBrushSize(); break;
     case VirtualKey.Subtract: ReduceBrushSize(); break;
     case VirtualKey.L: break;
+    case VirtualKey.E: FileExport_Click(null, null); break;
     }
     }
+    } else { 
     switch (e.Key) {
     case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
     case VirtualKey.B: RegularBrush_Click(null, null); break;
     case VirtualKey.E: Eraser_Click(null, null); break;
     case VirtualKey.I: eyeDropper_Click(null, null); break;
     }
+    }
 }
-
 /// <summary>
 /// Checks if the Ctrl key is pressed.
 /// </summary>
@@ -147,7 +155,6 @@ private async void FileNew_Click(object sender, RoutedEventArgs e) {
     NewWindowSize();
     }
 }
-
 private async void NewWindowSize() {
     var box = new CanvasSizeBox();
     var input = await box.ShowAsync();
@@ -155,7 +162,6 @@ private async void NewWindowSize() {
     newWidth = box.WidthVal;
     SetDrawingArea(newWidth, newHeight);
 }
-
 /// <summary>
 /// Saves file to existing file.
 /// </summary>
@@ -216,11 +222,9 @@ private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     openNew = false; }
     isNewFile = false;
 }
-
 private async Task<bool> SavingImage(){
     FileSave_Click(null, null);
 return true;}
-
 /// <summary>
 /// Saves images to file.
 /// </summary>
@@ -340,9 +344,6 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
     BrushType = 3;
 }
-
-
-
 private void ClearCanvas_Click(object sender, RoutedEventArgs e){
     BrushType = 4;
 }
@@ -352,11 +353,9 @@ private void TriangleBrush_Click(object sender, RoutedEventArgs e){
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
-private void Fill_Click(object sender, RoutedEventArgs e)
-{
+private void Fill_Click(object sender, RoutedEventArgs e) {
 	BrushType = 9;
 }
-
 private void Eraser_Click(object sender, RoutedEventArgs e) {
     BrushType = 7;
 }
@@ -381,7 +380,11 @@ private async void FileExport_Click(object sender, RoutedEventArgs e) {
 	}
     }	
 }
-
+/// <summary>
+/// Takes in width and hegith to build a new canvas and image
+/// </summary>
+/// <param name="width">Width</param>
+/// <param name="height">Height</param>
 private void SetDrawingArea(int width, int height) { 
     DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
     DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);

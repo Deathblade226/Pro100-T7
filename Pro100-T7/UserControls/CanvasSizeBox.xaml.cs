@@ -38,6 +38,11 @@ private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialo
     HeightVal = h;
 }
 
+private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args) {
+    if (WidthVal == 0) WidthVal = 1000;
+    if (HeightVal == 0) HeightVal = 800;
+}
+
 }
 
 }
