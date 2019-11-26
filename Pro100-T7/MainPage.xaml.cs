@@ -39,15 +39,22 @@ namespace Pro100_T7
 public sealed partial class MainPage : Page {
 public MainPage() {
     this.InitializeComponent();
+
 }
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
     ProgramControlsBar.OnNavigatedTo(e);
     PointerMoved += Main_PointerMoved;
+	PointerReleased += MainPage_PointerReleased;
+}
+
+private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
+{
+	DrawCanvas.ActionPointerReleased(sender, e);
 }
 
 public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 
-    ProgramControlsBar.Canvas = DrawCanvas.Canvas;
+    DrawCanvas.Canvas.ImageDataLayer.BrushMod = BrushModifier;
     int size = 1;
     int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
     DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
