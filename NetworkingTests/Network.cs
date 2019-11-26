@@ -13,13 +13,17 @@ namespace NetworkingTests
             Socket listener = new Socket(local.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(local);
             listener.Listen(1);
-
+            
             Socket accepted = listener.Accept();
-            byte[] words = new byte[256];
-            accepted.Receive(words);
 
-            string s = Encoding.ASCII.GetString(words);
-            Console.WriteLine(s);
+            while (true)
+            {
+                byte[] words = new byte[256];
+                accepted.Receive(words);
+
+                string s = Encoding.ASCII.GetString(words);
+                Console.WriteLine(s);
+            }
         }
     }
 }
