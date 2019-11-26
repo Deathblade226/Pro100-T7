@@ -157,6 +157,7 @@
     <Compile Include="Models\FillTool.cs" />
     <Compile Include="Models\ImageLayer.cs" />
     <Compile Include="Models\History.cs" />
+    <Compile Include="Models\SelectionTool.cs" />
     <Compile Include="Models\Server.cs" />
     <Compile Include="Models\Stroke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

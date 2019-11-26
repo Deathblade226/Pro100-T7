@@ -344,6 +344,12 @@ private void Eraser_Click(object sender, RoutedEventArgs e) {
 private void eyeDropper_Click(object sender, RoutedEventArgs e) {
     BrushType = 8;
 }
+
+private void Selection_Click(object sender, RoutedEventArgs e)
+{
+	BrushType = 10;
+}
+
 /// <summary>
 /// Exports the file to be loaded back into latter. Saves current settings.
 /// </summary>

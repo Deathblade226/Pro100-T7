@@ -83,5 +83,11 @@ namespace Pro100_T7.Models
 			FillTool.Fill(Bmp, CurrentX, CurrentY, BrushColor);
 			Bmp.Invalidate();
 		}
+
+		public void Selection()
+		{
+			SelectionTool.Selection(Bmp, CurrentX, CurrentY);
+
+		}
     }
 }

@@ -118,6 +118,10 @@
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
                     Click="Fill_Click"/>
+			<MenuFlyoutItem x:Name="Selection"
+                    ToolTipService.ToolTip="Selection"
+                    Text="Selection" 
+                    Click="Selection_Click"/>
 
         </MenuBarItem>
         

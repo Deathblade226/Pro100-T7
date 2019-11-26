@@ -34,6 +34,7 @@ namespace Pro100_T7.Models
         case 7: brush.Erase(); break;
         case 8: brush.EyeDropper(); break;
         case 9: brush.Fill(); break;
+		case 10: brush.Selection(); break;
 
         }
 
