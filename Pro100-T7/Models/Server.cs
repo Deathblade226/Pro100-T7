@@ -6,33 +6,43 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.System.Threading;
 
 namespace Pro100_T7.Models
 {
-    public sealed class Server : IClientServer, IServer
+    public sealed class Server : IServer
     {
+        public Socket CurrentAddress { get; set; } = new Socket(SocketType.Stream, ProtocolType.Tcp);
         public Stack<Socket> Clients { get; private set; } = new Stack<Socket>();
-        public IPAddress LocalAddress { get; set; }
 
         public Server()
         {
             
         }
 
-        public void Update()
+        public bool IsHosting()
         {
-            throw new NotImplementedException();
+            return Clients.Count() > 0;
         }
 
-        public void SendData()
+        public void SendData(byte[] data)
         {
             foreach (Socket s in Clients)
             {
-                
+                s.Send(data);
             }
-
-            throw new NotImplementedException();
         }
 
+        public bool TryConnectClient(Socket client)
+        {
+            Socket newClient = CurrentAddress.Accept();
+            if (newClient != null)
+            {
+                Clients.Push(newClient);
+                return true;
+            }
+
+            return false;
+        }
     }
 }

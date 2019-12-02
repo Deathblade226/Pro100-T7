@@ -142,7 +142,6 @@
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
     <Compile Include="CustomBitmapExtensions\WriteableBitmapCustomExtensions.cs" />
     <Compile Include="Interfaces\IClient.cs" />
-    <Compile Include="Interfaces\IClientServer.cs" />
     <Compile Include="Interfaces\IDrawPacket.cs" />
     <Compile Include="Interfaces\IServer.cs" />
     <Compile Include="Models\BitmapReader.cs" />
@@ -158,6 +157,7 @@
     <Compile Include="Models\ImageLayer.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Server.cs" />
+    <Compile Include="Models\Session.cs" />
     <Compile Include="Models\Stroke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\BrushModifierPanel.xaml.cs">

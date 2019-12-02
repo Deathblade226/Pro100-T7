@@ -367,7 +367,20 @@ private async void FileExport_Click(object sender, RoutedEventArgs e)
 
 
 }
-		
-}
+
+        
+
+        private void Host_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Initialize(true, true);
+            Session.Build(new Client(null));
+        }
+
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Initialize(true);
+            Session.Build(new Client(null), new Server());
+        }
+    }
 
 }

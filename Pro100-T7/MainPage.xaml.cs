@@ -28,6 +28,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml.Hosting;
+using System.Net;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -36,35 +37,38 @@ namespace Pro100_T7
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-public sealed partial class MainPage : Page {
-public MainPage() {
-    this.InitializeComponent();
+    public sealed partial class MainPage : Page
+    {
+        public MainPage()
+        {
+            this.InitializeComponent();
+        }
 
-}
-protected override void OnNavigatedTo(NavigationEventArgs e) {
-    DrawCanvas.OnNavigatedTo(e);
-    ProgramControlsBar.OnNavigatedTo(e);
-    PointerMoved += Main_PointerMoved;
-	PointerReleased += MainPage_PointerReleased;
-}
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            DrawCanvas.OnNavigatedTo(e);
+            ProgramControlsBar.OnNavigatedTo(e);
+            PointerMoved += Main_PointerMoved;
+            PointerReleased += MainPage_PointerReleased;
+        }
 
-private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
-{
-	DrawCanvas.ActionPointerReleased(sender, e);
-}
+        private void MainPage_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            DrawCanvas.ActionPointerReleased(sender, e);
+        }
 
-public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) { 
-    DrawCanvas.Canvas.ImageDataLayer.BrushMod = BrushModifier;
-    int size = 1;
-    int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
-    DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
-    DrawCanvas.Secondary = BrushModifier.GetColorPickerSecondary();
-    DrawCanvas.Size = size;
-    ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
-    DrawCanvas.Type = ProgramControlsBar.BrushType;
-    ProgramControlsBar.SetFocus();
-}
-
+        public void Main_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            DrawCanvas.Canvas.ImageDataLayer.BrushMod = BrushModifier;
+            int size = 1;
+            int.TryParse(BrushModifier.GetBrushSizeTextBoxUIElement().Text, out size);
+            DrawCanvas.Color = BrushModifier.GetColorPickerUIElement().Color;
+            DrawCanvas.Secondary = BrushModifier.GetColorPickerSecondary();
+            DrawCanvas.Size = size;
+            ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
+            DrawCanvas.Type = ProgramControlsBar.BrushType;
+            ProgramControlsBar.SetFocus();
+        }
 
         //private void MainPage_PointerMoved(object sender, PointerRoutedEventArgs e)
         //{
