@@ -6,19 +6,29 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.System.Threading;
 
 namespace Pro100_T7.Models
 {
     public sealed class Server : IServer
     {
-        public Socket CurrentAddress { get; set; } = new Socket(SocketType.Stream, ProtocolType.Tcp);
+        public Timer CheckConnectTimer { get; set; } = new Timer(5);
+
+        public Socket CurrentAddress { get; set; } = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
         public Stack<Socket> Clients { get; private set; } = new Stack<Socket>();
 
         public Server()
         {
-            
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Any, 5555);
+            CurrentAddress.Bind(ipep);
+            CurrentAddress.Listen(100);
+
+            CheckConnectTimer.Elapsed += TryConnectClient;
+            CheckConnectTimer.Start();
         }
+
+        ~Server() => CheckConnectTimer.Stop();
 
         public bool IsHosting()
         {
@@ -33,16 +43,13 @@ namespace Pro100_T7.Models
             }
         }
 
-        public bool TryConnectClient(Socket client)
+        public void TryConnectClient(object sender, ElapsedEventArgs e)
         {
             Socket newClient = CurrentAddress.Accept();
             if (newClient != null)
             {
                 Clients.Push(newClient);
-                return true;
             }
-
-            return false;
         }
     }
 }
