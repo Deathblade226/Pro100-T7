@@ -75,6 +75,8 @@ private void TradeColor_Click(object sender, RoutedEventArgs e) {
     Color temp = secondary;
     secondary = colorPicker.Color;
     colorPicker.Color = temp;
+    RColor.Fill = new SolidColorBrush(secondary);
+    LColor.Fill = new SolidColorBrush(colorPicker.Color);
 
 }
 
