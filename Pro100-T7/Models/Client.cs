@@ -14,32 +14,33 @@ namespace Pro100_T7.Models
     public sealed class Client : IClient
     {
         public Socket HostConnection { get; private set; } = new Socket(SocketType.Stream, ProtocolType.Tcp);
-        public WriteableBitmap BitmapData { get; set; } = null;
 
-        public Client(WriteableBitmap bmp)
+        public Client() {}
+
+        public void ReceiveData(out byte[] data)
         {
-            BitmapData = bmp;
+            //byte[] old = BitmapData.PixelBuffer.ToArray();
+            //byte[] newBytes = new byte[old.Length];
+            //old.CopyTo(newBytes, 0);
+            //History.EndAction(new Action(newBytes));
+            //BitmapData.PixelBuffer.AsStream().Write(old, 0, old.Length);
+            //BitmapData.Invalidate();
+
+            byte[] incoming = null;
+            HostConnection.Receive(incoming);
+
+            data = incoming;
         }
 
-        public void TryReceiveData(byte[] data)
+        public void SendData(byte[] data)
         {
-            byte[] old = BitmapData.PixelBuffer.ToArray();
-            byte[] newBytes = new byte[old.Length];
-            old.CopyTo(newBytes, 0);
-            History.EndAction(new Action(newBytes));
-            BitmapData.PixelBuffer.AsStream().Write(data, 0, data.Length);
-            BitmapData.Invalidate();
-        }
-
-        public void TrySendData ()
-        {
-            HostConnection.Send(BitmapData.PixelBuffer.ToArray());
+            HostConnection.Send(data);
         }
 
         public bool TryConnectToServer(EndPoint server)
         {
             try { HostConnection.Connect(server); return true; }
-            catch (Exception e) { return false; }
+            catch (Exception) { return false; }
         }
     }
 }

@@ -66,9 +66,7 @@ public DrawingCanvas() {
     byte[] b = new byte[b1.Length];
     b1.CopyTo(b, 0);
     History.StartHistory(b1);
-    GetControlCanvasUIElement().Children.Add(canvas.ImageData);
-
-            if (Session.BuildOnlineSession) Session.Build(new Client(canvas.ImageDataLayer.BitmapDrawingData));
+            GetControlCanvasUIElement().Children.Add(canvas.ImageData);
 }
 
 public Canvas GetControlCanvasUIElement() => DrawArea;

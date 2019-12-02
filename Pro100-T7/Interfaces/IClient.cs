@@ -10,8 +10,8 @@ namespace Pro100_T7.Interfaces
 {
     interface IClient
     {
-        void TryReceiveData(byte[] data);
-        void TrySendData();
+        void ReceiveData(out byte[] data);
+        void SendData(byte[] data);
         bool TryConnectToServer(EndPoint server);
     }
 }

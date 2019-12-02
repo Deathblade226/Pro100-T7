@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -395,13 +396,20 @@ private void SetDrawingArea(int width, int height) {
         private void Host_Click(object sender, RoutedEventArgs e)
         {
             Session.Initialize(true, true);
-            Session.Build(new Client(null));
+            Session.Build(new Client());
+            
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
         {
             Session.Initialize(true);
-            Session.Build(new Client(null), new Server());
+            Session.Build(new Client(), new Server());
+
+            bool success = false;
+            uint trycount = 0;
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+            do success = Session.CurrentClientSession.TryConnectToServer(ipep);
+            while (success || trycount > 10000);
         }
     }
 
