@@ -87,7 +87,8 @@ namespace Pro100_T7.Models
 		public void Selection()
 		{
 			SelectionTool.Selection(Bmp, CurrentX, CurrentY);
-
+			Bmp.Invalidate();
+			
 		}
     }
 }

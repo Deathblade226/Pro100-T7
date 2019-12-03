@@ -97,6 +97,10 @@ private void KeyPressed(object sender, KeyRoutedEventArgs e) {
     case VirtualKey.E: Eraser_Click(null, null); break;
     case VirtualKey.I: eyeDropper_Click(null, null); break;
     }
+	if(e.Key == VirtualKey.Delete || e.Key == VirtualKey.Back)
+			{
+				SelectionTool.ClearSelection();
+			}
 }
 /// <summary>
 /// Checks if the Ctrl key is pressed.
@@ -278,6 +282,7 @@ private void FileUndo_Click(object sender, RoutedEventArgs e) {
     byte[] b = History.Undo().bmp;
     DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
     DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+	SelectionTool.SelectionUndo();
 }
 /// <summary>
 /// Redoes the last action.
@@ -348,7 +353,13 @@ private void eyeDropper_Click(object sender, RoutedEventArgs e) {
 private void Selection_Click(object sender, RoutedEventArgs e)
 {
 	BrushType = 10;
+	//DrawArea.UICanvasObject.PointerReleased += SelectionRelease;
 }
+
+//private void SelectionRelease(object sender, PointerRoutedEventArgs e)
+//{
+//	SelectionTool.SelectRelease();
+//}
 
 /// <summary>
 /// Exports the file to be loaded back into latter. Saves current settings.
