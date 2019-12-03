@@ -142,7 +142,7 @@
             <MenuFlyoutItem x:Name="FileExit"
                     ToolTipService.ToolTip="Exit (Ctrl+Esc)"
                     Text="Exit"
-                    Click="FileExit_Click"/>
+                    Command="{StaticResource FileExitCommand}"/>
 
 
         </MenuBarItem>
@@ -164,7 +164,7 @@
             <MenuFlyoutItem x:Name="Regular"
                     ToolTipService.ToolTip="Regular Brush (B)"
                     Text="Regular Brush" 
-                    Command="{StaticResource EditRedoCommand}"/>
+                    Command="{StaticResource RegilarBrushCommand}"/>
             <MenuFlyoutItem x:Name="Wavy"
                     ToolTipService.ToolTip="Wavy Brush"
                     Text="Wavy Brush" 
@@ -208,7 +208,7 @@
             <MenuFlyoutItem x:Name="Fill"
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
-                    Command="{StaticResource ToolsEyeDropperCommand}"/>
+                    Command="{StaticResource ToolsFillCommand}"/>
 
         </MenuBarItem>
 
