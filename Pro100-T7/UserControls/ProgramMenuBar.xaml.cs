@@ -1,8 +1,10 @@
 ﻿using Pro100_T7.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -20,6 +22,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -36,8 +39,11 @@ public sealed partial class ProgramMenuBar : UserControl {
     private int brushSize = 1;
     bool exit = false;
     bool openNew = false;
+    bool newSize = false;
+    int newWidth = 1000;
+    int newHeight = 800;
 
-		private string customFileExtension = ".dpf";
+    private string customFileExtension = ".dpf";
 
 public CanvasMaster DrawArea {
     get { return drawArea; }
@@ -53,6 +59,9 @@ public int BrushSize {
     get { return brushSize; }
     set { BrushSize = value; }
 }
+
+public Canvas DrawCanvas { get; set; }
+
 public ProgramMenuBar() {
     this.InitializeComponent();
 }
@@ -102,6 +111,7 @@ private void KeyPressed(object sender, KeyRoutedEventArgs e) {
 				SelectionTool.ClearSelection();
 			}
 }
+
 /// <summary>
 /// Checks if the Ctrl key is pressed.
 /// </summary>
@@ -131,17 +141,27 @@ private async void FileNew_Click(object sender, RoutedEventArgs e) {
     var result = await newFile.ShowAsync();
 
     if (result == ContentDialogResult.Primary) {
-    History.ClearHistory();
     openNew = true;
-    await SavingImage();
+    newSize = true;
+    SavingImage();
+    NewWindowSize();
     }
-    else if (result == ContentDialogResult.Secondary) {
+    else if (result == ContentDialogResult.Secondary) { //No problem
     isNewFile = true;
     outputFile = null;
     History.ClearHistory();
-    FileUndo_Click(null, null);
+    NewWindowSize();
     }
 }
+
+private async void NewWindowSize() {
+    var box = new CanvasSizeBox();
+    var input = await box.ShowAsync();
+    newHeight = box.HeightVal;
+    newWidth = box.WidthVal;
+    SetDrawingArea(newWidth, newHeight);
+}
+
 /// <summary>
 /// Saves file to existing file.
 /// </summary>
@@ -242,6 +262,7 @@ private async Task<bool> SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap,
     await encoder.FlushAsync(); 
     }
     }
+    if (newSize) SetDrawingArea(newWidth, newHeight); newSize = false;
 return true;}
 /// <summary>
 /// Loades a file with history data.
@@ -366,25 +387,54 @@ private void Selection_Click(object sender, RoutedEventArgs e)
 /// </summary>
 /// <param name="sender">Set to null</param>
 /// <param name="e">Set to null</param>
-private async void FileExport_Click(object sender, RoutedEventArgs e)
-{
+private async void FileExport_Click(object sender, RoutedEventArgs e) {
 	//serialization here
 	FileSavePicker picker = new FileSavePicker();
 	picker.FileTypeChoices.Add("Drawing Project file", new List<string>() { customFileExtension });
 	picker.SuggestedFileName = "New Project";
 	StorageFile file = await picker.PickSaveFileAsync();
-	if (file != null)
-	{
-	using (Stream stream = await file.OpenStreamForWriteAsync())
-	{
-		DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
-		ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
+	if (file != null) {
+	using (Stream stream = await file.OpenStreamForWriteAsync()) {
+    DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
+	ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
 	}
-	}	
-
-
+    }	
 }
-		
+
+private void SetDrawingArea(int width, int height) { 
+    DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
+    DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);
+    DrawCanvas.Width = width;
+    DrawCanvas.Height = height;
+    History.ClearHistory();
 }
+
+        
+
+        private void Host_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Initialize(true, true);
+            Session.Build(new Client(), new Server());
+
+            AttemptConnect();
+        }
+
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Initialize(true);
+            Session.Build(new Client());
+
+            AttemptConnect();
+        }
+
+        private void AttemptConnect()
+        {
+            bool success = false;
+            uint trycount = 0;
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+            do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
+            while ( !success || trycount < 1000);
+        }
+    }
 
 }

@@ -114,7 +114,7 @@
                     ToolTipService.ToolTip="Clear Canvas"
                     Text="Clear Canvas" 
                     Click="ClearCanvas_Click"/>
-			<MenuFlyoutItem x:Name="Fill"
+            <MenuFlyoutItem x:Name="Fill"
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
                     Click="Fill_Click"/>
@@ -123,6 +123,17 @@
                     Text="Selection" 
                     Click="Selection_Click"/>
 
+        </MenuBarItem>
+
+        <MenuBarItem Title="Online">
+            <MenuFlyoutItem x:Name="RemoteHost"
+                            ToolTipService.ToolTip="Host your drawing"
+                            Text="Host"
+                            Click="Host_Click"/>
+            <MenuFlyoutItem x:Name="RemoteConnect"
+                            ToolTipService.ToolTip="Connect to a drawing"
+                            Text="Connect"
+                            Click="Connect_Click"/>
         </MenuBarItem>
         
     </Windows10version1809:MenuBar>

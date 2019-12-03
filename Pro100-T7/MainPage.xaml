@@ -13,14 +13,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-
 <Grid x:Name="mainArea">
         <Rectangle Fill="#464646"/>
 
-        <!--<AppBar HorizontalAlignment="Right"/>-->
-
         <uc:ProgramMenuBar x:Name="ProgramControlsBar"/>
-
         <uc:BrushModifierPanel x:Name="BrushModifier"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"/>
     </Grid>
