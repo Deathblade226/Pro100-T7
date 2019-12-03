@@ -28,14 +28,27 @@ public Color Secondary {
 public BrushModifierPanel() {
     this.InitializeComponent();
     Default_Click(null, null);
-    //brushSizeBox.Text = (string)ApplicationData.Current.LocalSettings.Values["brushSize"];
-	//Application.Current.Suspending += Current_Suspending;
-	//int intColor = (int)ApplicationData.Current.LocalSettings.Values["brushColor"];
-	//colorPicker.Color = Color.FromArgb((byte)((intColor & 0xff000000) >> 24),
-	//											(byte)((intColor & 0x00ff0000) >> 16),
-	//											(byte)((intColor & 0x0000ff00) >> 8),
-	//											(byte)((intColor & 0x000000ff) >> 0)
-	//											);
+			if(ApplicationData.Current.LocalSettings.Values != null)
+			{
+				string brushSize = (string)ApplicationData.Current.LocalSettings.Values["brushSize"];
+				if(brushSize != null)
+				{
+					brushSizeBox.Text = brushSize;
+				}
+				Application.Current.Suspending += Current_Suspending;
+				if (ApplicationData.Current.LocalSettings.Values.ContainsKey("brushColor"))
+				{
+					int? intColor = (int)ApplicationData.Current.LocalSettings.Values["brushColor"];
+					colorPicker.Color = Color.FromArgb((byte)((intColor & 0xff000000) >> 24),
+														(byte)((intColor & 0x00ff0000) >> 16),
+														(byte)((intColor & 0x0000ff00) >> 8),
+														(byte)((intColor & 0x000000ff) >> 0)
+														);
+				}
+				
+				
+			}
+			
 }
 
 private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)

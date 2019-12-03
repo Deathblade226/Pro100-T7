@@ -78,21 +78,35 @@ public void OnNavigatedTo(NavigationEventArgs e) {
 }
 
 private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
-    if(isMouseDownOnCanvas) {
+	Canvas_PointerMoved(sender, e);
+   if(isMouseDownOnCanvas) {
     ActionPointerReleased(sender, e);
     }
 	isMouseDownOnCanvas = true;
+	if(type != 10)
+	{
+		SelectionTool.ToolChanged();
+	}
 }
 
 public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
-    if(isMouseDownOnCanvas) {
+
+   
+   if(isMouseDownOnCanvas) {
     byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
 	byte[] b = new byte[b1.Length];
 	b1.CopyTo(b, 0);
 	History.EndAction(new Models.Action(b));
 	isMouseDownOnCanvas = false;
     }
-    
+
+	if(type == 10)
+	{
+		SelectionTool.SelectRelease();
+	}
+
+	canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
+
 }
 
 private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {

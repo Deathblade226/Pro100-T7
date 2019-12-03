@@ -79,7 +79,6 @@ public void ReduceBrushSize() {
     if (BrushSize >= 1) { BrushSize--; }
 }
 
-/// <summary>
 /// Checks if the Ctrl key is pressed.
 /// </summary>
 /// <returns></returns>
@@ -175,6 +174,11 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
 }
 private void Eraser_Click(object sender, RoutedEventArgs e) {
     BrushType = 7;
+}
+
+private void Selection_Click(object sender, RoutedEventArgs e)
+{
+	BrushType = 10;
 }
 
 /// <summary>

@@ -216,9 +216,14 @@
             <MenuFlyoutItem x:Name="Fill"
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
-                    Command="{StaticResource ToolsFillCommand}"/>
+					Command="{StaticResource ToolsFillCommand}"/>
+			<MenuFlyoutItem x:Name="Selection"
+                    ToolTipService.ToolTip="Selection"
+                    Text="Selection" 
+                    Click="Selection_Click"/>
 
-        </MenuBarItem>
+
+		</MenuBarItem>
 
         <MenuBarItem Title="Online">
             <MenuFlyoutItem x:Name="RemoteHost"
