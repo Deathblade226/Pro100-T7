@@ -9,6 +9,7 @@
     PrimaryButtonText="Confirm"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonText="Cancel"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
     d:DesignHeight="300"
     d:DesignWidth="400">
 

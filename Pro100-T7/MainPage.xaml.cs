@@ -44,7 +44,6 @@ public MainPage() {
 }
 protected override void OnNavigatedTo(NavigationEventArgs e) {
     DrawCanvas.OnNavigatedTo(e);
-    ProgramControlsBar.OnNavigatedTo(e);
     PointerMoved += Main_PointerMoved;
 	PointerReleased += MainPage_PointerReleased;
 }

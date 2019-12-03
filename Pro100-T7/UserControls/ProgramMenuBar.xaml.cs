@@ -8,6 +8,7 @@ using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
@@ -29,7 +30,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Pro100_T7.UserControls {
 
-public sealed partial class ProgramMenuBar : UserControl {
+public sealed partial class ProgramMenuBar : UserControl, ICommand {
     int brushType = 0;
     bool debug = true;
     bool isNewFile = true;
@@ -45,7 +46,9 @@ public sealed partial class ProgramMenuBar : UserControl {
 
     private string customFileExtension = ".dpf";
 
-public CanvasMaster DrawArea {
+        public event EventHandler CanExecuteChanged;
+
+        public CanvasMaster DrawArea {
     get { return drawArea; }
     set { drawArea = value; }
 }
@@ -66,13 +69,6 @@ public ProgramMenuBar() {
     this.InitializeComponent();
 }
 /// <summary>
-/// Sets the keydown event to keypressed.
-/// </summary>
-/// <param name="e">e</param>
-public void OnNavigatedTo(NavigationEventArgs e) { 
-    KeyDown += KeyPressed;        
-}
-/// <summary>
 /// Sets the focus to the menu bar for keybinds to work.
 /// </summary>
 public void SetFocus() { this.Focus(FocusState.Programmatic); }
@@ -84,35 +80,6 @@ public void ReduceBrushSize() {
     if (BrushSize >= 1) { BrushSize--; }
 }
 
-/// <summary>
-/// Reads current keys pressed and calles method.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">KeyRoutedEventArgs</param>
-private void KeyPressed(object sender, KeyRoutedEventArgs e) {
-    if (IsCtrlKeyPressed()) {
-    switch (e.Key) {
-    case VirtualKey.S: FileSave_Click(null, null); break;
-    case VirtualKey.Z: FileUndo_Click(null, null); break;
-    case VirtualKey.Y: FileRedo_Click(null, null); break;
-    case VirtualKey.Add: IncreaseBrushSize(); break;
-    case VirtualKey.Subtract: ReduceBrushSize(); break;
-    case VirtualKey.L: break;
-    }
-    }
-    switch (e.Key) {
-    case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
-    case VirtualKey.B: RegularBrush_Click(null, null); break;
-    case VirtualKey.E: Eraser_Click(null, null); break;
-    case VirtualKey.I: eyeDropper_Click(null, null); break;
-    }
-	if(e.Key == VirtualKey.Delete || e.Key == VirtualKey.Back)
-			{
-				SelectionTool.ClearSelection();
-			}
-}
-
-/// <summary>
 /// Checks if the Ctrl key is pressed.
 /// </summary>
 /// <returns></returns>
@@ -153,7 +120,6 @@ private async void FileNew_Click(object sender, RoutedEventArgs e) {
     NewWindowSize();
     }
 }
-
 private async void NewWindowSize() {
     var box = new CanvasSizeBox();
     var input = await box.ShowAsync();
@@ -161,7 +127,6 @@ private async void NewWindowSize() {
     newWidth = box.WidthVal;
     SetDrawingArea(newWidth, newHeight);
 }
-
 /// <summary>
 /// Saves file to existing file.
 /// </summary>
@@ -222,11 +187,9 @@ private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
     openNew = false; }
     isNewFile = false;
 }
-
 private async Task<bool> SavingImage(){
     FileSave_Click(null, null);
 return true;}
-
 /// <summary>
 /// Saves images to file.
 /// </summary>
@@ -347,9 +310,6 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
     BrushType = 3;
 }
-
-
-
 private void ClearCanvas_Click(object sender, RoutedEventArgs e){
     BrushType = 4;
 }
@@ -359,11 +319,9 @@ private void TriangleBrush_Click(object sender, RoutedEventArgs e){
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
-private void Fill_Click(object sender, RoutedEventArgs e)
-{
+private void Fill_Click(object sender, RoutedEventArgs e) {
 	BrushType = 9;
 }
-
 private void Eraser_Click(object sender, RoutedEventArgs e) {
     BrushType = 7;
 }
@@ -400,7 +358,11 @@ private async void FileExport_Click(object sender, RoutedEventArgs e) {
 	}
     }	
 }
-
+/// <summary>
+/// Takes in width and hegith to build a new canvas and image
+/// </summary>
+/// <param name="width">Width</param>
+/// <param name="height">Height</param>
 private void SetDrawingArea(int width, int height) { 
     DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
     DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);
@@ -411,30 +373,93 @@ private void SetDrawingArea(int width, int height) {
 
         
 
-        private void Host_Click(object sender, RoutedEventArgs e)
-        {
-            Session.Initialize(true, true);
-            Session.Build(new Client(), new Server());
+private void Host_Click(object sender, RoutedEventArgs e)
+{
+    Session.Initialize(true, true);
+    Session.Build(new Client(), new Server());
 
-            AttemptConnect();
+    AttemptConnect();
+}
+
+private void Connect_Click(object sender, RoutedEventArgs e)
+{
+    Session.Initialize(true);
+    Session.Build(new Client());
+
+    AttemptConnect();
+}
+
+private void AttemptConnect()
+{
+    bool success = false;
+    uint trycount = 0;
+    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+    do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
+    while ( !success || trycount < 1000);
+}
+
+public bool CanExecute(object parameter) {
+    throw new NotImplementedException();
+}
+
+public void Execute(object parameter) {
+    throw new NotImplementedException();
+}
+
+private void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    FileSave_Click(null, null);
+}
+
+private void FileNewCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileNew_Click(null, null);
+}
+
+private void FileSaveAsCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileSaveAs_Click(null, null);
         }
 
-        private void Connect_Click(object sender, RoutedEventArgs e)
-        {
-            Session.Initialize(true);
-            Session.Build(new Client());
+private void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileLoad_Click(null, null);
+}
 
-            AttemptConnect();
+private void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileExport_Click(null, null);
+}
+
+private void FileExitCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileExit_Click(null, null);
+}
+
+private void EditUndoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileUndo_Click(null, null);
         }
 
-        private void AttemptConnect()
-        {
-            bool success = false;
-            uint trycount = 0;
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
-            do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
-            while ( !success || trycount < 1000);
-        }
-    }
+private void EditRedoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    FileRedo_Click(null, null);
+}
+
+private void RegilarBrushCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    RegularBrush_Click(null, null);
+}
+
+private void ToolsEyeDropperCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    eyeDropper_Click(null, null);
+}
+
+private void ToolsFillCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+{
+    Fill_Click(null, null);
+}
+
+}
 
 }

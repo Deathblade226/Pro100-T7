@@ -14,11 +14,13 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
 <Grid x:Name="mainArea">
+    
         <Rectangle Fill="#464646"/>
 
         <uc:ProgramMenuBar x:Name="ProgramControlsBar"/>
         <uc:BrushModifierPanel x:Name="BrushModifier"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"/>
-    </Grid>
+
+</Grid>
 
 </Page>
