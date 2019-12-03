@@ -10,6 +10,97 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
+<UserControl.Resources>
+        <Windows10version1809:XamlUICommand x:Name="FileSaveCommand"
+                                            ExecuteRequested="FileSaveCommand_ExecuteRequested"
+                                            Description="File Save"
+                                            Label="File Save">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="S" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="FileNewCommand"
+                                            ExecuteRequested="FileNewCommand_ExecuteRequested"
+                                            Description="File New"
+                                            Label="File New">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="N" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="FileSaveAsCommand"
+                                            ExecuteRequested="FileSaveAsCommand_ExecuteRequested"
+                                            Description="File Save As"
+                                            Label="File Save As">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="S" Modifiers="Control,Shift"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="FileLoadCommand"
+                                            ExecuteRequested="FileLoadCommand_ExecuteRequested"
+                                            Description="File Load"
+                                            Label="File Load">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="L" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="FileExportCommand"
+                                            ExecuteRequested="FileExportCommand_ExecuteRequested"
+                                            Description="File Export"
+                                            Label="File Export">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="E" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="FileExitCommand"
+                                            ExecuteRequested="FileExitCommand_ExecuteRequested"
+                                            Description="File Exit"
+                                            Label="File Exit">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Escape"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="EditUndoCommand"
+                                            ExecuteRequested="EditUndoCommand_ExecuteRequested"
+                                            Description="Edit Undo"
+                                            Label="Edit Undo">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Z" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="EditRedoCommand"
+                                            ExecuteRequested="EditRedoCommand_ExecuteRequested"
+                                            Description="Edit Redo"
+                                            Label="Edit Redo">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Z" Modifiers="Control,Shift"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="RegilarBrushCommand"
+                                            ExecuteRequested="RegilarBrushCommand_ExecuteRequested"
+                                            Description="Edit Redo"
+                                            Label="Edit Redo">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="B"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsEyeDropperCommand"
+                                            ExecuteRequested="ToolsEyeDropperCommand_ExecuteRequested"
+                                            Description="Edit Redo"
+                                            Label="Edit Redo">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="I"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsFillCommand"
+                                            ExecuteRequested="ToolsFillCommand_ExecuteRequested"
+                                            Description="Edit Redo"
+                                            Label="Edit Redo">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="F"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+</UserControl.Resources>    
+    
     <Windows10version1809:MenuBar x:Name="AppBar"
          VerticalAlignment="Top"
          Background="LightGray">
@@ -20,31 +111,31 @@
             <MenuFlyoutItem x:Name="FileNew"
                     ToolTipService.ToolTip="New (Ctrl+N)"
                     Text="New"
-                    Click="FileNew_Click"/>
+                    Command="{StaticResource FileNewCommand}"/>
 
             <MenuFlyoutSeparator/>
 
             <MenuFlyoutItem x:Name="FileSave"
                     ToolTipService.ToolTip="Save (Ctrl+S)"
                     Text="Save"
-                    Click="FileSave_Click"/>
+                    Command="{StaticResource FileSaveCommand}"/>
 
             <MenuFlyoutItem x:Name="FileSaveAs"
                     Text="SaveAs"
-                    Click="FileSaveAs_Click"/>
+                    Command="{StaticResource FileSaveAsCommand}"/>
 
 
             <MenuFlyoutItem x:Name="FileLoad"
-                    ToolTipService.ToolTip="Load (Ctrl+L)"
+                    ToolTipService.ToolTip="Load"
                     Text="Load"
-                    Click="FileLoad_Click"/>
+                    Command="{StaticResource FileLoadCommand}"/>
 
             <MenuFlyoutSeparator/>
 
             <MenuFlyoutItem x:Name="FileExport"
-                            ToolTipService.ToolTip="Export (Ctrl+E)"
+                            ToolTipService.ToolTip="Export"
                             Text="Export"
-                            Click="FileExport_Click"/>
+                    Command="{StaticResource FileExportCommand}"/>
 
             <MenuFlyoutSeparator/>
 
@@ -58,14 +149,14 @@
 
         <MenuBarItem Title="Edit">
             <MenuFlyoutItem x:Name="FileUndo"
-                    ToolTipService.ToolTip="Undo (Ctrl+Z)"
-                    Text="Undo (Ctrl+Z)"
-                    Click="FileUndo_Click"/>
+                    ToolTipService.ToolTip="Undo"
+                    Text="Undo"
+                    Command="{StaticResource EditUndoCommand}"/>
 
             <MenuFlyoutItem x:Name="FileRedo"
-                    ToolTipService.ToolTip="Redo (Ctrl+Shift+Z)"
-                    Text="Redo (Ctrl+Y)"
-                    Click="FileRedo_Click"/>
+                    ToolTipService.ToolTip="Redo"
+                    Text="Redo"
+                    Command="{StaticResource EditRedoCommand}"/>
 
         </MenuBarItem>
 
@@ -73,7 +164,7 @@
             <MenuFlyoutItem x:Name="Regular"
                     ToolTipService.ToolTip="Regular Brush (B)"
                     Text="Regular Brush" 
-                    Click="RegularBrush_Click"/>
+                    Command="{StaticResource EditRedoCommand}"/>
             <MenuFlyoutItem x:Name="Wavy"
                     ToolTipService.ToolTip="Wavy Brush"
                     Text="Wavy Brush" 
@@ -108,8 +199,8 @@
 
             <MenuFlyoutItem x:Name="eyeDropper"
                             Text="Eyedropper tool"
-                            ToolTipService.ToolTip="Eyedropper Tool (I)"
-                            Click="eyeDropper_Click"/>
+                            ToolTipService.ToolTip="Eyedropper Tool"
+                            Command="{StaticResource ToolsEyeDropperCommand}"/>
             <MenuFlyoutItem x:Name="Clear"
                     ToolTipService.ToolTip="Clear Canvas"
                     Text="Clear Canvas" 
@@ -117,7 +208,7 @@
             <MenuFlyoutItem x:Name="Fill"
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
-                    Click="Fill_Click"/>
+                    Command="{StaticResource ToolsEyeDropperCommand}"/>
 
         </MenuBarItem>
 
