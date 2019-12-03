@@ -350,6 +350,10 @@ private void ToolsFillCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequ
 	BrushType = 9;
 }
 
-}
+        private void ToolsEraseCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
+        {
+
+        }
+    }
 
 }

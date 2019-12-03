@@ -99,6 +99,14 @@
                 <KeyboardAccelerator Key="F"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsEraseCommand"
+                                            ExecuteRequested="ToolsEraseCommand_ExecuteRequested"
+                                            Description="Erase Brush"
+                                            Label="Erase Brush">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="E"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
 </UserControl.Resources>    
     
     <Windows10version1809:MenuBar x:Name="AppBar"
@@ -191,7 +199,7 @@
             <MenuFlyoutItem x:Name="Eraser"
                             ToolTipService.ToolTip="Erase (E)"
                             Text="Eraser"
-                            Click="Eraser_Click"/>
+                            Command="{StaticResource ToolsEraseCommand}"/>
 
         </MenuBarItem>
 
