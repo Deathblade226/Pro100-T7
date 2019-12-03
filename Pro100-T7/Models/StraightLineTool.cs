@@ -14,7 +14,7 @@ namespace Pro100_T7.Models
 	{
 		private static WriteableBitmap bmp;
 		private static bool isSelecting = false;
-		private static bool lineDrawn = false;
+		//private static bool lineDrawn = false;
 
 		private static P startPoint;
 		private static P currentPoint;
