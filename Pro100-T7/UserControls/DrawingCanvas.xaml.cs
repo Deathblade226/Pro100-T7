@@ -78,7 +78,8 @@ public void OnNavigatedTo(NavigationEventArgs e) {
 }
 
 private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
-    if(isMouseDownOnCanvas) {
+	Canvas_PointerMoved(sender, e);
+   if(isMouseDownOnCanvas) {
     ActionPointerReleased(sender, e);
     }
 	isMouseDownOnCanvas = true;
