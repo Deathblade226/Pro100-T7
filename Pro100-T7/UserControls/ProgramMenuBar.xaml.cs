@@ -188,31 +188,6 @@ private void SetDrawingArea(int width, int height) {
     History.ClearHistory();
 }
 
-private void Host_Click(object sender, RoutedEventArgs e)
-{
-    Session.Initialize(true, true);
-    Session.Build(new Client(), new Server());
-
-    AttemptConnect();
-}
-
-private void Connect_Click(object sender, RoutedEventArgs e)
-{
-    Session.Initialize(true);
-    Session.Build(new Client());
-
-    AttemptConnect();
-}
-
-private void AttemptConnect()
-{
-    bool success = false;
-    uint trycount = 0;
-    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
-    do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
-    while ( !success || trycount < 1000);
-}
-
 private async void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
     else { 
@@ -379,6 +354,32 @@ private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteReq
     SelectionTool.ClearSelection();
 }
 
-}
+        private void Host_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Initialize(true, true);
+            Session.Build(new Client(), new Server());
+
+            AttemptConnect();
+        }
+
+        private void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            Session.Initialize(true);
+            Session.Build(new Client());
+
+            AttemptConnect();
+        }
+
+        private void AttemptConnect()
+        {
+            bool success = false;
+            uint trycount = 0;
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+            do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
+            while (!success || trycount < 1000);
+        }
+
+    }
 
 }
+

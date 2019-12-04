@@ -93,8 +93,6 @@ private void Dt_Tick(object sender, object e) {
     }
 }
 
-public Canvas GetControlCanvasUIElement() => DrawArea;
-
 private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
 	Canvas_PointerMoved(sender, e);
    if(isMouseDownOnCanvas) {
