@@ -13,15 +13,20 @@ namespace NetworkingTestsHelper
             Socket s = new Socket(SocketType.Stream, ProtocolType.Tcp);
             s.Connect(ep);
 
+            Console.WriteLine("Hit enter to connect");
+            Console.ReadLine();
+
+            Tester(s);
+        }
+
+        public static async void Tester(Socket s)
+        {
             while (true)
             {
-                Console.WriteLine("Hit enter to connect");
-                Console.ReadLine();
-
                 byte[] words = Encoding.ASCII.GetBytes("Hello network...fuck you sockets");
-                s.Send(words);
+                s.BeginSend(words, 0, 0, SocketFlags.None, null, null);
 
-                Console.Read();
+                Console.ReadLine();
             }
         }
     }
