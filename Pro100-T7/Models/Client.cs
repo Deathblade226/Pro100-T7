@@ -9,19 +9,26 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
     public sealed class Client
     {
-        public Timer UpdateTimer { get; set; } = new Timer(5);
+        public DispatcherTimer UpdateTimer { get; set; } = new DispatcherTimer();
         public Socket HostConnection { get; private set; } = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
         ~Client() => UpdateTimer.Stop();
         public Client() 
         {
-            UpdateTimer.Elapsed += TryReceiveData;
+            UpdateTimer.Interval = new TimeSpan(0, 0, 0, 0, 5);
+            UpdateTimer.Tick += TRD;
+        }
+
+        private void TRD<TEventArgs>(object sender, TEventArgs e)
+        {
+            TryReceiveData(null, null);
         }
 
         public void TryReceiveData(object sender, ElapsedEventArgs e)
