@@ -1,3 +1,4 @@
+using Pro100_T7.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Pro100_T7.Models
     {
         public Canvas UICanvasObject { get; private set; }
 
-        public Image ImageData { get; private set; }
+        public Image ImageData { get; set; }
         public ImageLayer ImageDataLayer { get; private set; }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pro100_T7.UserControls;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -93,8 +94,11 @@ namespace Pro100_T7
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Save application state and stop any background activity
-            deferral.Complete();
+			//TODO: Save application state and stop any background activity
+
+
+			
+			deferral.Complete();
         }
     }
 }

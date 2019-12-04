@@ -12,12 +12,22 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <PackageCertificateKeyFile>C:\Users\xXDeathblade226\OneDrive - Neumont College of Computer Science\Projects\Pro100-T7\Pro100-T7\Pro100-T7\Pro100-T7_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>485D125E96BD83F82B469A799A39FCAAA562778B</PackageCertificateThumbprint>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxPackageDir>C:\Users\xXDeathblade226\Desktop\DrawingTogeather\</AppxPackageDir>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x86</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +40,7 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -140,22 +151,33 @@
     <Compile Include="BitMap\WriteableBitmapShapeExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapSplineExtensions.cs" />
     <Compile Include="BitMap\WriteableBitmapTransformationExtensions.cs" />
-    <Compile Include="Interfaces\IClientServer.cs" />
+    <Compile Include="CustomBitmapExtensions\WriteableBitmapCustomExtensions.cs" />
+    <Compile Include="Interfaces\IClient.cs" />
     <Compile Include="Interfaces\IDrawPacket.cs" />
+    <Compile Include="Interfaces\IServer.cs" />
     <Compile Include="Models\BitmapReader.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Brush.cs" />
     <Compile Include="Models\CanvasMaster.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\DrawPacket.cs" />
     <Compile Include="Models\DrawPoint.cs" />
     <Compile Include="Models\FillTool.cs" />
     <Compile Include="Models\ImageLayer.cs" />
     <Compile Include="Models\History.cs" />
+    <Compile Include="Models\SelectionTool.cs" />
+    <Compile Include="Models\Server.cs" />
+    <Compile Include="Models\Session.cs" />
+    <Compile Include="Models\StraightLineTool.cs" />
     <Compile Include="Models\Stroke.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\BrushModifierPanel.xaml.cs">
       <DependentUpon>BrushModifierPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CanvasSizeBox.xaml.cs">
+      <DependentUpon>CanvasSizeBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\DrawingCanvas.xaml.cs">
       <DependentUpon>DrawingCanvas.xaml</DependentUpon>
@@ -192,6 +214,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="UserControls\CanvasSizeBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\DrawingCanvas.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -206,7 +232,6 @@
       <Version>6.2.9</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

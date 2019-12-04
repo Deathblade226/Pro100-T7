@@ -1,9 +1,14 @@
 ﻿using Pro100_T7.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
@@ -18,6 +23,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -27,11 +33,19 @@ namespace Pro100_T7.UserControls {
 public sealed partial class ProgramMenuBar : UserControl {
     int brushType = 0;
     bool debug = true;
-    bool newFile = true;
+    bool isNewFile = true;
     FileSavePicker fileSavePicker = new FileSavePicker();
+    StorageFile outputFile;
     private CanvasMaster drawArea;
-    private CanvasMaster canvas;
     private int brushSize = 1;
+    bool exit = false;
+    bool openNew = false;
+    bool newSize = false;
+    int newWidth = 1000;
+    int newHeight = 800;
+
+    private string customFileExtension = ".dpf";
+
 
 public CanvasMaster DrawArea {
     get { return drawArea; }
@@ -43,24 +57,15 @@ public int BrushType {
     set { brushType = value; }
 }
 
-public CanvasMaster Canvas {
-    get { return canvas; }
-    set { canvas = value; }
-}
-
 public int BrushSize {
     get { return brushSize; }
     set { BrushSize = value; }
 }
+
+public Canvas DrawCanvas { get; set; }
+
 public ProgramMenuBar() {
     this.InitializeComponent();
-}
-/// <summary>
-/// Sets the keydown event to keypressed.
-/// </summary>
-/// <param name="e">e</param>
-public void OnNavigatedTo(NavigationEventArgs e) { 
-    KeyDown += KeyPressed;        
 }
 /// <summary>
 /// Sets the focus to the menu bar for keybinds to work.
@@ -74,27 +79,6 @@ public void ReduceBrushSize() {
     if (BrushSize >= 1) { BrushSize--; }
 }
 
-/// <summary>
-/// Reads current keys pressed and calles method.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">KeyRoutedEventArgs</param>
-private void KeyPressed(object sender, KeyRoutedEventArgs e) {
-    if (IsCtrlKeyPressed()) {
-    switch (e.Key) {
-    case VirtualKey.S: FileSave_Click(null, null); break;
-    case VirtualKey.Z: FileUndo_Click(null, null); break;
-    case VirtualKey.Y: FileRedo_Click(null, null); break;
-    case VirtualKey.Add: IncreaseBrushSize(); break;
-    case VirtualKey.Subtract: ReduceBrushSize(); break;
-    case VirtualKey.L: break;
-    }
-    }
-    switch (e.Key) {
-    case VirtualKey.Escape: if (debug) { FileExit_Click(null, null); } break;
-    }
-}
-/// <summary>
 /// Checks if the Ctrl key is pressed.
 /// </summary>
 /// <returns></returns>
@@ -108,74 +92,21 @@ return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down; }
 public static bool IsShiftKeyPressed() {
     var ctrlState = CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Shift);
 return (ctrlState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;}
-/// <summary>
-/// Creates a new file and cleares history.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private async void FileNew_Click(object sender, RoutedEventArgs e) {
-    ContentDialog newFile = new ContentDialog {
-    Title = "Do you want to save before opening a new canvas?",
-    CloseButtonText = "Cancel",
-    PrimaryButtonText = "Yes",
-    SecondaryButtonText = "No"};
 
-    var result = await newFile.ShowAsync();
-
-    if (result == ContentDialogResult.Primary) {
-    //FileSave_Click(null, null);
-    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
-    History.ClearHistory(); }
-    else if (result == ContentDialogResult.Secondary) {
-    //canvas.ImageDataLayer.BitmapDrawingData.Clear(); //Clearing the canvas
-    History.ClearHistory();
-    }
+private async void NewWindowSize() {
+    var box = new CanvasSizeBox();
+    var input = await box.ShowAsync();
+    newHeight = box.HeightVal;
+    newWidth = box.WidthVal;
+    SetDrawingArea(newWidth, newHeight);
 }
-/// <summary>
-/// Saves file to existing file.
-/// </summary>
-/// <param name="sender"></param>
-/// <param name="e"></param>
-private void FileSave_Click(object sender, RoutedEventArgs e) {
-    if (newFile) { FileSaveAs_Click(sender, e); }
-    else { 
-    var outputFile = fileSavePicker.PickSaveFileAsync();
-    if (outputFile == null) { // The user cancelled the picking operation
-    return;
-    }
-    }
-}
-/// <summary>
-/// Creates a new file to save to.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private async void FileSaveAs_Click(object sender, RoutedEventArgs e) {
-    fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-    fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
-    fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
-    fileSavePicker.SuggestedFileName = "image";
-    var outputFile = await fileSavePicker.PickSaveFileAsync();
-    if (outputFile == null) { // The user cancelled the picking operation
-    return;
-    }
 
-    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
-    BitmapPixelFormat.Bgra8,
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
-    );
-
-    SaveSoftwareBitmapToFile(outputBitmap, outputFile);
-    newFile = false;
-}
 /// <summary>
 /// Saves images to file.
 /// </summary>
 /// <param name="softwareBitmap">Set to null</param>
 /// <param name="outputFile">Set to null</param>
-private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
+private async Task<bool> SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, StorageFile outputFile) {
     using (IRandomAccessStream stream = await outputFile.OpenAsync(FileAccessMode.ReadWrite)) {
     // Create an encoder with the desired format
     BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
@@ -200,69 +131,14 @@ private async void SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap, Stora
     default: throw;
     }
     }
-    if (encoder.IsThumbnailGenerated == false)
-    {
-    await encoder.FlushAsync();
+    if (encoder.IsThumbnailGenerated == false) {
+                    
+    await encoder.FlushAsync(); 
     }
     }
-}
-/// <summary>
-/// Loades a file with history data.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private void FileLoad_Click(object sender, RoutedEventArgs e) {
+    if (newSize) SetDrawingArea(newWidth, newHeight); newSize = false;
+return true;}
 
-}
-/// <summary>
-/// Closes application and asks to save.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private async void FileExit_Click(object sender, RoutedEventArgs e) {
-    ContentDialog newFile = new ContentDialog {
-    Title = "Do you want to save before exiting the application?",
-    CloseButtonText = "Cancel",
-    PrimaryButtonText = "Yes",
-    SecondaryButtonText = "No"};
-
-    var result = await newFile.ShowAsync();
-
-    if (result == ContentDialogResult.Primary) {
-    FileSaveAs_Click(null, null);
-    Application.Current.Exit();
-    } else if (result == ContentDialogResult.Secondary) {
-    Application.Current.Exit();
-    }
-}
-/// <summary>
-/// Undoes the last action.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private void FileUndo_Click(object sender, RoutedEventArgs e) {
-    byte[] b = History.Undo().bmp;
-    canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
-}
-/// <summary>
-/// Redoes the last action.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private void FileRedo_Click(object sender, RoutedEventArgs e) {
-    byte[] b = History.Redo().bmp;
-    canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
-    canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
-}
-/// <summary>
-/// Sets current brush to base brush.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private void RegularBrush_Click(object sender, RoutedEventArgs e) {
-    BrushType = 0;
-}
 /// <summary>
 /// Sets the current brush to wavy. (Bugged)
 /// </summary>
@@ -287,14 +163,6 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
     BrushType = 3;
 }
-/// <summary>
-/// Exports the file to be loaded back into latter. Saves current settings.
-/// </summary>
-/// <param name="sender">Set to null</param>
-/// <param name="e">Set to null</param>
-private void FileExport_Click(object sender, RoutedEventArgs e) {
-
-} 
 private void ClearCanvas_Click(object sender, RoutedEventArgs e){
     BrushType = 4;
 }
@@ -305,8 +173,186 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
 
-        private void FileExport_Click(object sender, RoutedEventArgs e) {
+/// <summary>
+/// Takes in width and hegith to build a new canvas and image
+/// </summary>
+/// <param name="width">Width</param>
+/// <param name="height">Height</param>
+private void SetDrawingArea(int width, int height) { 
+    DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
+    DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);
+    DrawCanvas.Width = width;
+    DrawCanvas.Height = height;
+    History.ClearHistory();
+}
 
+private void Host_Click(object sender, RoutedEventArgs e)
+{
+    Session.Initialize(true, true);
+    Session.Build(new Client(), new Server());
+
+    AttemptConnect();
+}
+
+private void Connect_Click(object sender, RoutedEventArgs e)
+{
+    Session.Initialize(true);
+    Session.Build(new Client());
+
+    AttemptConnect();
+}
+
+private void AttemptConnect()
+{
+    bool success = false;
+    uint trycount = 0;
+    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+    do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
+    while ( !success || trycount < 1000);
+}
+
+private async void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
+    else { 
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
+    BitmapPixelFormat.Bgra8,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
+    );
+
+    await SaveSoftwareBitmapToFile(outputBitmap, outputFile);
+    if (exit) { Application.Current.Exit(); }
+    if (openNew) {     
+    EditUndoCommand_ExecuteRequested(null, null);
+    isNewFile = true;
+    outputFile = null;
+    openNew = false; }
+    }
+}
+
+private async void FileNewCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    ContentDialog newFile = new ContentDialog {
+    Title = "Do you want to save before opening a new canvas?",
+    CloseButtonText = "Cancel",
+    PrimaryButtonText = "Yes",
+    SecondaryButtonText = "No"};
+
+    var result = await newFile.ShowAsync();
+
+    if (result == ContentDialogResult.Primary) {
+    openNew = true;
+    newSize = true;
+    FileSaveCommand_ExecuteRequested(null, null);
+    NewWindowSize();
+    }
+    else if (result == ContentDialogResult.Secondary) { //No problem
+    isNewFile = true;
+    outputFile = null;
+    History.ClearHistory();
+    NewWindowSize();
+    }
+}
+
+private async void FileSaveAsCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    fileSavePicker = new FileSavePicker();
+    fileSavePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+    
+    fileSavePicker.FileTypeChoices.Add("JPEG files", new List<string>() { ".jpg" });
+    fileSavePicker.FileTypeChoices.Add("PNG files", new List<string>() { ".png" });
+    fileSavePicker.SuggestedFileName = "image";
+    outputFile = await fileSavePicker.PickSaveFileAsync();
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+
+    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
+    BitmapPixelFormat.Bgra8,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
+    );
+
+    await SaveSoftwareBitmapToFile(outputBitmap, outputFile);
+    if (exit) { Application.Current.Exit(); }
+    if (openNew) {
+    EditUndoCommand_ExecuteRequested(null, null);
+    isNewFile = true;
+    outputFile = null;
+    openNew = false; }
+    isNewFile = false;
+}
+
+private void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+
+}
+
+private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+	//serialization here
+	FileSavePicker picker = new FileSavePicker();
+	picker.FileTypeChoices.Add("Drawing Project file", new List<string>() { customFileExtension });
+	picker.SuggestedFileName = "New Project";
+	StorageFile file = await picker.PickSaveFileAsync();
+	if (file != null) {
+	using (Stream stream = await file.OpenStreamForWriteAsync()) {
+    DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
+	ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
+	}
+    }	
+}
+
+private async void FileExitCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    ContentDialog newFile = new ContentDialog {
+    Title = "Do you want to save before exiting the application?",
+    CloseButtonText = "Cancel",
+    PrimaryButtonText = "Yes",
+    SecondaryButtonText = "No"};
+
+    var result = await newFile.ShowAsync();
+
+    if (result == ContentDialogResult.Primary) {
+    exit = true;
+    FileSaveCommand_ExecuteRequested(null, null);
+
+    } else if (result == ContentDialogResult.Secondary) {
+    Application.Current.Exit();
+    }
+}
+
+private void EditUndoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    byte[] b = History.Undo().bmp;
+    DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+}
+
+private void EditRedoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    byte[] b = History.Redo().bmp;
+    DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
+    DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+}
+
+private void RegilarBrushCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    BrushType = 0;
+}
+
+private void ToolsEyeDropperCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    BrushType = 8;
+}
+
+private void ToolsFillCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+	BrushType = 9;
+}
+private void ToolsEraseCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    BrushType = 7;
+}
+private void ToolsSelectCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+	BrushType = 10;
+}
+private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    SelectionTool.ClearSelection();
 }
 
 }
