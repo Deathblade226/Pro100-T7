@@ -1,6 +1,7 @@
 ﻿using Pro100_T7.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -25,6 +26,7 @@ namespace Pro100_T7.Models
             CurrentAddress.Listen(100);
 
             CheckConnectTimer.Elapsed += TryConnectClient;
+            CheckConnectTimer.Elapsed += TryReceiveData;
             CheckConnectTimer.Start();
         }
 
@@ -40,6 +42,17 @@ namespace Pro100_T7.Models
             foreach (Socket s in Clients)
             {
                 s.Send(data);
+            }
+        }
+
+        public async void TryReceiveData(object sender, ElapsedEventArgs e)
+        {
+            foreach (Socket s in Clients)
+            {
+                byte[] currentClientBuffer = new byte[0];
+                await s.ReceiveAsync(currentClientBuffer, SocketFlags.None);
+
+                if (currentClientBuffer.Length > 0) Debug.WriteLine(currentClientBuffer.ToString()); 
             }
         }
 

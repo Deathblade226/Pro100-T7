@@ -16,6 +16,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -414,10 +415,14 @@ private void SetDrawingArea(int width, int height) {
         {
             bool success = false;
             uint trycount = 0;
+
             IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
-            do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
-            while ( !success || trycount < 1000);
+            do { 
+                success = Session.CurrentClientSession.TryConnectToServer(ipep);
+                Debug.WriteLine($"{trycount} - Connected: {success}"); 
+                trycount++; 
+            }
+            while (!success && trycount < 100);
         }
     }
-
 }

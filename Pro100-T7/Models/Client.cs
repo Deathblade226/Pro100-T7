@@ -32,9 +32,9 @@ namespace Pro100_T7.Models
             data = incoming;
         }
 
-        public void SendData(byte[] data)
+        public async void SendData(byte[] data)
         {
-            HostConnection.Send(data);
+            HostConnection.SendAsync(data, SocketFlags.None);
         }
 
         public bool TryConnectToServer(EndPoint server)

@@ -91,6 +91,7 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 	b1.CopyTo(b, 0);
 	History.EndAction(new Models.Action(b));
 	isMouseDownOnCanvas = false;
+    if (Session.IsOnlineSession) Session.CurrentClientSession.SendData(b);
     }
     
 }
