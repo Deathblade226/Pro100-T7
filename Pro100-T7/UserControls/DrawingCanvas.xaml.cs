@@ -27,7 +27,7 @@ private static Color secondary;
 private int size;
 private int type = 0;
 private bool isMouseDownOnCanvas = false;
-private DispatcherTimer dt = new DispatcherTimer();
+public static  DispatcherTimer dt = new DispatcherTimer();
 
 public BrushModifierPanel BrushMod { get; set; }
 
@@ -85,6 +85,8 @@ private void Dt_Tick(object sender, object e) {
     drawPoint.OldPoint = drawPoint.CurrentPoint;
     }
 }
+
+public static void StopTimer() { dt.Stop(); }
 
 public Canvas GetControlCanvasUIElement() => DrawArea;
 

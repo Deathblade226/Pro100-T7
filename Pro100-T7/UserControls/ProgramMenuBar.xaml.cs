@@ -17,6 +17,7 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,7 +33,7 @@ namespace Pro100_T7.UserControls {
 
 public sealed partial class ProgramMenuBar : UserControl {
     int brushType = 0;
-    bool debug = true;
+    readonly bool debug = true;
     bool isNewFile = true;
     FileSavePicker fileSavePicker = new FileSavePicker();
     StorageFile outputFile;
@@ -45,7 +46,8 @@ public sealed partial class ProgramMenuBar : UserControl {
     int newHeight = 800;
 
     private string customFileExtension = ".dpf";
-
+    private string hostip = "0.0.0.0";
+    private string debugip = "";
 
 public CanvasMaster DrawArea {
     get { return drawArea; }
@@ -67,6 +69,7 @@ public Canvas DrawCanvas { get; set; }
 public ProgramMenuBar() {
     this.InitializeComponent();
 }
+
 /// <summary>
 /// Sets the focus to the menu bar for keybinds to work.
 /// </summary>
@@ -145,6 +148,7 @@ return true;}
 /// <param name="sender">Set to null</param>
 /// <param name="e">Set to null</param>
 private void WavyBrush_Click(object sender, RoutedEventArgs e) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 1;
 }
 /// <summary>
@@ -153,6 +157,7 @@ private void WavyBrush_Click(object sender, RoutedEventArgs e) {
 /// <param name="sender">Set to null</param>
 /// <param name="e">Set to null</param>
 private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 2;
 }
 /// <summary>
@@ -161,15 +166,19 @@ private void DoubleBrush_Click(object sender, RoutedEventArgs e) {
 /// <param name="sender">Set to null</param>
 /// <param name="e">Set to null</param>
 private void PenBrush_Click(object sender, RoutedEventArgs e) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 3;
 }
 private void ClearCanvas_Click(object sender, RoutedEventArgs e){
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 4;
 }
 private void TriangleBrush_Click(object sender, RoutedEventArgs e){
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 5;
 }
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 6;
 }
 
@@ -186,52 +195,67 @@ private void SetDrawingArea(int width, int height) {
     History.ClearHistory();
 }
 
-private void Host_Click(object sender, RoutedEventArgs e)
+private async void Host_Click(object sender, RoutedEventArgs e)
 {
-    Session.Initialize(true, true);
-    Session.Build(new Client(), new Server());
+    var box = new OnlineConnect();
+    var input = await box.ShowAsync();
 
-    AttemptConnect();
+    if (input == ContentDialogResult.Primary) {
+    hostip = box.IP;
+    buildSession(new Client(), new Server());
+    }
 }
 
-private void Connect_Click(object sender, RoutedEventArgs e)
+private async void Connect_Click(object sender, RoutedEventArgs e)
 {
-    Session.Initialize(true);
-    Session.Build(new Client());
+    var box = new OnlineConnect();
+    var input = await box.ShowAsync();
 
+    if (input == ContentDialogResult.Primary) {
+    hostip = box.IP;
+    buildSession(new Client());
+    }
+}
+
+private void buildSession(Client client, Server server = null) { 
+    Session.Initialize(true);
+    Session.Build(client, server);
     AttemptConnect();
 }
 
 private void AttemptConnect()
 {
+    if (debug && debugip != "") hostip = debugip;
+
     bool success = false;
     uint trycount = 0;
-    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(hostip), 5555);
     do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
     while ( !success || trycount < 1000);
 }
 
-private async void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-    if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
-    else { 
-    if (outputFile == null) { // The user cancelled the picking operation
-    return;
-    }
-    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
-    BitmapPixelFormat.Bgra8,
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
-    );
 
-    await SaveSoftwareBitmapToFile(outputBitmap, outputFile);
-    if (exit) { Application.Current.Exit(); }
-    if (openNew) {     
-    EditUndoCommand_ExecuteRequested(null, null);
-    isNewFile = true;
-    outputFile = null;
-    openNew = false; }
-    }
+
+public bool Exists() {
+    string filePath = "";
+    if (outputFile != null) {filePath = outputFile.Path;}
+    try {
+    string path = Path.GetDirectoryName(filePath);
+    var fileName = Path.GetFileName(filePath);
+    StorageFolder accessFolder = StorageFolder.GetFolderFromPathAsync(path).AsTask().GetAwaiter().GetResult();
+    StorageFile file = accessFolder.GetFileAsync(fileName).AsTask().GetAwaiter().GetResult();
+    return file != null;
+    } catch { 
+    return false;
+}
+
+}
+
+
+
+private void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (outputFile != null) isNewFile = Exists();
+    Save();
 }
 
 private async void FileNewCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
@@ -254,6 +278,29 @@ private async void FileNewCommand_ExecuteRequested(XamlUICommand sender, Execute
     outputFile = null;
     History.ClearHistory();
     NewWindowSize();
+    }
+}
+
+private async void Save() { 
+    if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
+    else { 
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
+    BitmapPixelFormat.Bgra8,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
+    );
+
+    await SaveSoftwareBitmapToFile(outputBitmap, outputFile);
+    if (exit) { Application.Current.Exit(); }
+    if (openNew) {     
+    EditUndoCommand_ExecuteRequested(null, null);
+    isNewFile = true;
+    outputFile = null;
+    openNew = false; }
     }
 }
 
@@ -286,8 +333,8 @@ private async void FileSaveAsCommand_ExecuteRequested(XamlUICommand sender, Exec
     isNewFile = false;
 }
 
-private void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-
+private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    await(new MessageDialog("This Function is not implemented. Wait for version 2.0.")).ShowAsync();
 }
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
@@ -315,9 +362,11 @@ private async void FileExitCommand_ExecuteRequested(XamlUICommand sender, Execut
 
     if (result == ContentDialogResult.Primary) {
     exit = true;
+    DrawingCanvas.StopTimer();
     FileSaveCommand_ExecuteRequested(null, null);
-
+    
     } else if (result == ContentDialogResult.Secondary) {
+    DrawingCanvas.StopTimer();
     Application.Current.Exit();
     }
 }
@@ -335,20 +384,25 @@ private void EditRedoCommand_ExecuteRequested(XamlUICommand sender, ExecuteReque
 }
 
 private void RegilarBrushCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 0;
 }
 
 private void ToolsEyeDropperCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.UpArrow, 0);
     BrushType = 8;
 }
 
 private void ToolsFillCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Pin, 0);
 	BrushType = 9;
 }
 private void ToolsEraseCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.UniversalNo, 0);
     BrushType = 7;
 }
 private void ToolsSelectCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.SizeAll, 0);
 	BrushType = 10;
 }
 private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {

@@ -256,6 +256,9 @@
                             ToolTipService.ToolTip="Host your drawing"
                             Text="Host"
                             Click="Host_Click"/>
+            
+            <MenuFlyoutSeparator/>
+
             <MenuFlyoutItem x:Name="RemoteConnect"
                             ToolTipService.ToolTip="Connect to a drawing"
                             Text="Connect"
