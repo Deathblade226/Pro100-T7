@@ -88,12 +88,6 @@ private void IncreaseBrushSize_ExecuteRequested(XamlUICommand sender, ExecuteReq
 private void DecreaseBrushSize_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     if (brushSizeSlider.Minimum != brushSizeSlider.Value) brushSizeSlider.Value--;
 }
-private void increase_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-    if (brushSizeSlider.Value != brushSizeSlider.Maximum) brushSizeSlider.Value++;
-}
-private void decrease_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-    if (brushSizeSlider.Value != brushSizeSlider.Minimum) brushSizeSlider.Value--;
-}
 
 }
 

@@ -136,7 +136,7 @@
                             Margin="4 0 1 110"
                             Background="Gray"
                             BorderBrush="Black"
-                            Command="{StaticResource increase}"/>
+                            Command="{StaticResource IncreaseBrushSize}"/>
                     <Button x:Name="sub"
                             Content="Decrease Brush Size"
                             HorizontalAlignment="Left"
@@ -146,7 +146,7 @@
                             Margin="4 0 1 70"
                             Background="Gray"
                             BorderBrush="Black"
-                            Command="{StaticResource decrease}"/>
+                            Command="{StaticResource DecreaseBrushSize}"/>
 
                 </Grid>
             </GroupItem>
