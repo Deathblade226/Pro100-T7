@@ -400,7 +400,7 @@ private void SetDrawingArea(int width, int height) {
             Session.Initialize(true, true);
             Session.Build(new Client(), new Server());
 
-            AttemptConnect();
+            AttemptConnect(true);
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
@@ -408,15 +408,15 @@ private void SetDrawingArea(int width, int height) {
             Session.Initialize(true);
             Session.Build(new Client());
 
-            AttemptConnect();
+            AttemptConnect(false);
         }
 
-        private void AttemptConnect()
+        private void AttemptConnect(bool host)
         {
             bool success = false;
             uint trycount = 0;
 
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+            IPEndPoint ipep = (host) ? new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555) : new IPEndPoint(IPAddress.Parse("172.20.10.5"), 5555);
             do { 
                 success = Session.CurrentClientSession.TryConnectToServer(ipep);
                 Debug.WriteLine($"{trycount} - Connected: {success}"); 
