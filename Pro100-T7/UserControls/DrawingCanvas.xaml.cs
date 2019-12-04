@@ -101,6 +101,7 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
         private void UpdateFromServer(byte[] data)
         {
             canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(data, 0, data.Length);
+            canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
         }
 
 private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {

@@ -22,7 +22,7 @@ namespace Pro100_T7.Models
         ~Client() => UpdateTimer.Stop();
         public Client() 
         {
-            UpdateTimer.Interval = new TimeSpan(0, 0, 0, 0, 5);
+            UpdateTimer.Interval = new TimeSpan(0, 0, 0, 0, 1000);
             UpdateTimer.Tick += TRD;
         }
 
