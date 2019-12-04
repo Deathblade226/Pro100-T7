@@ -70,18 +70,23 @@ private void RColorB_Click(object sender, RoutedEventArgs e) {
 
 private void Default_Click(object sender, RoutedEventArgs e) {
     colorPicker.Color = Color.FromArgb(255, 255, 0, 0);
-    RColor.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+    RColor.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
     LColor.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-    secondary = Color.FromArgb(255, 255, 255, 255);
+    secondary = Color.FromArgb(255, 0, 0, 255);
 }
 
-private void TradeColor_Click(object sender, RoutedEventArgs e) {
+private void ColorSwap_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     Color temp = secondary;
     secondary = colorPicker.Color;
     colorPicker.Color = temp;
     RColor.Fill = new SolidColorBrush(secondary);
     LColor.Fill = new SolidColorBrush(colorPicker.Color);
-
+}
+private void IncreaseBrushSize_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (brushSizeSlider.Maximum != brushSizeSlider.Value) brushSizeSlider.Value++;
+}
+private void DecreaseBrushSize_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (brushSizeSlider.Minimum != brushSizeSlider.Value) brushSizeSlider.Value--;
 }
 private void increase_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     if (brushSizeSlider.Value != brushSizeSlider.Maximum) brushSizeSlider.Value++;

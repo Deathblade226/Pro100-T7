@@ -12,41 +12,50 @@
     d:DesignWidth="400">
 
     <UserControl.Resources>
-        <Windows10version1809:XamlUICommand x:Name="increase"
-                                            ExecuteRequested="increase_ExecuteRequested">
+        <Windows10version1809:XamlUICommand x:Name="ColorSwap"
+                                            ExecuteRequested="ColorSwap_ExecuteRequested"
+                                            Description="Swap Colors"
+                                            Label="Swap Colors">
             <Windows10version1809:XamlUICommand.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Right" Modifiers="Control"/>
+                <KeyboardAccelerator Key="Tab" Modifiers="Control"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
-        <Windows10version1809:XamlUICommand x:Name="decrease"
-                                            ExecuteRequested="decrease_ExecuteRequested">
+
+        <Windows10version1809:XamlUICommand x:Name="IncreaseBrushSize"
+                                            ExecuteRequested="IncreaseBrushSize_ExecuteRequested">
             <Windows10version1809:XamlUICommand.KeyboardAccelerators>
-                <KeyboardAccelerator Key="Left" Modifiers="Control"/>
+                <KeyboardAccelerator Key="Up" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+        <Windows10version1809:XamlUICommand x:Name="DecreaseBrushSize"
+                                            ExecuteRequested="DecreaseBrushSize_ExecuteRequested">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Down" Modifiers="Control"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
     </UserControl.Resources>
-    
-	<GroupItem HorizontalAlignment="Right"
+
+    <GroupItem HorizontalAlignment="Right"
            Margin="0 0 20 0">
-		<Grid x:Name="Pickerbox">
-			<ColorPicker x:Name="colorPicker"
+        <Grid>
+            <ColorPicker x:Name="colorPicker"
                          Grid.Column="1"
                          Height="690"
                          IsEnabled="True"
-                         Color="Blue"
+                         Color="Red"
                          RightTapped="colorPicker_RightClick"/>
-			<GroupItem Grid.Column="1"
+            <GroupItem Grid.Column="1"
                        HorizontalAlignment="Center">
-				<Grid>
-					<TextBlock Text="Brush Size: 1 - 200"
+                <Grid>
+                    <TextBlock Text="Brush Size: 1 - 200"
                                    FontSize="20"
                                    Width="170"
                                    Height="40"
-                                   Grid.Column="1"
                                    VerticalAlignment="Top"
-                                   Margin="0 75 0 0"
+                               HorizontalAlignment="Left"
+                                   Margin="20,76,0,0"
                     />
-					<TextBox x:Name="brushSizeBox"
+                    <TextBox x:Name="brushSizeBox"
                                  Width="60"
                                  Height="35"
                                  InputScope="Number"
@@ -88,6 +97,7 @@
 
                     <Button x:Name="TradeColor"
                             Content="Swap Colors"
+                            ToolTipService.ToolTip="Swap Color (Ctrl+Tab)"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Bottom"
                             Width="145"
@@ -95,8 +105,8 @@
                             Margin="4 0 1 230"
                             Background="Gray"
                             BorderBrush="Black"
-                            Click="TradeColor_Click"/>
-                    
+                            Command="{StaticResource ColorSwap}"/>
+
                     <Button x:Name="RColorB"
                             Content="Set Secondary Color"
                             HorizontalAlignment="Left"
@@ -106,7 +116,7 @@
                             Background="Gray"
                             BorderBrush="Black"
                             Click="RColorB_Click"/>
-                    
+
                     <Button x:Name="Default"
                             Content="Set Default Color"
                             HorizontalAlignment="Left"
@@ -139,7 +149,7 @@
                             Command="{StaticResource decrease}"/>
 
                 </Grid>
-			</GroupItem>
-		</Grid>
-	</GroupItem>
+            </GroupItem>
+        </Grid>
+    </GroupItem>
 </UserControl>
