@@ -36,6 +36,7 @@ public sealed partial class ProgramMenuBar : UserControl {
     readonly bool debug = true;
     bool isNewFile = true;
     FileSavePicker fileSavePicker = new FileSavePicker();
+    FileOpenPicker fileOpenPicker = new FileOpenPicker();
     StorageFile outputFile;
     private CanvasMaster drawArea;
     private int brushSize = 1;
@@ -334,8 +335,30 @@ private async void FileSaveAsCommand_ExecuteRequested(XamlUICommand sender, Exec
 }
 
 private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-    await(new MessageDialog("This Function is not implemented. Wait for version 2.0.")).ShowAsync();
-}
+            fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            fileOpenPicker.FileTypeFilter.Add(".jpg");
+            fileOpenPicker.FileTypeFilter.Add(".png");
+            StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
+            //User cancelled load
+            if (inputFile == null) { return; }
+
+            using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
+            {
+                /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
+                 //if (inputFile.FileType == ".png") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+                 //if (inputFile.FileType == ".jpg") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream);
+                 SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
+                 byte[] pixels = bitmap.BitmapPixelFormat
+                 drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
+
+                WriteableBitmap bi = new WriteableBitmap(1000, 800);
+                await bi.SetSourceAsync(fileStream);
+                byte[] pixels = bi.ToByteArray();
+                drawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+
+
+            }
+        }
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 	//serialization here
