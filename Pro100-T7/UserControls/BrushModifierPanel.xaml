@@ -6,31 +6,56 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Windows10FallCreatorsUpdate="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 5)"
+    xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
     mc:Ignorable="d"
     d:DesignHeight="1000"
     d:DesignWidth="400">
 
-	<GroupItem HorizontalAlignment="Right"
+    <UserControl.Resources>
+        <Windows10version1809:XamlUICommand x:Name="ColorSwap"
+                                            ExecuteRequested="ColorSwap_ExecuteRequested"
+                                            Description="Swap Colors"
+                                            Label="Swap Colors">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Tab" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+
+        <Windows10version1809:XamlUICommand x:Name="IncreaseBrushSize"
+                                            ExecuteRequested="IncreaseBrushSize_ExecuteRequested">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Up" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+        <Windows10version1809:XamlUICommand x:Name="DecreaseBrushSize"
+                                            ExecuteRequested="DecreaseBrushSize_ExecuteRequested">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Down" Modifiers="Control"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    </UserControl.Resources>
+
+    <GroupItem HorizontalAlignment="Right"
            Margin="0 0 20 0">
-		<Grid>
-			<ColorPicker x:Name="colorPicker"
+        <Grid>
+            <ColorPicker x:Name="colorPicker"
                          Grid.Column="1"
                          Height="690"
                          IsEnabled="True"
-                         Color="Blue"
+                         Color="Red"
                          RightTapped="colorPicker_RightClick"/>
-			<GroupItem Grid.Column="1"
+            <GroupItem Grid.Column="1"
                        HorizontalAlignment="Center">
-				<Grid>
-					<TextBlock Text="Brush Size: 1 - 200"
+                <Grid>
+                    <TextBlock Text="Brush Size: 1 - 200"
                                    FontSize="20"
                                    Width="170"
                                    Height="40"
-                                   Grid.Column="1"
                                    VerticalAlignment="Top"
-                                   Margin="0 75 0 0"
+                               HorizontalAlignment="Left"
+                                   Margin="20,76,0,0"
                     />
-					<TextBox x:Name="brushSizeBox"
+                    <TextBox x:Name="brushSizeBox"
                                  Width="60"
                                  Height="35"
                                  InputScope="Number"
@@ -40,7 +65,7 @@
                                  Text="1"
                                  Margin="340 98.5 0 0"
                     />
-					<Slider x:Name="brushSizeSlider"
+                    <Slider x:Name="brushSizeSlider"
                                 HorizontalAlignment="Left"
                                 Value="{Binding Text, ElementName=brushSizeBox, Mode=TwoWay}"
                                 Minimum="1"
@@ -49,6 +74,28 @@
                                 Width="310"
                                 Grid.Column="1"
                     />
+
+                    <Button x:Name="buttonAdd"
+                            Content="+"
+                            Height="40"
+                            Width="40"
+                            FontSize="20"
+                            Background="LightGray"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Margin="0,62,80,0"
+                            Command="{StaticResource IncreaseBrushSize}"/>
+
+                    <Button x:Name="buttonSub"
+                            Content="-"
+                            Height="40"
+                            Width="40"
+                            FontSize="20"
+                            Background="LightGray"
+                            VerticalAlignment="Top"
+                            Margin="213,62,0,0"
+                            Command="{StaticResource DecreaseBrushSize}"/>
+
                     <Rectangle x:Name="LColor"
                                VerticalAlignment="Bottom"
                                Width="30"
@@ -71,6 +118,7 @@
 
                     <Button x:Name="TradeColor"
                             Content="Swap Colors"
+                            ToolTipService.ToolTip="Swap Color (Ctrl+Tab)"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Bottom"
                             Width="145"
@@ -78,8 +126,8 @@
                             Margin="4 0 1 230"
                             Background="Gray"
                             BorderBrush="Black"
-                            Click="TradeColor_Click"/>
-                    
+                            Command="{StaticResource ColorSwap}"/>
+
                     <Button x:Name="RColorB"
                             Content="Set Secondary Color"
                             HorizontalAlignment="Left"
@@ -89,7 +137,7 @@
                             Background="Gray"
                             BorderBrush="Black"
                             Click="RColorB_Click"/>
-                    
+
                     <Button x:Name="Default"
                             Content="Set Default Color"
                             HorizontalAlignment="Left"
@@ -102,7 +150,7 @@
                             Click="Default_Click"/>
 
                 </Grid>
-			</GroupItem>
-		</Grid>
-	</GroupItem>
+            </GroupItem>
+        </Grid>
+    </GroupItem>
 </UserControl>

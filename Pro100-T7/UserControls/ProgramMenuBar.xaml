@@ -107,6 +107,14 @@
                 <KeyboardAccelerator Key="E"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsSelectionCommand"
+                                            ExecuteRequested="ToolsSelectionCommand_ExecuteRequested"
+                                            Description="Selection Tool"
+                                            Label="Erase Brush">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="S"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
 </UserControl.Resources>    
     
     <Windows10version1809:MenuBar x:Name="AppBar"
@@ -209,10 +217,6 @@
                             Text="Eyedropper tool"
                             ToolTipService.ToolTip="Eyedropper Tool"
                             Command="{StaticResource ToolsEyeDropperCommand}"/>
-            <MenuFlyoutItem x:Name="Clear"
-                    ToolTipService.ToolTip="Clear Canvas"
-                    Text="Clear Canvas" 
-                    Click="ClearCanvas_Click"/>
             <MenuFlyoutItem x:Name="Fill"
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
@@ -220,8 +224,14 @@
 			<MenuFlyoutItem x:Name="Selection"
                     ToolTipService.ToolTip="Selection"
                     Text="Selection" 
-                    Click="Selection_Click"/>
+                    Command="{StaticResource ToolsSelectionCommand}"/>
 
+            <MenuFlyoutSeparator/>
+
+            <MenuFlyoutItem x:Name="Clear"
+                    ToolTipService.ToolTip="Clear Canvas"
+                    Text="Clear Canvas" 
+                    Click="ClearCanvas_Click"/>
 
 		</MenuBarItem>
 
