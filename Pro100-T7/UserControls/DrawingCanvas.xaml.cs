@@ -67,6 +67,8 @@ public DrawingCanvas() {
     b1.CopyTo(b, 0);
     History.StartHistory(b1);
             GetControlCanvasUIElement().Children.Add(canvas.ImageData);
+
+    Session.ServerTickUpdate += UpdateFromServer;
 }
 
 public Canvas GetControlCanvasUIElement() => DrawArea;
@@ -95,6 +97,11 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
     }
     
 }
+
+        private void UpdateFromServer(byte[] data)
+        {
+            canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(data, 0, data.Length);
+        }
 
 private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     defaultStroke.StrokeRadius = size;

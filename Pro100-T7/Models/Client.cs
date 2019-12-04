@@ -24,12 +24,13 @@ namespace Pro100_T7.Models
             UpdateTimer.Elapsed += TryReceiveData;
         }
 
-        public async void TryReceiveData(object sender, ElapsedEventArgs e)
+        public void TryReceiveData(object sender, ElapsedEventArgs e)
         {
             byte[] received = new byte[3200000];
             HostConnection.ReceiveAsync(received, SocketFlags.None);
 
-            if (received.Length > 0) Debug.WriteLine(received.ToString());
+            if (received.Length > 0) Debug.WriteLine($"Received from {HostConnection.RemoteEndPoint.ToString()}: {received.ToString()}");
+            if (Session.IsOnlineSession) Session.Tick(received);
         }
 
         public async void SendData(byte[] data)
@@ -37,7 +38,7 @@ namespace Pro100_T7.Models
             await HostConnection.SendAsync(data, SocketFlags.None);
         }
 
-        public bool TryConnectToServer(EndPoint server)
+        public bool TryConnectToServer(IPEndPoint server)
         {
             try { HostConnection.Connect(server); UpdateTimer.Start(); return true; }
             catch (Exception) { return false; }
