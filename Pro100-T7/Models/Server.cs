@@ -15,9 +15,10 @@ namespace Pro100_T7.Models
     public sealed class Server : IServer
     {
         public Timer CheckConnectTimer { get; set; } = new Timer(5);
+        public Timer CheckReceiveTimer { get; set; } = new Timer(5);
 
         public Socket CurrentAddress { get; set; } = new Socket(IPAddress.Any.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        public Stack<Socket> Clients { get; private set; } = new Stack<Socket>();
+        public List<Socket> Clients { get; private set; } = new List<Socket>();
 
         public Server()
         {
@@ -25,12 +26,11 @@ namespace Pro100_T7.Models
             CurrentAddress.Bind(ipep);
             CurrentAddress.Listen(100);
 
+            CheckReceiveTimer.Elapsed += TryReceiveData;
             CheckConnectTimer.Elapsed += TryConnectClient;
-            CheckConnectTimer.Elapsed += TryReceiveData;
             CheckConnectTimer.Start();
+            CheckReceiveTimer.Start();
         }
-
-        ~Server() => CheckConnectTimer.Stop();
 
         public bool IsHosting()
         {
@@ -45,15 +45,16 @@ namespace Pro100_T7.Models
             }
         }
 
-        public async void TryReceiveData(object sender, ElapsedEventArgs e)
+        public void TryReceiveData(object sender, ElapsedEventArgs e)
         {
+            byte[] currentClientBuffer = new byte[320000];
             foreach (Socket s in Clients)
             {
-                byte[] currentClientBuffer = new byte[0];
-                await s.ReceiveAsync(currentClientBuffer, SocketFlags.None);
+                s.ReceiveAsync(currentClientBuffer, SocketFlags.None);
 
-                if (currentClientBuffer.Length > 0) Debug.WriteLine(currentClientBuffer.ToString()); 
+                if (currentClientBuffer.Length > 0) Debug.WriteLine($"{s.RemoteEndPoint.ToString()} - {currentClientBuffer.ToString()}");                
             }
+            SendData(currentClientBuffer);
         }
 
         public void TryConnectClient(object sender, ElapsedEventArgs e)
@@ -61,7 +62,8 @@ namespace Pro100_T7.Models
             Socket newClient = CurrentAddress.Accept();
             if (newClient != null)
             {
-                Clients.Push(newClient);
+                Debug.WriteLine($"Client connected: {newClient.RemoteEndPoint.ToString()}");
+                Clients.Add(newClient);
             }
         }
     }

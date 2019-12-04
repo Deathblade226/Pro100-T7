@@ -1,45 +1,45 @@
 ﻿using Pro100_T7.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
-    public sealed class Client : IClient
+    public sealed class Client
     {
+        public Timer UpdateTimer { get; set; } = new Timer(5);
         public Socket HostConnection { get; private set; } = new Socket(SocketType.Stream, ProtocolType.Tcp);
 
-        public Client() {}
-
-        public void ReceiveData(out byte[] data)
+        ~Client() => UpdateTimer.Stop();
+        public Client() 
         {
-            //byte[] old = BitmapData.PixelBuffer.ToArray();
-            //byte[] newBytes = new byte[old.Length];
-            //old.CopyTo(newBytes, 0);
-            //History.EndAction(new Action(newBytes));
-            //BitmapData.PixelBuffer.AsStream().Write(old, 0, old.Length);
-            //BitmapData.Invalidate();
+            UpdateTimer.Elapsed += TryReceiveData;
+        }
 
-            byte[] incoming = null;
-            HostConnection.Receive(incoming);
+        public async void TryReceiveData(object sender, ElapsedEventArgs e)
+        {
+            byte[] received = new byte[3200000];
+            HostConnection.ReceiveAsync(received, SocketFlags.None);
 
-            data = incoming;
+            if (received.Length > 0) Debug.WriteLine(received.ToString());
         }
 
         public async void SendData(byte[] data)
         {
-            HostConnection.SendAsync(data, SocketFlags.None);
+            await HostConnection.SendAsync(data, SocketFlags.None);
         }
 
         public bool TryConnectToServer(EndPoint server)
         {
-            try { HostConnection.Connect(server); return true; }
+            try { HostConnection.Connect(server); UpdateTimer.Start(); return true; }
             catch (Exception) { return false; }
         }
     }
