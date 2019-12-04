@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Pro100_T7.UserControls {
 public sealed partial class BrushModifierPanel : UserControl {
-Color secondary = Color.FromArgb(255, 255, 0, 0);
+private Color secondary = Color.FromArgb(255, 255, 0, 0);
 
 public Color Secondary {
     set { secondary = value; }
@@ -27,40 +27,31 @@ public Color Secondary {
 
 public BrushModifierPanel() {
     this.InitializeComponent();
-    Default_Click(null, null);
-			if(ApplicationData.Current.LocalSettings.Values != null)
-			{
-				string brushSize = (string)ApplicationData.Current.LocalSettings.Values["brushSize"];
-				if(brushSize != null)
-				{
-					brushSizeBox.Text = brushSize;
-				}
-				Application.Current.Suspending += Current_Suspending;
-				if (ApplicationData.Current.LocalSettings.Values.ContainsKey("brushColor"))
-				{
-					int? intColor = (int)ApplicationData.Current.LocalSettings.Values["brushColor"];
-					colorPicker.Color = Color.FromArgb((byte)((intColor & 0xff000000) >> 24),
-														(byte)((intColor & 0x00ff0000) >> 16),
-														(byte)((intColor & 0x0000ff00) >> 8),
-														(byte)((intColor & 0x000000ff) >> 0)
-														);
-				}
-				
-				
-			}
+    colorPicker.Color = Color.FromArgb(255,0,0,255);
+    RColor.Fill = new SolidColorBrush(Color.FromArgb(secondary.A, secondary.R, secondary.G, secondary.B));
+	if(ApplicationData.Current.LocalSettings.Values != null) {
+	string brushSize = (string)ApplicationData.Current.LocalSettings.Values["brushSize"];
+	if(brushSize != null) {
+	brushSizeBox.Text = brushSize;
+	}
+	Application.Current.Suspending += Current_Suspending;
+	if (ApplicationData.Current.LocalSettings.Values.ContainsKey("brushColor")) {
+	int? intColor = (int)ApplicationData.Current.LocalSettings.Values["brushColor"];
+	colorPicker.Color = Color.FromArgb((byte)((intColor & 0xff000000) >> 24), (byte)((intColor & 0x00ff0000) >> 16), (byte)((intColor & 0x0000ff00) >> 8), (byte)((intColor & 0x000000ff) >> 0));
+	}			
+	}
 			
 }
 
-private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e)
-{
-			ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-			StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+private void Current_Suspending(object sender, Windows.ApplicationModel.SuspendingEventArgs e) {
+    ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+	StorageFolder localFolder = ApplicationData.Current.LocalFolder;
 
-			localSettings.Values["brushSize"] = brushSizeBox.Text;
-			Color color = colorPicker.Color;
-			int intColor = ((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
-			localSettings.Values["brushColor"] = intColor;
-		}
+    localSettings.Values["brushSize"] = brushSizeBox.Text;
+	Color color = colorPicker.Color;
+	int intColor = ((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
+	localSettings.Values["brushColor"] = intColor;
+}
 
 public ColorPicker GetColorPickerUIElement() => colorPicker;
 public Color GetColorPickerSecondary() => secondary;
@@ -78,10 +69,10 @@ private void RColorB_Click(object sender, RoutedEventArgs e) {
 }
 
 private void Default_Click(object sender, RoutedEventArgs e) {
-    colorPicker.Color = Color.FromArgb(255, 0, 0, 255);
-    RColor.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
+    colorPicker.Color = Color.FromArgb(255, 255, 0, 0);
+    RColor.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
     LColor.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-    secondary = Color.FromArgb(255, 255, 0, 0);
+    secondary = Color.FromArgb(255, 255, 255, 255);
 }
 
 private void TradeColor_Click(object sender, RoutedEventArgs e) {
@@ -91,6 +82,12 @@ private void TradeColor_Click(object sender, RoutedEventArgs e) {
     RColor.Fill = new SolidColorBrush(secondary);
     LColor.Fill = new SolidColorBrush(colorPicker.Color);
 
+}
+private void increase_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (brushSizeSlider.Value != brushSizeSlider.Maximum) brushSizeSlider.Value++;
+}
+private void decrease_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (brushSizeSlider.Value != brushSizeSlider.Minimum) brushSizeSlider.Value--;
 }
 
 }

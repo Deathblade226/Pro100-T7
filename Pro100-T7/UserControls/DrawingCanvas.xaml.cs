@@ -26,9 +26,8 @@ private static Color color;
 private static Color secondary;
 private int size;
 private int type = 0;
-
-
-		private bool isMouseDownOnCanvas = false;
+private bool isMouseDownOnCanvas = false;
+private DispatcherTimer dt = new DispatcherTimer();
 
 public BrushModifierPanel BrushMod { get; set; }
 
@@ -54,28 +53,40 @@ public int Type {
     get { return type; }
     set { type = value; }
 }
-
-
+private PointerPoint ptrPt;
 DrawPoint drawPoint = new DrawPoint();
 Stroke defaultStroke = new Stroke() { StrokeColor = color, StrokeRadius = 1 };
 
 public DrawingCanvas() {
     this.InitializeComponent();
+    dt.Interval = TimeSpan.FromSeconds(1/120);
+    dt.Tick += Dt_Tick;
+    dt.Start();
     canvas = new CanvasMaster(1000, 800);
     byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
     byte[] b = new byte[b1.Length];
     b1.CopyTo(b, 0);
     History.StartHistory(b1);
-            GetControlCanvasUIElement().Children.Add(canvas.ImageData);
-}
-
-public Canvas GetControlCanvasUIElement() => DrawArea;
-
-public void OnNavigatedTo(NavigationEventArgs e) {
+    GetControlCanvasUIElement().Children.Add(canvas.ImageData);
     PointerReleased += ActionPointerReleased;
     PointerMoved += Canvas_PointerMoved;
     PointerPressed += DrawingCanvas_PointerPressed;
 }
+private void Dt_Tick(object sender, object e) {
+    if (ptrPt != null && type != 10) {
+    if (ptrPt.Properties.IsLeftButtonPressed) {
+    defaultStroke.StrokeColor = color;
+    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
+
+    } else if (ptrPt.Properties.IsRightButtonPressed) {
+    defaultStroke.StrokeColor = secondary;
+    canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 2);
+    }
+    drawPoint.OldPoint = drawPoint.CurrentPoint;
+    }
+}
+
+public Canvas GetControlCanvasUIElement() => DrawArea;
 
 private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
 	Canvas_PointerMoved(sender, e);
@@ -91,7 +102,6 @@ private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs 
 
 public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 
-   
    if(isMouseDownOnCanvas) {
     byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
 	byte[] b = new byte[b1.Length];
@@ -116,8 +126,9 @@ private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     drawPoint.CurrentPoint = new Point(current.Position.X, current.Position.Y);
 
     if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
-    PointerPoint ptrPt = e.GetCurrentPoint(null);
-    
+    ptrPt = e.GetCurrentPoint(null);
+        
+    if (type == 10) {
     if (ptrPt.Properties.IsLeftButtonPressed) {
     defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
@@ -127,6 +138,7 @@ private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 2);
     }
     drawPoint.OldPoint = drawPoint.CurrentPoint;
+    }
 }
 
 }

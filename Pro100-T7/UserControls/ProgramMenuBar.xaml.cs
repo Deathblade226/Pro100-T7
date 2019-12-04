@@ -172,14 +172,6 @@ private void TriangleBrush_Click(object sender, RoutedEventArgs e){
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
-private void Eraser_Click(object sender, RoutedEventArgs e) {
-    BrushType = 7;
-}
-
-private void Selection_Click(object sender, RoutedEventArgs e)
-{
-	BrushType = 10;
-}
 
 /// <summary>
 /// Takes in width and hegith to build a new canvas and image
@@ -353,11 +345,16 @@ private void ToolsEyeDropperCommand_ExecuteRequested(XamlUICommand sender, Execu
 private void ToolsFillCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 	BrushType = 9;
 }
+private void ToolsEraseCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    BrushType = 7;
+}
+private void ToolsSelectCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+	BrushType = 10;
+}
+private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    SelectionTool.ClearSelection();
+}
 
-        private void ToolsEraseCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args)
-        {
-
-        }
-    }
+}
 
 }
