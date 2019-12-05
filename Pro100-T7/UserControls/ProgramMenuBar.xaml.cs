@@ -183,6 +183,10 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 6;
 }
+private void StraightLine_Click(object sender, RoutedEventArgs e)
+{
+	BrushType = 11;
+}
 
 /// <summary>
 /// Takes in width and hegith to build a new canvas and image
@@ -338,10 +342,28 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
     fileOpenPicker.FileTypeFilter.Add(".jpg");
     fileOpenPicker.FileTypeFilter.Add(".png");
+    fileOpenPicker.FileTypeFilter.Add(customFileExtension);
     StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
     //User cancelled load
     if (inputFile == null) { return; }
     ImageProperties imageProperties = await inputFile.Properties.GetImagePropertiesAsync();
+
+			if (inputFile.FileType == customFileExtension)
+			{
+				using (Stream stream = await inputFile.OpenStreamForReadAsync())
+				{
+					DataContractSerializer ser = new DataContractSerializer(typeof(Exportable));
+					object obj = ser.ReadObject(stream);
+					Exportable exp = (Exportable)obj;
+
+					SetDrawingArea((int)exp.width, (int)exp.height);
+					DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(exp.bytes, 0, exp.bytes.Length);
+					DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+					History.StartHistory(exp.bytes);
+				}
+				return;
+			}
+
 
     using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
     /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
@@ -363,6 +385,23 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     updateLoad();
     }
 }
+		[DataContract]
+		public struct Exportable
+		{
+			[DataMember]
+			public byte[] bytes;
+			[DataMember]
+			public double width;
+			[DataMember]
+			public double height;
+
+			public Exportable(byte[] bytes, double width, double height)
+			{
+				this.bytes = bytes;
+				this.width = width;
+				this.height = height;
+			}
+		}
 
 private void updateLoad() { 
     DrawingCanvas.rebuildHistory();
@@ -377,8 +416,9 @@ private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, Exec
 	StorageFile file = await picker.PickSaveFileAsync();
 	if (file != null) {
 	using (Stream stream = await file.OpenStreamForWriteAsync()) {
-    DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
-	ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
+    DataContractSerializer ser = new DataContractSerializer(typeof(Exportable));
+					Exportable export = new Exportable(DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray(), DrawArea.ImageData.ActualWidth, DrawArea.ImageData.ActualHeight);
+					ser.WriteObject(stream, export);
 	}
     }	
 }
@@ -408,12 +448,14 @@ private void exitcode(ContentDialogResult result) {
 
 private void EditUndoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     byte[] b = History.Undo().bmp;
+	SelectionTool.UndoSelection();
     DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
     DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 
 private void EditRedoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     byte[] b = History.Redo().bmp;
+	SelectionTool.RedoSelection();
     DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
     DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }

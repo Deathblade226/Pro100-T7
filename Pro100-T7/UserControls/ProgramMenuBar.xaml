@@ -241,8 +241,12 @@
                     ToolTipService.ToolTip="Selection"
                     Text="Selection" 
                     Command="{StaticResource ToolsSelectCommand}"/>
+				<MenuFlyoutItem x:Name="StraightLine"
+                    ToolTipService.ToolTip="Straight Line"
+                    Text="Straight Line" 
+                    Click="StraightLine_Click"/>
 
-            <MenuFlyoutSeparator/>
+				<MenuFlyoutSeparator/>
 
             <MenuFlyoutItem x:Name="Clear"
                     ToolTipService.ToolTip="Clear Canvas"

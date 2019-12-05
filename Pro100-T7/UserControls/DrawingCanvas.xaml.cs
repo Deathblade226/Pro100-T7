@@ -73,7 +73,7 @@ public DrawingCanvas() {
     PointerPressed += DrawingCanvas_PointerPressed;
 }
 private void Dt_Tick(object sender, object e) {
-    if (ptrPt != null && type != 10 && type != 9) {
+    if (ptrPt != null && type != 10 && type != 9 && type != 11) {
     if (ptrPt.Properties.IsLeftButtonPressed) {
     defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
@@ -99,15 +99,14 @@ public static void StopTimer() { dt.Stop(); }
 public Canvas GetControlCanvasUIElement() => DrawArea;
 
 private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
+	SelectionTool.ToolChanged(type);
 	Canvas_PointerMoved(sender, e);
    if(isMouseDownOnCanvas) {
     ActionPointerReleased(sender, e);
     }
 	isMouseDownOnCanvas = true;
-	if(type != 10)
-	{
-		SelectionTool.ToolChanged();
-	}
+
+
 }
 
 public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
@@ -124,6 +123,10 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 	{
 		SelectionTool.SelectRelease();
 	}
+	if(type == 11)
+	{
+		StraightLineTool.StraightLineRelease();
+	}
 
 	canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
 
@@ -138,7 +141,7 @@ private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
     ptrPt = e.GetCurrentPoint(null);
         
-    if (type == 10 || type == 9) {
+    if (type == 10 || type == 9 || type == 11) {
     if (ptrPt.Properties.IsLeftButtonPressed) {
     defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
