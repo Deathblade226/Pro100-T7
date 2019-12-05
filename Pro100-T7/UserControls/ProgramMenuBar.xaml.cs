@@ -350,12 +350,16 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
     byte[] pixels = bitmap.BitmapPixelFormat
     drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
-    WriteableBitmap bi = new WriteableBitmap((int)imageProperties.Width, (int)imageProperties.Height);
-    SetDrawingArea((int)imageProperties.Width, (int)imageProperties.Height);
-    await bi.SetSourceAsync(fileStream);
-    drawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
-    byte[] pixels = bi.ToByteArray();
-    drawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+    newHeight = (int)imageProperties.Height;
+    newWidth = (int)imageProperties.Width;
+    WriteableBitmap bi = new WriteableBitmap(newWidth, newHeight);
+    SetDrawingArea(newWidth, newHeight);
+    //await bi.SetSourceAsync(fileStream);
+    //byte[] pixels = bi.ToByteArray();
+    //DrawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+    await drawArea.ImageDataLayer.BitmapDrawingData.SetSourceAsync(fileStream);
+    History.StartHistory(drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());    
+    DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
     }
 }
 
