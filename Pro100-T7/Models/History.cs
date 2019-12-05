@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
-    public class Action //lawsuit
+    public class Action
     {
         public int layerID;
         public byte[] bmp;//Layer info of some kind
@@ -54,11 +54,16 @@ namespace Pro100_T7.Models
         /// <param name="a">An action holding a byte array that represents the state of the image AFTER the action is taken.</param>
         public static void EndAction(Action a)
         {
-            while (redoStack.Count > 1)
-            {
-                redoStack.Pop();
-            }
-            historyStack.Push(a);
+			if(!DeepCompare(a, historyStack.Peek()))
+			{
+				while (redoStack.Count > 1)
+				{
+					redoStack.Pop();
+				}
+				//SelectionTool.RedoCleared();
+				historyStack.Push(a);
+			}
+            
         }
 
         //will return an ImageLayer or an action depends on how ImageLayer is implemented
@@ -95,5 +100,30 @@ namespace Pro100_T7.Models
             return a;
         }
 
-    }
+		public static Action PeekHistory()
+		{
+			return historyStack.Peek();
+		}
+
+		private static bool DeepCompare(Action a1, Action a2)
+		{
+			byte[] b1 = a1.bmp;
+			byte[] b2 = a2.bmp;
+
+			for(int i = 0; i < b1.Length; i++)
+			{
+				if(b1[i] != b2[i])
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+
+		public static int NumOfRedoOnStack()
+		{
+			return redoStack.Count() - 1;
+		}
+	}
 }
