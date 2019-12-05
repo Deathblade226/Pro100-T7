@@ -14,8 +14,7 @@ namespace Pro100_T7.Models
 
 
 		private static bool isSelecting = false;
-		public static bool selectionMade = false;
-		private static bool selectionDisplaying = false;
+		private static bool selectionMade = false;
 
 		private static P startPoint;
 		private static P currentPoint;
@@ -23,8 +22,6 @@ namespace Pro100_T7.Models
 		private static Rect selection = null;
 
 		private static WriteableBitmap bmp;
-
-		private static byte[] beforeSelection;
 
 		private struct P
 		{
@@ -67,18 +64,19 @@ namespace Pro100_T7.Models
 			{
 				startPoint = new P(x, y);
 
-				if (selectionMade && selection != null)
+				if(selectionMade)
 				{
 					selectionMade = false;
-					//oldBytes = History.Undo().bmp;
-					//bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-					//bmp.Invalidate();
+					oldBytes = History.Undo().bmp;
+					bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+					bmp.Invalidate();
 				}
 			}
 
 			currentPoint = new P(x, y);
 
 			//make a rectangle to represent the selected area (probably store it statically)
+
 
 			if (startPoint.x > currentPoint.x)
 			{
@@ -95,44 +93,30 @@ namespace Pro100_T7.Models
 			}
 			else
 			{
-				if (startPoint.y < currentPoint.y)
+				if(startPoint.y < currentPoint.y)
 				{
 					selection = new Rect(startPoint.x, startPoint.y, currentPoint.x, currentPoint.y);
 				}
-				else if (startPoint.y > currentPoint.y)
+				else
 				{
 					selection = new Rect(startPoint.x, currentPoint.y, currentPoint.x, startPoint.y);
 				}
-
 			}
 
+			if (isSelecting)
+			{
+				oldBytes = History.Undo().bmp;
+				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+			}
 
 			isSelecting = true;
-			if (selection == null)
-			{
-				bmp.DrawRectangle(startPoint.x, startPoint.y, startPoint.x + 1, startPoint.y + 1, Colors.Black);
-			}
-			else
-			{
-				if (isSelecting)
-				{
-					if (History.NumOfRedoOnStack() == 0)
-					{
-						oldBytes = History.Undo().bmp;
-						bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-					}
-					
-					bmp.DrawRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x, selection.bottomRight.y, Colors.Black);
-				}
-			}
 
-			selectionDisplaying = true;
-
+			bmp.DrawRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x, selection.bottomRight.y, Colors.Black);
 
 			oldBytes = bmp.PixelBuffer.ToArray();
 			bmp.PixelBuffer.ToArray().CopyTo(oldBytes, 0);
 
-
+			
 
 			History.EndAction(new Action(oldBytes));
 		}
@@ -140,15 +124,13 @@ namespace Pro100_T7.Models
 		public static void ClearSelection()
 		{
 			//use the rectangle to clear the bytes within the selected area
-			if (selectionMade && selectionDisplaying)
+			if(selectionMade)
 			{
 				byte[] oldBytes = History.Undo().bmp;
 				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
 
 				bmp.FillRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x + 1, selection.bottomRight.y + 1, Color.FromArgb(0, 0, 0, 0));
 				selectionMade = false;
-				selectionDisplaying = false;
-				selection = null;
 
 				oldBytes = bmp.PixelBuffer.ToArray();
 				bmp.PixelBuffer.ToArray().CopyTo(oldBytes, 0);
@@ -156,7 +138,7 @@ namespace Pro100_T7.Models
 				History.EndAction(new Action(oldBytes));
 				bmp.Invalidate();
 			}
-
+			
 		}
 
 
@@ -165,137 +147,33 @@ namespace Pro100_T7.Models
 			if (isSelecting)
 			{
 				isSelecting = false;
-				if (selection != null)
-				{
-					selectionMade = true;
-				}
-				//byte[] oldBytes = History.Undo().bmp;
-				//bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-				//bmp.Invalidate();
+				selectionMade = true;
+				byte[] oldBytes = History.Undo().bmp;
+				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+				bmp.Invalidate();
 
 			}
 
 		}
 
-
-		public static void ToolChanged(int type)
+		public static void SelectionUndo()
 		{
-			if (type == 9)//bucket fill tool
-			{
-				isSelecting = false;
-				if (selectionMade && !selectionDisplaying)
-				{
-					selection = null;
-					selectionMade = false;
-				}
-			}
-			else if (type != 10)//selection tool
-			{
-				if (selectionMade && selectionDisplaying)
-				{
-					byte[] oldBytes = History.Undo().bmp;
-					bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-					bmp.Invalidate();
-				}
-
-				selectionMade = false;
-				selection = null;
-				isSelecting = false;
-			}
-
-
+			selectionMade = false;
 		}
-		public static void RedrawSelection()
+
+		public static void ToolChanged()
 		{
-			if (selectionMade && selectionDisplaying)
+			if(selectionMade)
 			{
-				//first do the draw logic for the rectangle
-				WriteableBitmap oldbmp = new WriteableBitmap(bmp.PixelWidth, bmp.PixelHeight);
-				oldbmp.PixelBuffer.AsStream().Write(beforeSelection, 0, beforeSelection.Length);
-				using (BitmapReader oldReader = new BitmapReader(oldbmp))
-				{
-					using (BitmapReader newReader = new BitmapReader(bmp))
-					{
-						//top line
-						for (int i = selection.topLeft.x; i <= selection.bottomRight.x; i++)
-						{
-							int color = oldReader.GetPixeli(i, selection.topLeft.y);
-							newReader.SetPixel(i, selection.topLeft.y, color);
-						}
-						//bottom line
-						for (int i = selection.topLeft.x; i <= selection.bottomRight.x; i++)
-						{
-							int color = oldReader.GetPixeli(i, selection.bottomRight.y);
-							newReader.SetPixel(i, selection.bottomRight.y, color);
-						}
-						//left line
-						for (int i = selection.topLeft.y; i <= selection.bottomRight.y; i++)
-						{
-							int color = oldReader.GetPixeli(selection.topLeft.x, i);
-							newReader.SetPixel(selection.topLeft.x, i, color);
-						}
-						//right
-						for (int i = selection.topLeft.y; i <= selection.bottomRight.y; i++)
-						{
-							int color = oldReader.GetPixeli(selection.bottomRight.x, i);
-							newReader.SetPixel(selection.bottomRight.x, i, color);
-						}
-					}
-				}
-
-				byte[] b = new byte[beforeSelection.Length];
-				bmp.PixelBuffer.ToArray().CopyTo(b, 0);
-
-				History.EndAction(new Action(b));
-
-				bmp.DrawRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x, selection.bottomRight.y, Colors.Black);
+				byte[] oldBytes = History.Undo().bmp;
+				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
 				bmp.Invalidate();
 			}
 
-		}
-		public static void StoreSelection()
-		{
-			if (selectionMade)
-			{
-				Action a = History.Undo();
-				byte[] b = History.PeekHistory().bmp;
-				beforeSelection = new byte[b.Length];
-				b.CopyTo(beforeSelection, 0);
-				History.EndAction(a);
-			}
-		}
-
-		public static bool IsInSelection(int x, int y)
-		{
-			if (selection != null && selectionMade && x >= selection.topLeft.x && x <= selection.bottomRight.x && y >= selection.topLeft.y && y <= selection.bottomRight.y)
-			{
-				return true;
-			}
-			return false;
-		}
-
-		public static void UndoSelection()
-		{
-			if (selectionMade)
-			{
-				selectionMade = false;
-				selectionDisplaying = false;
-			}
-		}
-
-		public static void RedoSelection()
-		{
-			if (!selectionMade && selection != null && History.NumOfRedoOnStack() == 0)
-			{
-				selectionMade = true;
-			}
-		}
-
-		public static void RedoCleared()
-		{
 			selectionMade = false;
 			selection = null;
 			isSelecting = false;
+			
 		}
 
 	}

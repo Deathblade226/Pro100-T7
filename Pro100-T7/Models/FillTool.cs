@@ -40,20 +40,7 @@ namespace Pro100_T7.Models
 		public static void Fill(WriteableBitmap bitmap, int x, int y, Color color)
 		{
 			int intColor = ((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
-			if(SelectionTool.selectionMade)
-			{
-				if(SelectionTool.IsInSelection(x, y))
-				{
-					SelectionTool.StoreSelection();
-					Fill(bitmap, x, y, intColor);
-					SelectionTool.RedrawSelection();
-				}
-			}
-			else
-			{
-				Fill(bitmap, x, y, intColor);
-			}
-
+			Fill(bitmap, x, y, intColor);
 		}
 
 		/// <summary>

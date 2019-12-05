@@ -182,9 +182,6 @@
     <Compile Include="UserControls\DrawingCanvas.xaml.cs">
       <DependentUpon>DrawingCanvas.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\OnlineConnect.xaml.cs">
-      <DependentUpon>OnlineConnect.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\ProgramMenuBar.xaml.cs">
       <DependentUpon>ProgramMenuBar.xaml</DependentUpon>
     </Compile>
@@ -224,10 +221,6 @@
     <Page Include="UserControls\DrawingCanvas.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UserControls\OnlineConnect.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\ProgramMenuBar.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -90,12 +90,5 @@ namespace Pro100_T7.Models
 			Bmp.Invalidate();
 			
 		}
-
-		public void StraightLine()
-		{
-			StraightLineTool.StraightLine(Bmp, CurrentX, CurrentY, BrushSize, BrushColor);
-			Bmp.Invalidate();
-
-		}
-	}
+    }
 }
