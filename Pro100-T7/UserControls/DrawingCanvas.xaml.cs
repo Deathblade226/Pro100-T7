@@ -78,15 +78,14 @@ public void OnNavigatedTo(NavigationEventArgs e) {
 }
 
 private void DrawingCanvas_PointerPressed(object sender, PointerRoutedEventArgs e) {
+	SelectionTool.ToolChanged(type);
 	Canvas_PointerMoved(sender, e);
    if(isMouseDownOnCanvas) {
     ActionPointerReleased(sender, e);
     }
 	isMouseDownOnCanvas = true;
-	if(type != 10)
-	{
-		SelectionTool.ToolChanged();
-	}
+
+
 }
 
 public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
@@ -103,6 +102,10 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 	if(type == 10)
 	{
 		SelectionTool.SelectRelease();
+	}
+	if(type == 11)
+	{
+		StraightLineTool.StraightLineRelease();
 	}
 
 	canvas.ImageDataLayer.BitmapDrawingData.Invalidate();

@@ -31,7 +31,7 @@ namespace Pro100_T7.Models
 			}
 		}
 
-		public static void StraightLine(WriteableBitmap b, int x, int y)
+		public static void StraightLine(WriteableBitmap b, int x, int y, int width, Color color)
 		{
 			byte[] oldBytes = null;
 
@@ -88,7 +88,7 @@ namespace Pro100_T7.Models
 
 			isSelecting = true;
 
-			bmp.DrawLine(startPoint.x, startPoint.y, currentPoint.x, currentPoint.y, Colors.Black);
+			bmp.DrawLineCustom(startPoint.x, startPoint.y, currentPoint.x, currentPoint.y, color, width);
 
 			oldBytes = bmp.PixelBuffer.ToArray();
 			bmp.PixelBuffer.ToArray().CopyTo(oldBytes, 0);
@@ -96,6 +96,18 @@ namespace Pro100_T7.Models
 
 
 			History.EndAction(new Action(oldBytes));
+		}
+
+		public static void StraightLineRelease()
+		{
+			if (isSelecting)
+			{
+				isSelecting = false;
+				byte[] oldBytes = History.Undo().bmp;
+				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+				bmp.Invalidate();
+
+			}
 		}
 
 	}

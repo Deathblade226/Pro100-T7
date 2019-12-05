@@ -213,6 +213,10 @@
                     ToolTipService.ToolTip="Selection"
                     Text="Selection" 
                     Click="Selection_Click"/>
+			<MenuFlyoutItem x:Name="StraightLine"
+                    ToolTipService.ToolTip="Straight Line"
+                    Text="Straight Line" 
+                    Click="StraightLine_Click"/>
 
 
 		</MenuBarItem>

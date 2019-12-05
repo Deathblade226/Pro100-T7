@@ -180,6 +180,10 @@ private void Selection_Click(object sender, RoutedEventArgs e)
 {
 	BrushType = 10;
 }
+private void StraightLine_Click(object sender, RoutedEventArgs e)
+{
+	BrushType = 11;
+}
 
 /// <summary>
 /// Takes in width and hegith to build a new canvas and image
@@ -332,12 +336,14 @@ private async void FileExitCommand_ExecuteRequested(XamlUICommand sender, Execut
 
 private void EditUndoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     byte[] b = History.Undo().bmp;
+	SelectionTool.UndoSelection();
     DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
     DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 
 private void EditRedoCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     byte[] b = History.Redo().bmp;
+	SelectionTool.RedoSelection();
     DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(b, 0, b.Length);
     DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
