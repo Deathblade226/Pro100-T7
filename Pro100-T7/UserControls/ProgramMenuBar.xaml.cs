@@ -359,7 +359,7 @@ private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteReq
             Session.Initialize(true, true);
             Session.Build(new Client(), new Server());
 
-            AttemptConnect();
+            AttemptConnect(true);
         }
 
         private void Connect_Click(object sender, RoutedEventArgs e)
@@ -367,18 +367,17 @@ private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteReq
             Session.Initialize(true);
             Session.Build(new Client());
 
-            AttemptConnect();
+            AttemptConnect(false);
         }
 
-        private void AttemptConnect()
+        private void AttemptConnect(bool host)
         {
             bool success = false;
             uint trycount = 0;
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5555);
+            IPEndPoint ipep = new IPEndPoint((host) ? IPAddress.Parse("127.0.0.1") : IPAddress.Parse("172.0.0.1"), 5555);
             do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
             while (!success || trycount < 1000);
         }
-
     }
 
 }
