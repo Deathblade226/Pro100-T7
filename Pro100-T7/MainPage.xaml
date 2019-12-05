@@ -13,14 +13,21 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-<Grid x:Name="mainArea">
-    
-        <Rectangle Fill="#464646"/>
+    <Grid x:Name="mainArea">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="430"/>
+        </Grid.ColumnDefinitions>
 
-        <uc:ProgramMenuBar x:Name="ProgramControlsBar"/>
-        <uc:BrushModifierPanel x:Name="BrushModifier"/>
-        <uc:DrawingCanvas x:Name="DrawCanvas"/>
+        <Rectangle Fill="#464646" Grid.ColumnSpan="2"/>
 
-</Grid>
+        <uc:ProgramMenuBar x:Name="ProgramControlsBar" Grid.ColumnSpan="2"/>
+        <uc:BrushModifierPanel x:Name="BrushModifier" Grid.Column="1"/>
+        <uc:DrawingCanvas x:Name="DrawCanvas"
+                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                          />
+        <!---->
+
+    </Grid>
 
 </Page>

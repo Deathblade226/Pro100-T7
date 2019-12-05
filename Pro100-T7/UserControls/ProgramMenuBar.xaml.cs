@@ -13,6 +13,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.System;
@@ -119,8 +120,8 @@ private async Task<bool> SaveSoftwareBitmapToFile(SoftwareBitmap softwareBitmap,
     // Set the software bitmap
     encoder.SetSoftwareBitmap(softwareBitmap);
     // Set additional encoding parameters, if needed 
-    encoder.BitmapTransform.ScaledWidth = 1000;//(uint)DrawCanvas.GetControlCanvasUIElement().Width;
-    encoder.BitmapTransform.ScaledHeight = 800;//(uint)DrawCanvas.GetControlCanvasUIElement().Height;
+    encoder.BitmapTransform.ScaledWidth = (uint)drawArea.ImageData.Width;//(uint)DrawCanvas.GetControlCanvasUIElement().Width;
+    encoder.BitmapTransform.ScaledHeight = (uint)drawArea.ImageData.Height;//(uint)DrawCanvas.GetControlCanvasUIElement().Height;
     encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
     encoder.IsThumbnailGenerated = true;
     try { await encoder.FlushAsync(); } 
@@ -340,6 +341,7 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
     //User cancelled load
     if (inputFile == null) { return; }
+    ImageProperties imageProperties = await inputFile.Properties.GetImagePropertiesAsync();
 
     using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
     /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
@@ -348,20 +350,13 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
     byte[] pixels = bitmap.BitmapPixelFormat
     drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
-
-    WriteableBitmap bi = new WriteableBitmap(1000, 800);
+    WriteableBitmap bi = new WriteableBitmap((int)imageProperties.Width, (int)imageProperties.Height);
+    SetDrawingArea((int)imageProperties.Width, (int)imageProperties.Height);
     await bi.SetSourceAsync(fileStream);
+    drawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
     byte[] pixels = bi.ToByteArray();
     drawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
     }
-}
-
-private void Bm_ImageOpened(object sender, RoutedEventArgs e) {
-    var bm = sender as BitmapImage;
-    if (bm == null)
-    return;
-    var width = bm.PixelWidth;
-    var height = bm.PixelHeight;
 }
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
