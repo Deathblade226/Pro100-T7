@@ -48,7 +48,7 @@ public sealed partial class ProgramMenuBar : UserControl {
 
     private string customFileExtension = ".dpf";
     private string hostip = "0.0.0.0";
-    private string debugip = "";
+    private string debugip = "0.0.0.0";
 
 public CanvasMaster DrawArea {
     get { return drawArea; }
@@ -202,8 +202,8 @@ private async void Host_Click(object sender, RoutedEventArgs e)
     var input = await box.ShowAsync();
 
     if (input == ContentDialogResult.Primary) {
-    hostip = box.IP;
-    buildSession(new Client(), new Server());
+    //hostip = box.IP;
+    //buildSession(new Client(), new Server());
     }
 }
 
@@ -213,8 +213,8 @@ private async void Connect_Click(object sender, RoutedEventArgs e)
     var input = await box.ShowAsync();
 
     if (input == ContentDialogResult.Primary) {
-    hostip = box.IP;
-    buildSession(new Client());
+    //hostip = box.IP;
+    //buildSession(new Client());
     }
 }
 
@@ -267,12 +267,16 @@ private async void FileNewCommand_ExecuteRequested(XamlUICommand sender, Execute
     SecondaryButtonText = "No"};
 
     var result = await newFile.ShowAsync();
+    filenew(result);
+}
 
+private void filenew(ContentDialogResult result) { 
     if (result == ContentDialogResult.Primary) {
     openNew = true;
     newSize = true;
     FileSaveCommand_ExecuteRequested(null, null);
     NewWindowSize();
+    History.ClearHistory();
     }
     else if (result == ContentDialogResult.Secondary) { //No problem
     isNewFile = true;
@@ -335,30 +339,35 @@ private async void FileSaveAsCommand_ExecuteRequested(XamlUICommand sender, Exec
 }
 
 private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-            fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            fileOpenPicker.FileTypeFilter.Add(".jpg");
-            fileOpenPicker.FileTypeFilter.Add(".png");
-            StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
-            //User cancelled load
-            if (inputFile == null) { return; }
+    fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+    fileOpenPicker.FileTypeFilter.Add(".jpg");
+    fileOpenPicker.FileTypeFilter.Add(".png");
+    StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
+    //User cancelled load
+    if (inputFile == null) { return; }
 
-            using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
-            {
-                /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
-                 //if (inputFile.FileType == ".png") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                 //if (inputFile.FileType == ".jpg") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream);
-                 SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
-                 byte[] pixels = bitmap.BitmapPixelFormat
-                 drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
+    using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
+    /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
+    //if (inputFile.FileType == ".png") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+    //if (inputFile.FileType == ".jpg") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream);
+    SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
+    byte[] pixels = bitmap.BitmapPixelFormat
+    drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
 
-                WriteableBitmap bi = new WriteableBitmap(1000, 800);
-                await bi.SetSourceAsync(fileStream);
-                byte[] pixels = bi.ToByteArray();
-                drawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+    WriteableBitmap bi = new WriteableBitmap(1000, 800);
+    await bi.SetSourceAsync(fileStream);
+    byte[] pixels = bi.ToByteArray();
+    drawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+    }
+}
 
-
-            }
-        }
+private void Bm_ImageOpened(object sender, RoutedEventArgs e) {
+    var bm = sender as BitmapImage;
+    if (bm == null)
+    return;
+    var width = bm.PixelWidth;
+    var height = bm.PixelHeight;
+}
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 	//serialization here
@@ -382,7 +391,10 @@ private async void FileExitCommand_ExecuteRequested(XamlUICommand sender, Execut
     SecondaryButtonText = "No"};
 
     var result = await newFile.ShowAsync();
+    exitcode(result);
+}
 
+private void exitcode(ContentDialogResult result) { 
     if (result == ContentDialogResult.Primary) {
     exit = true;
     DrawingCanvas.StopTimer();
