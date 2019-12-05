@@ -275,30 +275,74 @@ private async void FileSaveAsCommand_ExecuteRequested(XamlUICommand sender, Exec
 }
 
 private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-            fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            fileOpenPicker.FileTypeFilter.Add(".jpg");
-            fileOpenPicker.FileTypeFilter.Add(".png");
-            StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
-            //User cancelled load
-            if (inputFile == null) { return; }
+    fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+    fileOpenPicker.FileTypeFilter.Add(".jpg");
+    fileOpenPicker.FileTypeFilter.Add(".png");
+    fileOpenPicker.FileTypeFilter.Add(customFileExtension);
+    StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
+    //User cancelled load
+    if (inputFile == null) { return; }
+    ImageProperties imageProperties = await inputFile.Properties.GetImagePropertiesAsync();
 
-            using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read))
-            {
-                /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
-                 //if (inputFile.FileType == ".png") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
-                 //if (inputFile.FileType == ".jpg") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream);
-                 SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
-                 byte[] pixels = bitmap.BitmapPixelFormat
-                 drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
+			if (inputFile.FileType == customFileExtension)
+			{
+				using (Stream stream = await inputFile.OpenStreamForReadAsync())
+				{
+					DataContractSerializer ser = new DataContractSerializer(typeof(Exportable));
+					object obj = ser.ReadObject(stream);
+					Exportable exp = (Exportable)obj;
 
-                WriteableBitmap bi = new WriteableBitmap(1000, 800);
-                await bi.SetSourceAsync(fileStream);
-                byte[] pixels = bi.ToByteArray();
-                drawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+					SetDrawingArea((int)exp.width, (int)exp.height);
+					DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(exp.bytes, 0, exp.bytes.Length);
+					DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+					History.StartHistory(exp.bytes);
+				}
+				return;
+			}
 
 
-            }
-        }
+    using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
+    /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
+    //if (inputFile.FileType == ".png") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.PngEncoderId, fileStream);
+    //if (inputFile.FileType == ".jpg") decoder = await BitmapDecoder.CreateAsync(BitmapEncoder.JpegEncoderId, fileStream);
+    SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync();
+    byte[] pixels = bitmap.BitmapPixelFormat
+    drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
+    newHeight = (int)imageProperties.Height;
+    newWidth = (int)imageProperties.Width;
+    SetDrawingArea(newWidth, newHeight);
+
+    //WriteableBitmap bi = new WriteableBitmap(newWidth, newHeight);
+    //await bi.SetSourceAsync(fileStream);
+    //byte[] pixels = bi.ToByteArray();
+    //DrawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
+    //^V does the same
+    await drawArea.ImageDataLayer.BitmapDrawingData.SetSourceAsync(fileStream); //Look at this
+    updateLoad();
+    }
+}
+		[DataContract]
+		public struct Exportable
+		{
+			[DataMember]
+			public byte[] bytes;
+			[DataMember]
+			public double width;
+			[DataMember]
+			public double height;
+
+			public Exportable(byte[] bytes, double width, double height)
+			{
+				this.bytes = bytes;
+				this.width = width;
+				this.height = height;
+			}
+		}
+
+private void updateLoad() { 
+    DrawingCanvas.canvas.ImageDataLayer.DrawBrush(new Stroke(), new DrawPoint(new Point(0, 0), new Point(0, 0)));
+    History.Undo();
+}
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 	//serialization here
