@@ -235,20 +235,6 @@ private void AttemptConnect()
     while ( !success || trycount < 1000);
 }
 
-private async void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
-    if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
-    else { 
-    if (outputFile == null) { // The user cancelled the picking operation
-    return;
-    }
-    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
-    BitmapPixelFormat.Bgra8,
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
-    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
-    );
-
-
 public bool Exists() {
     string filePath = "";
     if (outputFile != null) {filePath = outputFile.Path;}
@@ -263,8 +249,6 @@ public bool Exists() {
 }
 
 }
-
-
 
 private void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     if (outputFile != null) isNewFile = Exists();
