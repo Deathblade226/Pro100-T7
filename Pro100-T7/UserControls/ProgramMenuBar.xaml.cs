@@ -202,45 +202,6 @@ private void SetDrawingArea(int width, int height) {
     DrawingCanvas.rebuildHistory();
 }
 
-private async void Host_Click(object sender, RoutedEventArgs e)
-{
-    var box = new OnlineConnect();
-    var input = await box.ShowAsync();
-
-    if (input == ContentDialogResult.Primary) {
-    //hostip = box.IP;
-    //buildSession(new Client(), new Server());
-    }
-}
-
-private async void Connect_Click(object sender, RoutedEventArgs e)
-{
-    var box = new OnlineConnect();
-    var input = await box.ShowAsync();
-
-    if (input == ContentDialogResult.Primary) {
-    //hostip = box.IP;
-    //buildSession(new Client());
-    }
-}
-
-private void buildSession(Client client, Server server = null) { 
-    Session.Initialize(true);
-    Session.Build(client, server);
-    AttemptConnect();
-}
-
-private void AttemptConnect()
-{
-    if (debug && debugip != "") hostip = debugip;
-
-    bool success = false;
-    uint trycount = 0;
-    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(hostip), 5555);
-    do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
-    while ( !success || trycount < 1000);
-}
-
 public bool Exists() {
     string filePath = "";
     if (outputFile != null) {filePath = outputFile.Path;}
@@ -486,6 +447,47 @@ private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteReq
     SelectionTool.ClearSelection();
 }
 
+        //Dynamic IP connection code
+        //private async void Host_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var box = new OnlineConnect();
+        //    var input = await box.ShowAsync();
+
+        //    if (input == ContentDialogResult.Primary) {
+        //    //hostip = box.IP;
+        //    //buildSession(new Client(), new Server());
+        //    }
+        //}
+
+        //private async void Connect_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var box = new OnlineConnect();
+        //    var input = await box.ShowAsync();
+
+        //    if (input == ContentDialogResult.Primary) {
+        //    //hostip = box.IP;
+        //    //buildSession(new Client());
+        //    }
+        //}
+
+        //private void buildSession(Client client, Server server = null) { 
+        //    Session.Initialize(true);
+        //    Session.Build(client, server);
+        //    AttemptConnect();
+        //}
+
+        //private void AttemptConnect()
+        //{
+        //    if (debug && debugip != "") hostip = debugip;
+
+        //    bool success = false;
+        //    uint trycount = 0;
+        //    IPEndPoint ipep = new IPEndPoint(IPAddress.Parse(hostip), 5555);
+        //    do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
+        //    while ( !success || trycount < 1000);
+        //}
+
+        //Static IP connection code
         private void Host_Click(object sender, RoutedEventArgs e)
         {
             Session.Initialize(true, true);
@@ -507,8 +509,8 @@ private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteReq
             bool success = false;
             uint trycount = 0;
             IPEndPoint ipep = new IPEndPoint((host) ? IPAddress.Parse("127.0.0.1") : IPAddress.Parse("172.0.0.1"), 5555);
-            do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"Connected: {success}"); }
-            while (!success || trycount < 1000);
+            do { success = Session.CurrentClientSession.TryConnectToServer(ipep); Debug.WriteLine($"{trycount} Connected: {success}"); }
+            while (!success && ++trycount < 100);
         }
     }
 
