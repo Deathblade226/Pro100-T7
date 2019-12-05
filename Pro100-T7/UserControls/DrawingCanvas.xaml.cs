@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Navigation;
 namespace Pro100_T7.UserControls {
 public sealed partial class DrawingCanvas : UserControl {
 
-private static CanvasMaster canvas;
+public static CanvasMaster canvas;
 private static Color color;
 private static Color secondary;
 private int size;
