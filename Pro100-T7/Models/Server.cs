@@ -30,11 +30,6 @@ namespace Pro100_T7.Models
 
         ~Server() => CheckConnectTimer.Stop();
 
-        public bool IsHosting()
-        {
-            return Clients.Count() > 0;
-        }
-
         public void SendData(byte[] data)
         {
             foreach (Socket s in Clients)
