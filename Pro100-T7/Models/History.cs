@@ -60,6 +60,7 @@ namespace Pro100_T7.Models
 				{
 					redoStack.Pop();
 				}
+				//SelectionTool.RedoCleared();
 				historyStack.Push(a);
 			}
             
@@ -119,5 +120,10 @@ namespace Pro100_T7.Models
 			return true;
 		}
 
-    }
+
+		public static int NumOfRedoOnStack()
+		{
+			return redoStack.Count() - 1;
+		}
+	}
 }

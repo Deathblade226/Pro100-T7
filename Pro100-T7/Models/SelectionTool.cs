@@ -67,19 +67,18 @@ namespace Pro100_T7.Models
 			{
 				startPoint = new P(x, y);
 
-				if (selectionMade)
+				if (selectionMade && selection != null)
 				{
 					selectionMade = false;
-					oldBytes = History.Undo().bmp;
-					bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-					bmp.Invalidate();
+					//oldBytes = History.Undo().bmp;
+					//bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+					//bmp.Invalidate();
 				}
 			}
 
 			currentPoint = new P(x, y);
 
 			//make a rectangle to represent the selected area (probably store it statically)
-
 
 			if (startPoint.x > currentPoint.x)
 			{
@@ -100,27 +99,35 @@ namespace Pro100_T7.Models
 				{
 					selection = new Rect(startPoint.x, startPoint.y, currentPoint.x, currentPoint.y);
 				}
-				else if(startPoint.y > currentPoint.y)
+				else if (startPoint.y > currentPoint.y)
 				{
 					selection = new Rect(startPoint.x, currentPoint.y, currentPoint.x, startPoint.y);
 				}
+
 			}
-			
+
 
 			isSelecting = true;
 			if (selection == null)
 			{
-
-				return;
+				bmp.DrawRectangle(startPoint.x, startPoint.y, startPoint.x + 1, startPoint.y + 1, Colors.Black);
 			}
-
-			bmp.DrawRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x, selection.bottomRight.y, Colors.Black);
-			selectionDisplaying = true;
-			if (isSelecting && selection != null)
+			else
 			{
-				oldBytes = History.Undo().bmp;
-				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+				if (isSelecting)
+				{
+					if (History.NumOfRedoOnStack() == 0)
+					{
+						oldBytes = History.Undo().bmp;
+						bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+					}
+					
+					bmp.DrawRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x, selection.bottomRight.y, Colors.Black);
+				}
 			}
+
+			selectionDisplaying = true;
+
 
 			oldBytes = bmp.PixelBuffer.ToArray();
 			bmp.PixelBuffer.ToArray().CopyTo(oldBytes, 0);
@@ -157,7 +164,7 @@ namespace Pro100_T7.Models
 			if (isSelecting)
 			{
 				isSelecting = false;
-				if(selection != null)
+				if (selection != null)
 				{
 					selectionMade = true;
 				}
@@ -199,7 +206,7 @@ namespace Pro100_T7.Models
 		}
 		public static void RedrawSelection()
 		{
-			if (selectionMade && !selectionDisplaying)
+			if (selectionMade && selectionDisplaying)
 			{
 				//first do the draw logic for the rectangle
 				WriteableBitmap oldbmp = new WriteableBitmap(bmp.PixelWidth, bmp.PixelHeight);
@@ -268,18 +275,26 @@ namespace Pro100_T7.Models
 
 		public static void UndoSelection()
 		{
-			if(selectionMade)
+			if (selectionMade)
 			{
 				selectionMade = false;
+				selectionDisplaying = false;
 			}
 		}
 
 		public static void RedoSelection()
 		{
-			if(!selectionMade && selection != null)
+			if (!selectionMade && selection != null && History.NumOfRedoOnStack() == 0)
 			{
 				selectionMade = true;
 			}
+		}
+
+		public static void RedoCleared()
+		{
+			selectionMade = false;
+			selection = null;
+			isSelecting = false;
 		}
 
 	}
