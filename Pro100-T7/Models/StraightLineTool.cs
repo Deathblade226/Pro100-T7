@@ -41,44 +41,10 @@ namespace Pro100_T7.Models
 			{
 				startPoint = new P(x, y);
 
-				//if (lineDrawn)
-				//{
-				//	lineDrawn = false;
-				//	oldBytes = History.Undo().bmp;
-				//	bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-				//	bmp.Invalidate();
-				//}
 			}
 
 			currentPoint = new P(x, y);
 
-			//make a rectangle to represent the selected area (probably store it statically)
-
-
-			//if (startPoint.x > currentPoint.x)
-			//{
-			//	if (startPoint.y > currentPoint.y)
-			//	{
-			//		selection = new Rect(currentPoint.x, currentPoint.y, startPoint.x, startPoint.y);
-
-			//	}
-			//	else
-			//	{
-			//		selection = new Rect(currentPoint.x, startPoint.y, startPoint.x, currentPoint.y);
-
-			//	}
-			//}
-			//else
-			//{
-			//	if (startPoint.y < currentPoint.y)
-			//	{
-			//		selection = new Rect(startPoint.x, startPoint.y, currentPoint.x, currentPoint.y);
-			//	}
-			//	else
-			//	{
-			//		selection = new Rect(startPoint.x, currentPoint.y, currentPoint.x, startPoint.y);
-			//	}
-			//}
 
 			if (isSelecting)
 			{
@@ -103,9 +69,9 @@ namespace Pro100_T7.Models
 			if (isSelecting)
 			{
 				isSelecting = false;
-				byte[] oldBytes = History.Undo().bmp;
-				bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
-				bmp.Invalidate();
+				//byte[] oldBytes = History.Undo().bmp;
+				//bmp.PixelBuffer.AsStream().Write(oldBytes, 0, oldBytes.Length);
+				//bmp.Invalidate();
 
 			}
 		}

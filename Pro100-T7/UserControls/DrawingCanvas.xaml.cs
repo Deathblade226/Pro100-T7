@@ -73,7 +73,7 @@ public DrawingCanvas() {
     PointerPressed += DrawingCanvas_PointerPressed;
 }
 private void Dt_Tick(object sender, object e) {
-    if (ptrPt != null && type != 10 && type != 9) {
+    if (ptrPt != null && type != 10 && type != 9 && type != 11) {
     if (ptrPt.Properties.IsLeftButtonPressed) {
     defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
@@ -141,7 +141,7 @@ private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     if (drawPoint.OldPoint == null) drawPoint.OldPoint = drawPoint.CurrentPoint;
     ptrPt = e.GetCurrentPoint(null);
         
-    if (type == 10 || type == 9) {
+    if (type == 10 || type == 9 || type == 11) {
     if (ptrPt.Properties.IsLeftButtonPressed) {
     defaultStroke.StrokeColor = color;
     canvas.ImageDataLayer.DrawBrush(defaultStroke, drawPoint, type, 1);
