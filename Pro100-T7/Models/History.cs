@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Pro100_T7.Models
 {
-    public class Action //lawsuit
+    public class Action
     {
         public int layerID;
         public byte[] bmp;//Layer info of some kind
