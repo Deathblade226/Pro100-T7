@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Navigation;
 namespace Pro100_T7.UserControls {
 public sealed partial class DrawingCanvas : UserControl {
 
-private CanvasMaster canvas;
+private static CanvasMaster canvas;
 private static Color color;
 private static Color secondary;
 private int size;
@@ -84,6 +84,14 @@ private void Dt_Tick(object sender, object e) {
     }
     drawPoint.OldPoint = drawPoint.CurrentPoint;
     }
+}
+
+public static void rebuildHistory() { 
+    byte[] b1 = canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray();
+    byte[] b = new byte[b1.Length];
+    b1.CopyTo(b, 0);
+    History.StartHistory(b1);
+    History.ClearHistory();
 }
 
 public static void StopTimer() { dt.Stop(); }

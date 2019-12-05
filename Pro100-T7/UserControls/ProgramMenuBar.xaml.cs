@@ -194,6 +194,7 @@ private void SetDrawingArea(int width, int height) {
     DrawCanvas.Width = width;
     DrawCanvas.Height = height;
     History.ClearHistory();
+    DrawingCanvas.rebuildHistory();
 }
 
 private async void Host_Click(object sender, RoutedEventArgs e)
@@ -272,12 +273,10 @@ private void filenew(ContentDialogResult result) {
     newSize = true;
     FileSaveCommand_ExecuteRequested(null, null);
     NewWindowSize();
-    History.ClearHistory();
     }
     else if (result == ContentDialogResult.Secondary) { //No problem
     isNewFile = true;
     outputFile = null;
-    History.ClearHistory();
     NewWindowSize();
     }
 }
