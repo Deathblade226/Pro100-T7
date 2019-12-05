@@ -241,8 +241,12 @@
                     ToolTipService.ToolTip="Selection"
                     Text="Selection" 
                     Command="{StaticResource ToolsSelectCommand}"/>
+				<MenuFlyoutItem x:Name="StraightLine"
+                    ToolTipService.ToolTip="Straight Line"
+                    Text="Straight Line" 
+                    Click="StraightLine_Click"/>
 
-            <MenuFlyoutSeparator/>
+				<MenuFlyoutSeparator/>
 
             <MenuFlyoutItem x:Name="Clear"
                     ToolTipService.ToolTip="Clear Canvas"
@@ -256,6 +260,9 @@
                             ToolTipService.ToolTip="Host your drawing"
                             Text="Host"
                             Click="Host_Click"/>
+            
+            <MenuFlyoutSeparator/>
+
             <MenuFlyoutItem x:Name="RemoteConnect"
                             ToolTipService.ToolTip="Connect to a drawing"
                             Text="Connect"
