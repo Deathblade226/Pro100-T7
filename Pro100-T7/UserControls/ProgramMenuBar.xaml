@@ -75,6 +75,14 @@
                 <KeyboardAccelerator Key="Z" Modifiers="Control,Shift"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="EditDeleteCommand"
+                                            ExecuteRequested="EditDeleteCommand_ExecuteRequested"
+                                            Description="Edit Delete"
+                                            Label="Edit Delete">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="Delete"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
     <Windows10version1809:XamlUICommand x:Name="RegilarBrushCommand"
                                             ExecuteRequested="RegilarBrushCommand_ExecuteRequested"
                                             Description="Edit Redo"
@@ -97,6 +105,22 @@
                                             Label="Edit Redo">
             <Windows10version1809:XamlUICommand.KeyboardAccelerators>
                 <KeyboardAccelerator Key="F"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsEraseCommand"
+                                            ExecuteRequested="ToolsEraseCommand_ExecuteRequested"
+                                            Description="Erase Brush"
+                                            Label="Erase Brush">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="E"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsSelectCommand"
+                                            ExecuteRequested="ToolsSelectCommand_ExecuteRequested"
+                                            Description="Select Tool"
+                                            Label="Select Tool">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="S"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
 </UserControl.Resources>    
@@ -158,6 +182,14 @@
                     Text="Redo"
                     Command="{StaticResource EditRedoCommand}"/>
 
+            <MenuFlyoutSeparator/>
+            
+            <MenuFlyoutItem x:Name="Delete"
+                    ToolTipService.ToolTip="Delete"
+                    Text="Delete"
+                    Command="{StaticResource EditDeleteCommand}"/>
+            
+            
         </MenuBarItem>
 
         <MenuBarItem Title="Brushes">
@@ -191,7 +223,7 @@
             <MenuFlyoutItem x:Name="Eraser"
                             ToolTipService.ToolTip="Erase (E)"
                             Text="Eraser"
-                            Click="Eraser_Click"/>
+                            Command="{StaticResource ToolsEraseCommand}"/>
 
         </MenuBarItem>
 
@@ -201,10 +233,6 @@
                             Text="Eyedropper tool"
                             ToolTipService.ToolTip="Eyedropper Tool"
                             Command="{StaticResource ToolsEyeDropperCommand}"/>
-            <MenuFlyoutItem x:Name="Clear"
-                    ToolTipService.ToolTip="Clear Canvas"
-                    Text="Clear Canvas" 
-                    Click="ClearCanvas_Click"/>
             <MenuFlyoutItem x:Name="Fill"
                     ToolTipService.ToolTip="Bucket Fill"
                     Text="Bucket Fill" 
@@ -212,12 +240,18 @@
 			<MenuFlyoutItem x:Name="Selection"
                     ToolTipService.ToolTip="Selection"
                     Text="Selection" 
-                    Click="Selection_Click"/>
-			<MenuFlyoutItem x:Name="StraightLine"
+                    Command="{StaticResource ToolsSelectCommand}"/>
+				<MenuFlyoutItem x:Name="StraightLine"
                     ToolTipService.ToolTip="Straight Line"
                     Text="Straight Line" 
                     Click="StraightLine_Click"/>
 
+				<MenuFlyoutSeparator/>
+
+            <MenuFlyoutItem x:Name="Clear"
+                    ToolTipService.ToolTip="Clear Canvas"
+                    Text="Clear Canvas" 
+                    Click="ClearCanvas_Click"/>
 
 		</MenuBarItem>
 
@@ -226,6 +260,9 @@
                             ToolTipService.ToolTip="Host your drawing"
                             Text="Host"
                             Click="Host_Click"/>
+            
+            <MenuFlyoutSeparator/>
+
             <MenuFlyoutItem x:Name="RemoteConnect"
                             ToolTipService.ToolTip="Connect to a drawing"
                             Text="Connect"

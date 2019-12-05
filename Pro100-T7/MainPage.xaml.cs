@@ -41,9 +41,6 @@ namespace Pro100_T7
 public sealed partial class MainPage : Page {
 public MainPage() {
     this.InitializeComponent();
-}
-protected override void OnNavigatedTo(NavigationEventArgs e) {
-    DrawCanvas.OnNavigatedTo(e);
     PointerMoved += Main_PointerMoved;
 	PointerReleased += MainPage_PointerReleased;
 }
