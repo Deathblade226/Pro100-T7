@@ -48,7 +48,7 @@ public sealed partial class ProgramMenuBar : UserControl {
 
     private string customFileExtension = ".dpf";
     private string hostip = "0.0.0.0";
-    private string debugip = "0.0.0.0";
+    private string debugip = "127.0.0.1";
 
 public CanvasMaster DrawArea {
     get { return drawArea; }
@@ -235,6 +235,18 @@ private void AttemptConnect()
     while ( !success || trycount < 1000);
 }
 
+private async void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
+    else { 
+    if (outputFile == null) { // The user cancelled the picking operation
+    return;
+    }
+    SoftwareBitmap outputBitmap = SoftwareBitmap.CreateCopyFromBuffer(
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer,
+    BitmapPixelFormat.Bgra8,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelWidth,
+    drawArea.ImageDataLayer.BitmapDrawingData.PixelHeight
+    );
 
 
 public bool Exists() {
@@ -447,3 +459,4 @@ private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteReq
 }
 
 }
+
