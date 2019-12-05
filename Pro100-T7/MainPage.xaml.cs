@@ -60,7 +60,6 @@ public void Main_PointerMoved(object sender, PointerRoutedEventArgs e) {
     ProgramControlsBar.DrawArea = DrawCanvas.Canvas;
     DrawCanvas.Type = ProgramControlsBar.BrushType;
     ProgramControlsBar.DrawCanvas = DrawCanvas.GetControlCanvasUIElement();
-    ProgramControlsBar.SetFocus();
 }
 
 
