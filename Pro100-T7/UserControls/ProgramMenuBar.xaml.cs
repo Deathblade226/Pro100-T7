@@ -200,6 +200,7 @@ public bool Exists() {
     } catch { 
     return false;
 }
+}
 
 private async void FileSaveCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     if (isNewFile) { FileSaveAsCommand_ExecuteRequested(null, null); }
