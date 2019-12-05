@@ -189,8 +189,8 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
 private void SetDrawingArea(int width, int height) { 
     DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
     DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);
-    drawArea.ImageData.Width = width;
-    drawArea.ImageData.Height = height;
+    DrawingCanvas.DrawCanvas.Width = width;
+    DrawingCanvas.DrawCanvas.Height = height;
     History.ClearHistory();
     DrawingCanvas.rebuildHistory();
 }

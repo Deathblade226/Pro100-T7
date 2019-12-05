@@ -53,12 +53,16 @@ public int Type {
     get { return type; }
     set { type = value; }
 }
+
+public static Canvas DrawCanvas { get; set; }
+
 private PointerPoint ptrPt;
 DrawPoint drawPoint = new DrawPoint();
 Stroke defaultStroke = new Stroke() { StrokeColor = color, StrokeRadius = 1 };
 
 public DrawingCanvas() {
     this.InitializeComponent();
+    DrawCanvas = DrawArea;
     dt.Interval = TimeSpan.FromSeconds(1/120);
     dt.Tick += Dt_Tick;
     dt.Start();
