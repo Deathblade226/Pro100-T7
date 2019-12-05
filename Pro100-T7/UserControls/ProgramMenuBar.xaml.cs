@@ -75,7 +75,7 @@ public ProgramMenuBar() {
 /// <summary>
 /// Sets the focus to the menu bar for keybinds to work.
 /// </summary>
-public void SetFocus() { this.Focus(FocusState.Programmatic); }
+//public void SetFocus() { this.Focus(FocusState.Programmatic); }
 
 public void IncreaseBrushSize() { 
     if (BrushSize <= 200) { BrushSize++; }
@@ -352,15 +352,21 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     drawArea.ImageDataLayer.BitmapDrawingData.SetPixel*/
     newHeight = (int)imageProperties.Height;
     newWidth = (int)imageProperties.Width;
-    WriteableBitmap bi = new WriteableBitmap(newWidth, newHeight);
     SetDrawingArea(newWidth, newHeight);
+
+    //WriteableBitmap bi = new WriteableBitmap(newWidth, newHeight);
     //await bi.SetSourceAsync(fileStream);
     //byte[] pixels = bi.ToByteArray();
     //DrawArea.ImageDataLayer.BitmapDrawingData.FromByteArray(pixels);
-    await drawArea.ImageDataLayer.BitmapDrawingData.SetSourceAsync(fileStream);
-    History.StartHistory(drawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());    
-    DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+    //^V does the same
+    await drawArea.ImageDataLayer.BitmapDrawingData.SetSourceAsync(fileStream); //Look at this
+    updateLoad();
     }
+}
+
+private void updateLoad() { 
+    DrawingCanvas.rebuildHistory();
+    drawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 }
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
