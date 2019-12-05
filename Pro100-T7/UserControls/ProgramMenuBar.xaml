@@ -128,7 +128,7 @@
                                             Description="Line tool"
                                             Label="Line Tool">
             <Windows10version1809:XamlUICommand.KeyboardAccelerators>
-                <KeyboardAccelerator Key="S"/>
+                <KeyboardAccelerator Key="L"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
 </UserControl.Resources>    
