@@ -342,10 +342,28 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     fileOpenPicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
     fileOpenPicker.FileTypeFilter.Add(".jpg");
     fileOpenPicker.FileTypeFilter.Add(".png");
+    fileOpenPicker.FileTypeFilter.Add(customFileExtension);
     StorageFile inputFile = await fileOpenPicker.PickSingleFileAsync();
     //User cancelled load
     if (inputFile == null) { return; }
     ImageProperties imageProperties = await inputFile.Properties.GetImagePropertiesAsync();
+
+			if (inputFile.FileType == customFileExtension)
+			{
+				using (Stream stream = await inputFile.OpenStreamForReadAsync())
+				{
+					DataContractSerializer ser = new DataContractSerializer(typeof(Exportable));
+					object obj = ser.ReadObject(stream);
+					Exportable exp = (Exportable)obj;
+
+					SetDrawingArea((int)exp.width, (int)exp.height);
+					DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(exp.bytes, 0, exp.bytes.Length);
+					DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
+					History.StartHistory(exp.bytes);
+				}
+				return;
+			}
+
 
     using (IRandomAccessStream fileStream = await inputFile.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
     /* BitmapDecoder decoder = await BitmapDecoder.CreateAsync(BitmapDecoder.JpegDecoderId, fileStream);
@@ -366,6 +384,23 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
     DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
     }
 }
+		[DataContract]
+		public struct Exportable
+		{
+			[DataMember]
+			public byte[] bytes;
+			[DataMember]
+			public double width;
+			[DataMember]
+			public double height;
+
+			public Exportable(byte[] bytes, double width, double height)
+			{
+				this.bytes = bytes;
+				this.width = width;
+				this.height = height;
+			}
+		}
 
 private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
 	//serialization here
@@ -375,8 +410,9 @@ private async void FileExportCommand_ExecuteRequested(XamlUICommand sender, Exec
 	StorageFile file = await picker.PickSaveFileAsync();
 	if (file != null) {
 	using (Stream stream = await file.OpenStreamForWriteAsync()) {
-    DataContractSerializer ser = new DataContractSerializer(typeof(byte[]));
-	ser.WriteObject(stream, DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray());
+    DataContractSerializer ser = new DataContractSerializer(typeof(Exportable));
+					Exportable export = new Exportable(DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.ToArray(), DrawArea.ImageData.ActualWidth, DrawArea.ImageData.ActualHeight);
+					ser.WriteObject(stream, export);
 	}
     }	
 }
