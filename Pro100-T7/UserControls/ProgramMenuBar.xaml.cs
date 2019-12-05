@@ -64,8 +64,6 @@ public int BrushSize {
     set { BrushSize = value; }
 }
 
-public Canvas DrawCanvas { get; set; }
-
 public ProgramMenuBar() {
     this.InitializeComponent();
 }
@@ -174,7 +172,6 @@ private void TriangleBrush_Click(object sender, RoutedEventArgs e){
 private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     BrushType = 6;
 }
-
 /// <summary>
 /// Takes in width and hegith to build a new canvas and image
 /// </summary>
@@ -183,8 +180,8 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
 private void SetDrawingArea(int width, int height) { 
     DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
     DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);
-    DrawCanvas.Width = width;
-    DrawCanvas.Height = height;
+    drawArea.ImageData.Width = width;
+    drawArea.ImageData.Height = height;
     History.ClearHistory();
 }
 
@@ -366,6 +363,9 @@ private void ToolsSelectCommand_ExecuteRequested(XamlUICommand sender, ExecuteRe
 }
 private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     SelectionTool.ClearSelection();
+}
+private void ToolsLine_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    BrushType = 11;
 }
 
         //Dynamic IP connection code
