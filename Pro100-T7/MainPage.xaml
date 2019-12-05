@@ -20,13 +20,12 @@
         </Grid.ColumnDefinitions>
 
         <Rectangle Fill="#464646" Grid.ColumnSpan="2"/>
-
         <uc:ProgramMenuBar x:Name="ProgramControlsBar" Grid.ColumnSpan="2"/>
+
         <uc:BrushModifierPanel x:Name="BrushModifier" Grid.Column="1"/>
         <uc:DrawingCanvas x:Name="DrawCanvas"
-                          HorizontalAlignment="Center" VerticalAlignment="Center"
-                          />
-        <!---->
+                          HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
 
     </Grid>
 

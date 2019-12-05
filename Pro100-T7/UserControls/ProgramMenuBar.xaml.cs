@@ -66,8 +66,6 @@ public int BrushSize {
     set { BrushSize = value; }
 }
 
-public Canvas DrawCanvas { get; set; }
-
 public ProgramMenuBar() {
     this.InitializeComponent();
 }
@@ -183,11 +181,6 @@ private void HourglassBrush_Click(object sender, RoutedEventArgs e){
     Window.Current.CoreWindow.PointerCursor = new Windows.UI.Core.CoreCursor(Windows.UI.Core.CoreCursorType.Arrow, 0);
     BrushType = 6;
 }
-private void StraightLine_Click(object sender, RoutedEventArgs e)
-{
-	BrushType = 11;
-}
-
 /// <summary>
 /// Takes in width and hegith to build a new canvas and image
 /// </summary>
@@ -196,8 +189,8 @@ private void StraightLine_Click(object sender, RoutedEventArgs e)
 private void SetDrawingArea(int width, int height) { 
     DrawArea.ImageDataLayer.BitmapDrawingData.Clear();
     DrawArea.ImageDataLayer.BitmapDrawingData = BitmapFactory.New(width, height);
-    DrawCanvas.Width = width;
-    DrawCanvas.Height = height;
+    DrawingCanvas.DrawCanvas.Width = width;
+    DrawingCanvas.DrawCanvas.Height = height;
     History.ClearHistory();
     DrawingCanvas.rebuildHistory();
 }
@@ -484,6 +477,9 @@ private void ToolsSelectCommand_ExecuteRequested(XamlUICommand sender, ExecuteRe
 }
 private void EditDeleteCommand_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
     SelectionTool.ClearSelection();
+}
+private void ToolsLine_ExecuteRequested(XamlUICommand sender, ExecuteRequestedEventArgs args) {
+    BrushType = 11;
 }
 
 }

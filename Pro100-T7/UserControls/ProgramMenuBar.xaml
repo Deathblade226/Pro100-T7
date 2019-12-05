@@ -123,6 +123,14 @@
                 <KeyboardAccelerator Key="S"/>
             </Windows10version1809:XamlUICommand.KeyboardAccelerators>
         </Windows10version1809:XamlUICommand>
+    <Windows10version1809:XamlUICommand x:Name="ToolsLine"
+                                            ExecuteRequested="ToolsLine_ExecuteRequested"
+                                            Description="Line tool"
+                                            Label="Line Tool">
+            <Windows10version1809:XamlUICommand.KeyboardAccelerators>
+                <KeyboardAccelerator Key="L"/>
+            </Windows10version1809:XamlUICommand.KeyboardAccelerators>
+        </Windows10version1809:XamlUICommand>
 </UserControl.Resources>    
     
     <Windows10version1809:MenuBar x:Name="AppBar"
@@ -244,7 +252,7 @@
 				<MenuFlyoutItem x:Name="StraightLine"
                     ToolTipService.ToolTip="Straight Line"
                     Text="Straight Line" 
-                    Click="StraightLine_Click"/>
+                    Command="{StaticResource ToolsLine}"/>
 
 				<MenuFlyoutSeparator/>
 
