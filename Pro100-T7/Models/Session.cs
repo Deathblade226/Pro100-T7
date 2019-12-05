@@ -8,6 +8,9 @@ namespace Pro100_T7.Models
 {
     public static class Session
     {
+        public delegate void UpdateBitmapCanvas(byte[] canvasData);
+        public static event UpdateBitmapCanvas ServerTickUpdate;
+
         public static bool IsServer { get; set; } = false;
         public static Server ServerWhereApplicable { get; set; } = null;
 
@@ -27,6 +30,11 @@ namespace Pro100_T7.Models
             IsOnlineSession = true;
             if (IsServer && s != null) ServerWhereApplicable = s;
             if (s == null) IsServer = false;
+        }
+
+        public static void Tick(byte[] data)
+        {
+            ServerTickUpdate?.Invoke(data);
         }
     }
 }

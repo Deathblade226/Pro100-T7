@@ -67,7 +67,14 @@ public DrawingCanvas() {
     byte[] b = new byte[b1.Length];
     b1.CopyTo(b, 0);
     History.StartHistory(b1);
-    GetControlCanvasUIElement().Children.Add(canvas.ImageData);
+            GetControlCanvasUIElement().Children.Add(canvas.ImageData);
+
+    Session.ServerTickUpdate += UpdateFromServer;
+}
+
+public Canvas GetControlCanvasUIElement() => DrawArea;
+
+public void OnNavigatedTo(NavigationEventArgs e) {
     PointerReleased += ActionPointerReleased;
     PointerMoved += Canvas_PointerMoved;
     PointerPressed += DrawingCanvas_PointerPressed;
@@ -106,6 +113,7 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 	b1.CopyTo(b, 0);
 	History.EndAction(new Models.Action(b));
 	isMouseDownOnCanvas = false;
+    if (Session.IsOnlineSession) Session.CurrentClientSession.SendData(b);
     }
 
 	if(type == 10)
@@ -116,6 +124,12 @@ public void ActionPointerReleased(object sender, PointerRoutedEventArgs e) {
 	canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
 
 }
+
+        private void UpdateFromServer(byte[] data)
+        {
+            canvas.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(data, 0, data.Length);
+            canvas.ImageDataLayer.BitmapDrawingData.Invalidate();
+        }
 
 private void Canvas_PointerMoved(object sender, PointerRoutedEventArgs e) {
     defaultStroke.StrokeRadius = size;
