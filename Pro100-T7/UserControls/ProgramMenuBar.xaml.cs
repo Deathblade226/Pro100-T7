@@ -353,7 +353,9 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
 					DrawArea.ImageDataLayer.BitmapDrawingData.PixelBuffer.AsStream().Write(exp.bytes, 0, exp.bytes.Length);
 					DrawArea.ImageDataLayer.BitmapDrawingData.Invalidate();
 					History.StartHistory(exp.bytes);
-				}
+                    DrawingCanvas.canvas.ImageDataLayer.DrawBrush(new Stroke(), new DrawPoint(new Point(0, 0), new Point(0, 0)));
+                    History.Undo();
+                }
 				return;
 			}
 
