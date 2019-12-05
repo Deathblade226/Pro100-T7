@@ -148,6 +148,7 @@ namespace Pro100_T7.Models
 				bmp.FillRectangle(selection.topLeft.x, selection.topLeft.y, selection.bottomRight.x + 1, selection.bottomRight.y + 1, Color.FromArgb(0, 0, 0, 0));
 				selectionMade = false;
 				selectionDisplaying = false;
+				selection = null;
 
 				oldBytes = bmp.PixelBuffer.ToArray();
 				bmp.PixelBuffer.ToArray().CopyTo(oldBytes, 0);
