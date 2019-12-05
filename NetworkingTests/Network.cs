@@ -16,15 +16,10 @@ namespace NetworkingTests
             
             Socket accepted = listener.Accept();
 
-            Tests(accepted);
-        }
-
-        public static async void Tests(Socket accepted)
-        {
             while (true)
             {
                 byte[] words = new byte[256];
-                accepted.BeginReceive(words, 0, 0, SocketFlags.None, null, null);
+                accepted.Receive(words);
 
                 string s = Encoding.ASCII.GetString(words);
                 Console.WriteLine(s);
