@@ -399,6 +399,7 @@ private async void FileLoadCommand_ExecuteRequested(XamlUICommand sender, Execut
 		}
 
 private void updateLoad() { 
+    History.StartHistory(DrawingCanvas.canvas.ImageDataLayer.BitmapDrawingData.ToByteArray());
     DrawingCanvas.canvas.ImageDataLayer.DrawBrush(new Stroke(), new DrawPoint(new Point(0, 0), new Point(0, 0)));
     History.Undo();
 }
